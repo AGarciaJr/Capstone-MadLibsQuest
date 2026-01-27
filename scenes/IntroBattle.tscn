@@ -292,9 +292,9 @@ horizontal_alignment = 1
 [node name="WordInput" type="LineEdit" parent="BottomPanel"]
 layout_mode = 0
 offset_left = 131.0
-offset_top = 31.0
+offset_top = 26.0
 offset_right = 323.0
-offset_bottom = 62.0
+offset_bottom = 57.0
 placeholder_text = "Enter a word..."
 alignment = 1
 max_length = 30
@@ -309,13 +309,15 @@ text = "Submit"
 
 [node name="ResultLabel" type="Label" parent="BottomPanel"]
 layout_mode = 0
-offset_left = 6.0
-offset_top = 1.0
-offset_right = 182.0
-offset_bottom = 21.0
+offset_left = 148.0
+offset_top = -162.0
+offset_right = 324.0
+offset_bottom = -142.0
 theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
 theme_override_font_sizes/font_size = 8
 text = "Type a word and press Enter!"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="VictoryPanel" type="Control" parent="."]
 visible = false

@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://story_intro_scene"]
+[gd_scene load_steps=2 format=3 uid="uid://cu41gsvqwuar8"]
 
 [sub_resource type="GDScript" id="GDScript_story_intro"]
 script/source = "extends Control
@@ -64,7 +64,7 @@ func _on_continue_button_pressed() -> void:
 			# Save data and go to battle
 			GameData.player_name = player_name
 			GameData.player_letters = selected_letters
-			get_tree().change_scene_to_file(\"res://scenes/Battle.tscn\")
+			get_tree().change_scene_to_file(\"res://scenes/IntroBattle.tscn\")
 	
 	_update_ui()
 
@@ -160,6 +160,6 @@ horizontal_alignment = 1
 layout_mode = 2
 text = "Continue"
 
-[connection signal="pressed" from="VBoxContainer/ContinueButton" to="." method="_on_continue_button_pressed"]
 [connection signal="text_changed" from="VBoxContainer/LetterInput" to="." method="_on_letter_input_text_changed"]
 [connection signal="text_submitted" from="VBoxContainer/LetterInput" to="." method="_on_letter_input_text_submitted"]
+[connection signal="pressed" from="VBoxContainer/ContinueButton" to="." method="_on_continue_button_pressed"]
