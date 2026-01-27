@@ -11,8 +11,12 @@ config_version=5
 [application]
 
 config/name="madlibsquest"
-run/main_scene="uid://dd21o78r2k000"
+run/main_scene="uid://42b8ugsam0mp"
 config/features=PackedStringArray("4.5", "Forward Plus")
+
+[autoload]
+
+GameData="*res://scripts/GameData.gd"
 
 [display]
 

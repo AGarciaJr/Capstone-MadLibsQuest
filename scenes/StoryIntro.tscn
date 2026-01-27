@@ -1,0 +1,165 @@
+[gd_scene load_steps=2 format=3 uid="uid://story_intro_scene"]
+
+[sub_resource type="GDScript" id="GDScript_story_intro"]
+script/source = "extends Control
+
+signal intro_complete(player_name: String, starting_letters: Array[String])
+
+enum State { GREETING, ASK_NAME, ASK_LETTERS, CONFIRM }
+
+var current_state: State = State.GREETING
+var player_name: String = \"\"
+var selected_letters: Array[String] = []
+
+const BARD_DIALOGUES = {
+	State.GREETING: \"Ah, a new adventurer! Welcome, welcome! I am the Bard, keeper of tales and singer of songs. Your legend shall be written in verse!\",
+	State.ASK_NAME: \"But first, I must know... what name shall echo through the ages? What do they call you, brave soul?\",
+	State.ASK_LETTERS: \"Splendid! Now, every hero begins their journey with trusted companions. Choose up to 5 letters to be your starting characters. These letters will power your words in battle!\",
+	State.CONFIRM: \"\"
+}
+
+func _ready() -> void:
+	_update_ui()
+	$VBoxContainer/NameInput.visible = false
+	$VBoxContainer/LetterInput.visible = false
+	$VBoxContainer/SelectedLetters.visible = false
+	$VBoxContainer/ContinueButton.grab_focus()
+
+func _update_ui() -> void:
+	if current_state == State.CONFIRM:
+		$VBoxContainer/DialogueLabel.text = \"Excellent, %s! With the letters %s at your side, your adventure begins! May your words strike true!\" % [player_name, \", \".join(selected_letters)]
+	else:
+		$VBoxContainer/DialogueLabel.text = BARD_DIALOGUES[current_state]
+	
+	$VBoxContainer/SelectedLetters.text = \"Selected Letters: \" + \", \".join(selected_letters) + \" (%d/5)\" % selected_letters.size()
+
+func _on_continue_button_pressed() -> void:
+	match current_state:
+		State.GREETING:
+			current_state = State.ASK_NAME
+			$VBoxContainer/NameInput.visible = true
+			$VBoxContainer/NameInput.grab_focus()
+			$VBoxContainer/ContinueButton.text = \"Confirm Name\"
+		State.ASK_NAME:
+			var input_name = $VBoxContainer/NameInput.text.strip_edges()
+			if input_name.is_empty():
+				$VBoxContainer/DialogueLabel.text = \"Come now, surely you have a name? Don't be shy!\"
+				return
+			player_name = input_name
+			$VBoxContainer/NameInput.visible = false
+			current_state = State.ASK_LETTERS
+			$VBoxContainer/LetterInput.visible = true
+			$VBoxContainer/SelectedLetters.visible = true
+			$VBoxContainer/LetterInput.grab_focus()
+			$VBoxContainer/ContinueButton.text = \"Begin Adventure\"
+		State.ASK_LETTERS:
+			if selected_letters.is_empty():
+				$VBoxContainer/DialogueLabel.text = \"You must choose at least one letter companion! Type a letter and press Enter.\"
+				return
+			current_state = State.CONFIRM
+			$VBoxContainer/LetterInput.visible = false
+			$VBoxContainer/ContinueButton.text = \"Start Quest!\"
+		State.CONFIRM:
+			intro_complete.emit(player_name, selected_letters)
+			# Save data and go to battle
+			GameData.player_name = player_name
+			GameData.player_letters = selected_letters
+			get_tree().change_scene_to_file(\"res://scenes/Battle.tscn\")
+	
+	_update_ui()
+
+func _on_letter_input_text_submitted(new_text: String) -> void:
+	_add_letter(new_text)
+	$VBoxContainer/LetterInput.clear()
+
+func _add_letter(text: String) -> void:
+	var letter = text.strip_edges().to_upper()
+	if letter.length() != 1 or not letter[0] in \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\":
+		return
+	if letter in selected_letters:
+		$VBoxContainer/DialogueLabel.text = \"You've already chosen '%s'! Pick a different letter.\" % letter
+		return
+	if selected_letters.size() >= 5:
+		$VBoxContainer/DialogueLabel.text = \"You can only have 5 letter companions! Remove one first or continue.\"
+		return
+	
+	selected_letters.append(letter)
+	_update_ui()
+	$VBoxContainer/DialogueLabel.text = \"'%s' joins your party! %s\" % [letter, BARD_DIALOGUES[State.ASK_LETTERS] if selected_letters.size() < 5 else \"You've assembled a full party!\"]
+
+func _on_letter_input_text_changed(new_text: String) -> void:
+	# Auto-submit single letters
+	if new_text.length() == 1:
+		_add_letter(new_text)
+		$VBoxContainer/LetterInput.clear()
+"
+
+[node name="StoryIntro" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_story_intro")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.1, 0.1, 0.15, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -100.0
+offset_right = 200.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="BardLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "~ The Bard ~"
+horizontal_alignment = 1
+
+[node name="DialogueLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Welcome, adventurer!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="NameInput" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Enter your name..."
+alignment = 1
+max_length = 20
+
+[node name="LetterInput" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Type a letter (A-Z)..."
+alignment = 1
+max_length = 1
+
+[node name="SelectedLetters" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Selected Letters: (0/5)"
+horizontal_alignment = 1
+
+[node name="ContinueButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Continue"
+
+[connection signal="pressed" from="VBoxContainer/ContinueButton" to="." method="_on_continue_button_pressed"]
+[connection signal="text_changed" from="VBoxContainer/LetterInput" to="." method="_on_letter_input_text_changed"]
+[connection signal="text_submitted" from="VBoxContainer/LetterInput" to="." method="_on_letter_input_text_submitted"]

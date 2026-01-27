@@ -1,0 +1,385 @@
+[gd_scene load_steps=2 format=3 uid="uid://b2sll4r51y6ue"]
+
+[sub_resource type="GDScript" id="GDScript_battle"]
+script/source = "extends Control
+
+var player_name: String = \"Hero\"
+var player_letters: Array[String] = [\"A\", \"E\", \"S\", \"T\"]
+var player_hp: int = 100
+var player_max_hp: int = 100
+
+var enemy_name: String = \"Rat\"
+var enemy_hp: int = 30
+var enemy_max_hp: int = 30
+var enemy_damage: int = 10
+
+var current_prompt: Dictionary = {}
+var prompts: Array[Dictionary] = [
+	{\"type\": \"noun\", \"line\": \"The hero faced a fearsome ___!\"},
+	{\"type\": \"verb\", \"line\": \"They ___ with all their might!\"},
+	{\"type\": \"adjective\", \"line\": \"The battle was truly ___!\"},
+	{\"type\": \"noun\", \"line\": \"Victory came with a mighty ___!\"},
+]
+var current_prompt_index: int = 0
+var story_lines: Array[String] = []
+
+func _ready() -> void:
+	if GameData.player_name != \"\":
+		player_name = GameData.player_name
+	if GameData.player_letters.size() > 0:
+		player_letters = GameData.player_letters
+	
+	_setup_battle()
+	_next_prompt()
+
+func _setup_battle() -> void:
+	$PlayerPanel/PlayerName.text = player_name
+	$PlayerPanel/LettersLabel.text = \"Letters: \" + \", \".join(player_letters)
+	_update_hp_displays()
+	$EnemyPanel/EnemyName.text = enemy_name
+	$BottomPanel/WordInput.grab_focus()
+
+func _update_hp_displays() -> void:
+	$PlayerPanel/PlayerHP.text = \"HP: %d/%d\" % [player_hp, player_max_hp]
+	$PlayerPanel/PlayerHPBar.value = float(player_hp) / player_max_hp * 100
+	$EnemyPanel/EnemyHP.text = \"HP: %d/%d\" % [enemy_hp, enemy_max_hp]
+	$EnemyPanel/EnemyHPBar.value = float(enemy_hp) / enemy_max_hp * 100
+
+func _next_prompt() -> void:
+	if current_prompt_index >= prompts.size():
+		current_prompt_index = 0
+	
+	current_prompt = prompts[current_prompt_index]
+	$BottomPanel/PromptLabel.text = \"The Bard needs a %s!\" % current_prompt[\"type\"].to_upper()
+	$BottomPanel/LinePreview.text = current_prompt[\"line\"]
+
+func _on_word_input_text_submitted(word: String) -> void:
+	word = word.strip_edges().to_lower()
+	if word.is_empty():
+		return
+	
+	$BottomPanel/WordInput.clear()
+	_process_word(word)
+
+func _on_submit_button_pressed() -> void:
+	var word = $BottomPanel/WordInput.text.strip_edges().to_lower()
+	if word.is_empty():
+		return
+	
+	$BottomPanel/WordInput.clear()
+	_process_word(word)
+
+func _process_word(word: String) -> void:
+	var matched_letters: Array[String] = []
+	var word_upper = word.to_upper()
+	for letter in player_letters:
+		if letter in word_upper:
+			matched_letters.append(letter)
+	
+	var damage = matched_letters.size() * 5
+	var is_critical = matched_letters.size() >= 3
+	
+	var filled_line = current_prompt[\"line\"].replace(\"___\", word.to_upper())
+	story_lines.append(filled_line)
+	_update_story_display()
+	
+	var result_text = \"\"
+	if matched_letters.size() > 0:
+		result_text = \"'%s' hits with [%s]! %d damage!\" % [word, \", \".join(matched_letters), damage]
+		if is_critical:
+			result_text += \" CRITICAL!\"
+		enemy_hp -= damage
+	else:
+		result_text = \"'%s' has no matching letters... Miss!\" % word
+	
+	$BottomPanel/ResultLabel.text = result_text
+	_update_hp_displays()
+	
+	if enemy_hp <= 0:
+		_victory()
+		return
+	
+	await get_tree().create_timer(0.5).timeout
+	_enemy_attack()
+	
+	current_prompt_index += 1
+	_next_prompt()
+	$BottomPanel/WordInput.grab_focus()
+
+func _enemy_attack() -> void:
+	player_hp -= enemy_damage
+	$BottomPanel/ResultLabel.text += \" | Rat attacks for %d!\" % enemy_damage
+	_update_hp_displays()
+	
+	if player_hp <= 0:
+		_defeat()
+
+func _victory() -> void:
+	$BottomPanel/PromptLabel.text = \"VICTORY!\"
+	$BottomPanel/LinePreview.text = \"The %s has been defeated!\" % enemy_name
+	$BottomPanel/ResultLabel.text = \"The Bard shall sing of this triumph!\"
+	$BottomPanel/WordInput.visible = false
+	$BottomPanel/SubmitButton.visible = false
+	$VictoryPanel.visible = true
+
+func _defeat() -> void:
+	$BottomPanel/PromptLabel.text = \"DEFEAT...\"
+	$BottomPanel/LinePreview.text = \"The hero has fallen...\"
+	$BottomPanel/WordInput.visible = false
+	$BottomPanel/SubmitButton.visible = false
+	$DefeatPanel.visible = true
+
+func _update_story_display() -> void:
+	var story_text = \"~ The Bard's Tale ~\\n\"
+	for line in story_lines:
+		story_text += line + \"\\n\"
+	$StoryPanel/StoryText.text = story_text
+
+func _on_continue_button_pressed() -> void:
+	get_tree().change_scene_to_file(\"res://Main_Menu.tscn\")
+
+func _on_retry_button_pressed() -> void:
+	get_tree().reload_current_scene()
+"
+
+[node name="Battle" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_battle")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 480.0
+offset_bottom = 270.0
+color = Color(0.12, 0.1, 0.1, 1)
+
+[node name="PlayerPanel" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 140.0
+offset_bottom = 80.0
+
+[node name="PlayerName" type="Label" parent="PlayerPanel"]
+layout_mode = 0
+offset_right = 132.0
+offset_bottom = 18.0
+text = "Hero"
+
+[node name="PlayerHP" type="Label" parent="PlayerPanel"]
+layout_mode = 0
+offset_top = 18.0
+offset_right = 132.0
+offset_bottom = 34.0
+text = "HP: 100/100"
+
+[node name="PlayerHPBar" type="ProgressBar" parent="PlayerPanel"]
+layout_mode = 0
+offset_top = 36.0
+offset_right = 132.0
+offset_bottom = 48.0
+value = 100.0
+show_percentage = false
+
+[node name="LettersLabel" type="Label" parent="PlayerPanel"]
+layout_mode = 0
+offset_top = 52.0
+offset_right = 132.0
+offset_bottom = 68.0
+theme_override_font_sizes/font_size = 10
+text = "Letters: A, E, S, T"
+
+[node name="EnemyPanel" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 340.0
+offset_top = 8.0
+offset_right = 472.0
+offset_bottom = 100.0
+
+[node name="EnemyName" type="Label" parent="EnemyPanel"]
+layout_mode = 0
+offset_right = 132.0
+offset_bottom = 18.0
+text = "Rat"
+horizontal_alignment = 2
+
+[node name="EnemyHP" type="Label" parent="EnemyPanel"]
+layout_mode = 0
+offset_top = 18.0
+offset_right = 132.0
+offset_bottom = 34.0
+text = "HP: 30/30"
+horizontal_alignment = 2
+
+[node name="EnemyHPBar" type="ProgressBar" parent="EnemyPanel"]
+layout_mode = 0
+offset_top = 36.0
+offset_right = 132.0
+offset_bottom = 48.0
+value = 100.0
+show_percentage = false
+
+[node name="EnemySprite" type="Label" parent="EnemyPanel"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 47.0
+offset_right = 133.0
+offset_bottom = 87.0
+theme_override_font_sizes/font_size = 28
+text = "🐀"
+horizontal_alignment = 2
+
+[node name="StoryPanel" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 8.0
+offset_top = 90.0
+offset_right = 472.0
+offset_bottom = 170.0
+
+[node name="StoryBg" type="ColorRect" parent="StoryPanel"]
+layout_mode = 0
+offset_right = 464.0
+offset_bottom = 80.0
+color = Color(0.08, 0.08, 0.1, 1)
+
+[node name="StoryText" type="Label" parent="StoryPanel"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 460.0
+offset_bottom = 76.0
+text = "~ The Bard's Tale ~"
+autowrap_mode = 2
+
+[node name="BottomPanel" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 8.0
+offset_top = 178.0
+offset_right = 472.0
+offset_bottom = 262.0
+
+[node name="PanelBg" type="ColorRect" parent="BottomPanel"]
+layout_mode = 0
+offset_right = 464.0
+offset_bottom = 84.0
+color = Color(0.15, 0.12, 0.12, 1)
+
+[node name="PromptLabel" type="Label" parent="BottomPanel"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = -5.0
+offset_right = 460.0
+offset_bottom = 12.0
+theme_override_font_sizes/font_size = 12
+text = "The Bard needs a NOUN!"
+horizontal_alignment = 1
+
+[node name="LinePreview" type="Label" parent="BottomPanel"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 11.0
+offset_right = 460.0
+offset_bottom = 27.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.5, 1)
+theme_override_font_sizes/font_size = 10
+text = "The hero faced a fearsome ___!"
+horizontal_alignment = 1
+
+[node name="WordInput" type="LineEdit" parent="BottomPanel"]
+layout_mode = 0
+offset_left = 131.0
+offset_top = 31.0
+offset_right = 323.0
+offset_bottom = 62.0
+placeholder_text = "Enter a word..."
+alignment = 1
+max_length = 30
+
+[node name="SubmitButton" type="Button" parent="BottomPanel"]
+layout_mode = 0
+offset_left = 190.0
+offset_top = 60.0
+offset_right = 274.0
+offset_bottom = 80.0
+text = "Submit"
+
+[node name="ResultLabel" type="Label" parent="BottomPanel"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 1.0
+offset_right = 182.0
+offset_bottom = 21.0
+theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
+theme_override_font_sizes/font_size = 8
+text = "Type a word and press Enter!"
+
+[node name="VictoryPanel" type="Control" parent="."]
+visible = false
+anchors_preset = 0
+offset_left = 160.0
+offset_top = 100.0
+offset_right = 320.0
+offset_bottom = 170.0
+
+[node name="PanelBg" type="ColorRect" parent="VictoryPanel"]
+layout_mode = 0
+offset_right = 160.0
+offset_bottom = 70.0
+color = Color(0.1, 0.2, 0.1, 1)
+
+[node name="Label" type="Label" parent="VictoryPanel"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 8.0
+offset_right = 156.0
+offset_bottom = 28.0
+text = "VICTORY!"
+horizontal_alignment = 1
+
+[node name="ContinueButton" type="Button" parent="VictoryPanel"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 36.0
+offset_right = 120.0
+offset_bottom = 60.0
+text = "Continue"
+
+[node name="DefeatPanel" type="Control" parent="."]
+visible = false
+anchors_preset = 0
+offset_left = 160.0
+offset_top = 100.0
+offset_right = 320.0
+offset_bottom = 170.0
+
+[node name="PanelBg" type="ColorRect" parent="DefeatPanel"]
+layout_mode = 0
+offset_right = 160.0
+offset_bottom = 70.0
+color = Color(0.2, 0.1, 0.1, 1)
+
+[node name="Label" type="Label" parent="DefeatPanel"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 8.0
+offset_right = 156.0
+offset_bottom = 28.0
+text = "DEFEAT..."
+horizontal_alignment = 1
+
+[node name="RetryButton" type="Button" parent="DefeatPanel"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 36.0
+offset_right = 120.0
+offset_bottom = 60.0
+text = "Try Again"
+
+[connection signal="text_submitted" from="BottomPanel/WordInput" to="." method="_on_word_input_text_submitted"]
+[connection signal="pressed" from="BottomPanel/SubmitButton" to="." method="_on_submit_button_pressed"]
+[connection signal="pressed" from="VictoryPanel/ContinueButton" to="." method="_on_continue_button_pressed"]
+[connection signal="pressed" from="DefeatPanel/RetryButton" to="." method="_on_retry_button_pressed"]
