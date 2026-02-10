@@ -107,11 +107,7 @@
         "sky",
         "tornado",
         "cyclone",
-<<<<<<< HEAD
         "zephyr"
-=======
-        "zepher"
->>>>>>> origin/combat
       ],
       "forced_words": [
         "storm",
@@ -133,7 +129,6 @@
         "betray",
         "backstab",
         "haunt",
-<<<<<<< HEAD
         "hypnosis",
         "psychic",
         "evil",
@@ -143,13 +138,6 @@
       "forced_words": [
         "backstab",
         "sucker punch",
-=======
-        "hypnosis"
-      ],
-      "forced_words": [
-        "backstab",
-        "suckerpunch",
->>>>>>> origin/combat
         "curse",
         "scare",
         "evil"
@@ -168,12 +156,8 @@
         "justice",
         "focus",
         "honor",
-<<<<<<< HEAD
         "fairy",
         "divine"
-=======
-        "fairy"
->>>>>>> origin/combat
       ],
       "forced_words": [
         "justice",
