@@ -1,0 +1,172 @@
+{
+  "version": 1,
+  "description": "MadLibs Quest element taxonomy and demo classification config",
+
+  "elements": [
+    {
+      "id": "physical",
+      "display_name": "Physical",
+      "definition": "Punching, slashing, piercing, clobbering, smashing, or any attack made directly by a person using their body or a weapon.",
+      "semantic_hints": [
+        "punch",
+        "kick",
+        "strike",
+        "smash",
+        "chop",
+        "slash",
+        "stab",
+        "hit",
+        "volley",
+        "leap"
+      ],
+      "forced_words": [
+        "punch",
+        "kick",
+        "chop",
+        "stab",
+        "slash",
+        "slug"
+      ]
+    },
+
+    {
+      "id": "fire",
+      "display_name": "Fire",
+      "definition": "Heat, flame, burning, ash, smoke, or anything related to intense heat or combustion.",
+      "semantic_hints": [
+        "fire",
+        "flame",
+        "burn",
+        "ember",
+        "ash",
+        "heat",
+        "ignite",
+        "inferno",
+        "magma",
+        "lava"
+      ],
+      "forced_words": [
+        "heat",
+        "burn",
+        "flame",
+        "ignite"
+      ]
+    },
+
+    {
+      "id": "water",
+      "display_name": "Water",
+      "definition": "Liquid, ocean, rain, flood, steam, or forces driven by flowing or pressurized water.",
+      "semantic_hints": [
+        "water",
+        "rain",
+        "flood",
+        "torrent",
+        "wave",
+        "steam",
+        "drown",
+        "riptide"
+      ],
+      "forced_words": [
+        "torrent",
+        "flood",
+        "rain",
+        "tsunami"
+      ]
+    },
+
+    {
+      "id": "ground",
+      "display_name": "Ground",
+      "definition": "Earth, stone, soil, mud, quakes, landslides, swamps, or terrain-based destructive forces.",
+      "semantic_hints": [
+        "earth",
+        "stone",
+        "rock",
+        "mud",
+        "quake",
+        "landslide",
+        "collapse"
+      ],
+      "forced_words": [
+        "earthquake",
+        "landslide",
+        "quake"
+      ]
+    },
+
+    {
+      "id": "air",
+      "display_name": "Air",
+      "definition": "Wind, storms, gusts, pressure, and airborne or atmospheric forces.",
+      "semantic_hints": [
+        "wind",
+        "storm",
+        "gust",
+        "breeze",
+        "sky",
+        "tornado",
+        "cyclone",
+        "zepher"
+      ],
+      "forced_words": [
+        "storm",
+        "tornado",
+        "gust",
+        "gale"
+      ]
+    },
+
+    {
+      "id": "spooky",
+      "display_name": "Spooky",
+      "definition": "Ghostly, cursed, fearful, shadowy, underhanded, or dishonorable attacks and effects.",
+      "semantic_hints": [
+        "ghost",
+        "curse",
+        "shadow",
+        "fear",
+        "betray",
+        "backstab",
+        "haunt",
+        "hypnosis"
+      ],
+      "forced_words": [
+        "backstab",
+        "suckerpunch",
+        "curse",
+        "scare",
+        "evil"
+      ]
+    },
+
+    {
+      "id": "gleaming",
+      "display_name": "Gleaming",
+      "definition": "Light, radiant, holy, just, honorable, or morally righteous power.",
+      "semantic_hints": [
+        "light",
+        "radiant",
+        "shine",
+        "holy",
+        "justice",
+        "focus",
+        "honor",
+        "fairy"
+      ],
+      "forced_words": [
+        "justice",
+        "focus",
+        "honor",
+        "judge"
+      ]
+    }
+  ],
+
+  "classification_settings": {
+    "fallback_element": "physical",
+    "confidence_threshold": 0.32,
+    "normalize_input": true,
+    "allow_manual_overrides": true
+  }
+}
