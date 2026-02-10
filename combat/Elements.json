@@ -107,7 +107,7 @@
         "sky",
         "tornado",
         "cyclone",
-        "zepher"
+        "zephyr"
       ],
       "forced_words": [
         "storm",
@@ -129,11 +129,15 @@
         "betray",
         "backstab",
         "haunt",
-        "hypnosis"
+        "hypnosis",
+        "psychic",
+        "evil",
+        "malice",
+        "gloom"
       ],
       "forced_words": [
         "backstab",
-        "suckerpunch",
+        "sucker punch",
         "curse",
         "scare",
         "evil"
@@ -152,7 +156,8 @@
         "justice",
         "focus",
         "honor",
-        "fairy"
+        "fairy",
+        "divine"
       ],
       "forced_words": [
         "justice",

@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "description": "MadLibs Quest status/buff move registry",
+
+  "debuff_moves": [
+    {
+      "id": "weaken",
+      "display_name": "Weaken",
+      "kind": "debuff",
+      "description": "Reduce enemy damage output for a short time.",
+      "synonyms": ["weaken", "cripple", "diminish", "sunder", "ruin"],
+      "effect": {
+        "type": "enemy_damage_mult",
+        "value": 0.85
+      },
+      "duration_turns": 3,
+      "stacking": {
+        "mode": "refresh",
+        "max_stacks": 1
+      },
+      "tags": ["debuff", "offense"]
+    },
+    {
+      "id": "sunder_armor",
+      "display_name": "Sunder Armor",
+      "kind": "debuff",
+      "description": "Reduce enemy armor (armor strip).",
+      "synonyms": ["sunder", "rend", "crack", "shatter", "expose"],
+      "effect": {
+        "type": "armor_strip_pct",
+        "value": 0.30
+      },
+      "duration_turns": 3,
+      "stacking": {
+        "mode": "additive_cap",
+        "max_stacks": 3,
+        "cap_value": 0.80
+      },
+      "tags": ["debuff", "defense"]
+    }
+  ],
+  "classification_settings": {
+    "normalize_input": true,
+    "match_mode": "exact_or_contains",
+    "priority_over_elements": true
+  }
+}

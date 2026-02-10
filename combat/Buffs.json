@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "description": "MadLibs Quest status/buff move registry",
+
+  "status_moves": [
+    {
+      "id": "focus",
+      "display_name": "Focus",
+      "kind": "buff",
+      "description": "Improve reliability and/or critical potential for the next attack.",
+      "synonyms": ["focus", "aim", "steady", "concentrate", "discipline"],
+      "effect": {
+        "type": "crit_chance_add",
+        "value": 0.15
+      },
+      "duration_turns": 3,
+      "stacking": {
+        "mode": "refresh",
+        "max_stacks": 1
+      }
+    },
+    {
+      "id": "guard",
+      "display_name": "Guard",
+      "kind": "buff",
+      "description": "Reduce damage taken for a short time.",
+      "synonyms": ["guard", "block", "brace", "defend", "shield"],
+      "effect": {
+        "type": "damage_reduction_pct",
+        "value": 0.20
+      },
+      "duration_turns": 1,
+      "stacking": {
+        "mode": "refresh",
+        "max_stacks": 1
+      }
+    },
+    {
+      "id": "Growth",
+      "display_name": "Growth",
+      "kind": "buff",
+      "description": "Increases Max Health untill the end of the battle",
+      "synonyms": ["fat", "big", "growing", "massive", "huge"],
+      "effect": {
+        "type": "flat_health_increase",
+        "value": 10
+      },
+      "duration_turns": 999,
+      "stacking": {
+        "mode": "refresh",
+        "max_stacks": "Permanent"
+      }
+    }
+  ],
+  "classification_settings": {
+    "normalize_input": true,
+    "match_mode": "exact_or_contains",
+    "priority_over_elements": true
+  }
+}
