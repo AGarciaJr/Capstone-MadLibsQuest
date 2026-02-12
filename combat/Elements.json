@@ -86,7 +86,9 @@
         "mud",
         "quake",
         "landslide",
-        "collapse"
+        "collapse",
+        "chemicals",
+        "acid"
       ],
       "forced_words": [
         "earthquake",
