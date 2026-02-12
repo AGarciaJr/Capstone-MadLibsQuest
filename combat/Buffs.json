@@ -1,7 +1,4 @@
 {
-  "version": 1,
-  "description": "MadLibs Quest status/buff move registry",
-
   "status_moves": [
     {
       "id": "focus",
@@ -47,8 +44,8 @@
       },
       "duration_turns": 999,
       "stacking": {
-        "mode": "refresh",
-        "max_stacks": "Permanent"
+        "mode": "additive_cap",
+        "max_stacks": 999
       }
     }
   ],

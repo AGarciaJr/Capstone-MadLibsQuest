@@ -1,0 +1,22 @@
+{
+  "items": [
+    {
+      "id": "XYZ_Boost",
+      "display_name": "Charm of XYZ",
+      "description": "Boosts damage of moves containing X, Y, and or Z",
+      "effect": {
+        "type": "player_damage_boost",
+        "value": 3
+      }
+    },
+    {
+        "id": "ABC_Boost",
+        "display_name": "Charm of ABC",
+        "description": "Boosts damage of moves containing X, Y, and or Z",
+        "effect": {
+            "type": "player_damage_boost",
+            "value": 3
+        }
+    }
+  ]
+}

@@ -21,6 +21,39 @@
       "tags": ["debuff", "offense"]
     },
     {
+      "id": "strike",
+      "display_name": "Strike",
+      "kind": "debuff",
+      "description": "Second physical hit is applied",
+      "effect": {
+        "type": "multi_hit",
+        "value": 0.85
+      },
+      "duration_turns": 1,
+      "stacking": {
+        "mode": "refresh",
+        "max_stacks": 1
+      },
+      "tags": ["debuff", "offense"]
+    },
+    {
+      "id": "freeze",
+      "display_name": "Frozen",
+      "kind": "debuff",
+      "description": "Skips the enemies turn",
+      "synonyms": "NA",
+      "effect": {
+        "type": "skip a turn",
+        "value": 1
+      },
+      "duration_turns": 1,
+      "stacking": {
+        "mode": "refresh",
+        "max_stacks": 1
+      },
+      "tags": ["debuff", "offense"]
+    },
+    {
       "id": "sunder_armor",
       "display_name": "Sunder Armor",
       "kind": "debuff",
