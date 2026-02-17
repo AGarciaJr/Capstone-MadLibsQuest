@@ -43,7 +43,14 @@
         "ignite",
         "inferno",
         "magma",
-        "lava"
+        "lava",
+        "anger",
+        "hate",
+        "enrage",
+        "rage",
+        "expload",
+        "nuclear",
+        "fury"
       ],
       "forced_words": [
         "heat",
@@ -124,7 +131,10 @@
         "joy",
         "joyfull",
         "happy",
-        "smile"
+        "smile",
+        "bird",
+        "flapping",
+        "wings"
       ],
       "forced_words": [
         "storm",
