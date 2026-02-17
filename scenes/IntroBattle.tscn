@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://b2sll4r51y6ue"]
+[gd_scene format=3 uid="uid://b2sll4r51y6ue"]
 
 [sub_resource type="GDScript" id="GDScript_battle"]
 script/source = "extends Control
@@ -24,6 +24,18 @@ var current_prompt_index: int = 0
 var story_lines: Array[String] = []
 
 func _ready() -> void:
+	print(\"[Battle] === BATTLE SCENE READY ===\")
+	print(\"[Battle] Checking for WordNet autoload...\")
+	
+	var wordnet = get_node_or_null(\"/root/WordNet\")
+	if wordnet:
+		print(\"[Battle] WordNet FOUND!\")
+		if wordnet.get(\"IsReady\") != null:
+			print(\"[Battle] WordNet.IsReady = \", wordnet.IsReady)
+	else:
+		print(\"[Battle] WordNet NOT FOUND - C# may not have built correctly\")
+		print(\"[Battle] Root children: \", get_tree().root.get_children().map(func(n): return n.name))
+	
 	if GameData.player_name != \"\":
 		player_name = GameData.player_name
 	if GameData.player_letters.size() > 0:
@@ -70,6 +82,35 @@ func _on_submit_button_pressed() -> void:
 	_process_word(word)
 
 func _process_word(word: String) -> void:
+	var expected_pos: String = current_prompt[\"type\"]
+	
+	# Debug: Check WordNet validation
+	print(\"[Battle] Processing word: '%s', expecting: %s\" % [word, expected_pos])
+	
+	var wordnet = get_node_or_null(\"/root/WordNet\")
+	if wordnet == null:
+		print(\"[Battle] WARNING: WordNet autoload not found at /root/WordNet\")
+		print(\"[Battle] Available autoloads: \", get_tree().root.get_children().map(func(n): return n.name))
+	else:
+		print(\"[Battle] WordNet found! Checking methods...\")
+		print(\"[Battle] Has ValidatePos: \", wordnet.has_method(\"ValidatePos\"))
+		print(\"[Battle] Has GetPosHint: \", wordnet.has_method(\"GetPosHint\"))
+		
+		if wordnet.has_method(\"ValidatePos\"):
+			var is_valid: bool = wordnet.ValidatePos(word, expected_pos)
+			print(\"[Battle] Validation result for '%s' as %s: %s\" % [word, expected_pos, is_valid])
+			
+			if not is_valid:
+				var hint: String = \"\"
+				if wordnet.has_method(\"GetPosHint\"):
+					hint = wordnet.GetPosHint(word, expected_pos)
+					print(\"[Battle] Hint: \", hint)
+				$BottomPanel/ResultLabel.text = \"Woah! That's not a %s! %s\" % [expected_pos, hint]
+				$BottomPanel/WordInput.grab_focus()
+				return
+		else:
+			print(\"[Battle] ValidatePos method not available\")
+	
 	var matched_letters: Array[String] = []
 	var word_upper = word.to_upper()
 	for letter in player_letters:
