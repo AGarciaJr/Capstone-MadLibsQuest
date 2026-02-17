@@ -95,7 +95,11 @@
         "garbage",
         "chemicals",
         "elemental",
-        "chemistry"
+        "chemistry",
+        "digging",
+        "climbing",
+        "land",
+        "continent"
       ],
       "forced_words": [
         "earthquake",
@@ -160,7 +164,9 @@
         "ghosts",
         "supernatural",
         "criminal",
-        "murder"
+        "murder",
+        "unknown",
+        "awe"
       ],
       "forced_words": [
         "backstab",
@@ -195,7 +201,11 @@
         "angellic",
         "perfection",
         "holy",
-        "recover"
+        "recover",
+        "draconic",
+        "awesome",
+        "awe",
+        "love"
       ],
       "forced_words": [
         "justice",
