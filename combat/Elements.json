@@ -32,7 +32,7 @@
     {
       "id": "fire",
       "display_name": "Fire",
-      "definition": "Heat, flame, burning, ash, smoke, or anything related to intense heat or combustion.",
+      "definition": "Heat, flame, burning, ash, smoke, anger,or anything related to intense heat or combustion also relates to the emotion of anger.",
       "semantic_hints": [
         "fire",
         "flame",
@@ -56,7 +56,7 @@
     {
       "id": "water",
       "display_name": "Water",
-      "definition": "Liquid, ocean, rain, flood, steam, or forces driven by flowing or pressurized water.",
+      "definition": "Liquid, ocean, rain, flood, steam, sad, sadness, or forces driven by flowing or pressurized water also the emotion of sadness.",
       "semantic_hints": [
         "water",
         "rain",
@@ -65,7 +65,9 @@
         "wave",
         "steam",
         "drown",
-        "riptide"
+        "riptide",
+        "crying",
+        "somber"
       ],
       "forced_words": [
         "torrent",
@@ -78,7 +80,7 @@
     {
       "id": "ground",
       "display_name": "Ground",
-      "definition": "Earth, stone, soil, mud, quakes, landslides, swamps, or terrain-based destructive forces.",
+      "definition": "Earth, stone, soil, mud, quakes, landslides, swamps, or terrain-based destructive forces also relates to the emotion of disgust.",
       "semantic_hints": [
         "earth",
         "stone",
@@ -88,7 +90,12 @@
         "landslide",
         "collapse",
         "chemicals",
-        "acid"
+        "acid",
+        "disgusting",
+        "garbage",
+        "chemicals",
+        "elemental",
+        "chemistry"
       ],
       "forced_words": [
         "earthquake",
@@ -100,7 +107,7 @@
     {
       "id": "air",
       "display_name": "Air",
-      "definition": "Wind, storms, gusts, pressure, and airborne or atmospheric forces.",
+      "definition": "Wind, storms, gusts, pressure, joy, joyfull, and airborne or atmospheric forces or anything related to the emotion of joy.",
       "semantic_hints": [
         "wind",
         "storm",
@@ -109,7 +116,11 @@
         "sky",
         "tornado",
         "cyclone",
-        "zephyr"
+        "zephyr",
+        "joy",
+        "joyfull",
+        "happy",
+        "smile"
       ],
       "forced_words": [
         "storm",
@@ -122,7 +133,7 @@
     {
       "id": "spooky",
       "display_name": "Spooky",
-      "definition": "Ghostly, cursed, fearful, shadowy, underhanded, or dishonorable attacks and effects.",
+      "definition": "Ghostly, cursed, fearful, shadowy, underhanded, fear, or dishonorable attacks and effects also anything relating to the emotion of fear",
       "semantic_hints": [
         "ghost",
         "curse",
@@ -135,14 +146,29 @@
         "psychic",
         "evil",
         "malice",
-        "gloom"
+        "gloom",
+        "afraid",
+        "scare",
+        "spider",
+        "bugs",
+        "taxes",
+        "bills",
+        "trouble",
+        "despair",
+        "darkness",
+        "dark",
+        "ghosts",
+        "supernatural",
+        "criminal",
+        "murder"
       ],
       "forced_words": [
         "backstab",
         "sucker punch",
         "curse",
         "scare",
-        "evil"
+        "evil",
+        "fear"
       ]
     },
 
@@ -159,20 +185,31 @@
         "focus",
         "honor",
         "fairy",
-        "divine"
+        "divine",
+        "saviour",
+        "helper",
+        "helpful",
+        "sacrifice",
+        "smite",
+        "godly",
+        "angellic",
+        "perfection",
+        "holy",
+        "recover"
       ],
       "forced_words": [
         "justice",
         "focus",
         "honor",
-        "judge"
+        "judge",
+        "smite"
       ]
     }
   ],
 
   "classification_settings": {
     "fallback_element": "physical",
-    "confidence_threshold": 0.32,
+    "confidence_threshold": 0.15,
     "normalize_input": true,
     "allow_manual_overrides": true
   }
