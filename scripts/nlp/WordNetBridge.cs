@@ -28,29 +28,43 @@ public partial class WordNetBridge : Node
 		GD.Print("===========================================");
 		GD.Print("[WordNetBridge] C# AUTOLOAD STARTING...");
 		GD.Print("===========================================");
-		
+
 		_wordNetService = new WordNetService();
-		
-		// Convert Godot path to absolute system path
+
 		var absolutePath = ProjectSettings.GlobalizePath(WordNetDictPath);
-		
-		GD.Print($"[WordNetBridge] Godot path: {WordNetDictPath}");
-		GD.Print($"[WordNetBridge] Absolute path: {absolutePath}");
-		GD.Print($"[WordNetBridge] Directory exists: {System.IO.Directory.Exists(absolutePath)}");
-		
+
 		if (_wordNetService.Initialize(absolutePath))
 		{
 			GD.Print("[WordNetBridge] WordNet initialized successfully!");
 			GD.Print($"[WordNetBridge] IsReady = {IsReady}");
+			GD.Print($"[WordNetBridge] SynsetsReady = {SynsetsReady()}");
+
+			// ---- TEMP TEST BLOCK ----
+			if (SynsetsReady())
+			{
+				GD.Print("---- TESTING SYNSETS ----");
+
+				var synsets = _wordNetService.GetSynsets("torrent", 'n');
+
+				GD.Print($"Synset count: {synsets.Count}");
+
+				foreach (var s in synsets)
+				{
+					GD.Print($"Words: {string.Join(", ", s.Words)}");
+					GD.Print($"Gloss: {s.Gloss}");
+				}
+
+				GD.Print("---- END TEST ----");
+			}
 		}
 		else
 		{
-			GD.PrintErr($"[WordNetBridge] Failed to initialize WordNet. Make sure the dictionary exists at: {WordNetDictPath}");
-			GD.PrintErr("[WordNetBridge] Download WordNet from: https://wordnet.princeton.edu/download");
+			GD.PrintErr("[WordNetBridge] Failed to initialize WordNet.");
 		}
-		
+
 		GD.Print("===========================================");
 	}
+
 	
 	/// <summary>
 	/// Validates if a word matches the expected part of speech.
@@ -144,12 +158,139 @@ public partial class WordNetBridge : Node
 	}
 	
 	/// <summary>
-	/// Helper to get "a" or "an" for a word.
+	/// True if synset lookup is available.
+	/// Call from GDScript: WordNet.synsets_ready()
 	/// </summary>
+	public bool SynsetsReady()
+	{
+		return _wordNetService?.SynsetsReady ?? false;
+	}
+
+	/// <summary>
+	/// Returns all unique synset words (synonyms/collocations) for a word+POS.
+	/// POS can be "noun"/"verb"/"adjective"/"adverb" OR "n"/"v"/"a"/"r".
+	/// Call from GDScript: WordNet.get_synset_words("torrent","noun")
+	/// </summary>
+	public string[] GetSynsetWords(string word, string pos)
+	{
+		if (_wordNetService == null || !_wordNetService.IsInitialized || !_wordNetService.SynsetsReady)
+			return Array.Empty<string>();
+
+		var p = ResolvePosChar(pos);
+		if (p == '\0') return Array.Empty<string>();
+
+		var synsets = _wordNetService.GetSynsets(word, p);
+		return synsets
+			.SelectMany(s => s.Words)
+			.Where(w => !string.IsNullOrWhiteSpace(w))
+			.Distinct(StringComparer.OrdinalIgnoreCase)
+			.ToArray();
+	}
+
+	/// <summary>
+	/// Returns all synset glosses (definitions) for a word+POS.
+	/// Call from GDScript: WordNet.get_synset_glosses("torrent","noun")
+	/// </summary>
+	public string[] GetSynsetGlosses(string word, string pos)
+	{
+		if (_wordNetService == null || !_wordNetService.IsInitialized || !_wordNetService.SynsetsReady)
+			return Array.Empty<string>();
+
+		var p = ResolvePosChar(pos);
+		if (p == '\0') return Array.Empty<string>();
+
+		var synsets = _wordNetService.GetSynsets(word, p);
+		return synsets
+			.Select(s => s.Gloss ?? "")
+			.Where(g => !string.IsNullOrWhiteSpace(g))
+			.Distinct(StringComparer.OrdinalIgnoreCase)
+			.ToArray();
+	}
+
+	/// <summary>
+	/// Returns a semantic bag (synonyms + gloss tokens) for element scoring.
+	/// Call from GDScript: WordNet.get_semantic_bag("torrent","noun")
+	/// </summary>
+	public string[] GetSemanticBag(string word, string pos)
+	{
+		if (_wordNetService == null || !_wordNetService.IsInitialized || !_wordNetService.SynsetsReady)
+			return Array.Empty<string>();
+
+		var p = ResolvePosChar(pos);
+		if (p == '\0') return Array.Empty<string>();
+
+		var bag = _wordNetService.GetSemanticBag(word, p);
+		return bag
+			.Where(t => !string.IsNullOrWhiteSpace(t))
+			.Distinct(StringComparer.OrdinalIgnoreCase)
+			.ToArray();
+	}
+
+	/// <summary>
+	/// Debug helper: prints synset details to the Godot console.
+	/// Call from GDScript: WordNet.debug_print_synsets("torrent","noun")
+	/// </summary>
+	public void DebugPrintSynsets(string word, string pos)
+	{
+		if (_wordNetService == null || !_wordNetService.IsInitialized || !_wordNetService.SynsetsReady)
+		{
+			GD.PrintErr("[WordNetBridge] Synsets not ready.");
+			return;
+		}
+
+		var p = ResolvePosChar(pos);
+		if (p == '\0')
+		{
+			GD.PrintErr($"[WordNetBridge] Unknown POS for synsets: '{pos}'");
+			return;
+		}
+
+		var synsets = _wordNetService.GetSynsets(word, p);
+		GD.Print($"[WordNetBridge] Synsets for '{word}' ({p}) -> {synsets.Count}");
+
+		for (var i = 0; i < synsets.Count; i++)
+		{
+			var s = synsets[i];
+			GD.Print($"  [{i}] Offset={s.Offset} SsType={s.SsType}");
+			GD.Print($"      Words: {string.Join(", ", s.Words)}");
+			GD.Print($"      Gloss: {s.Gloss}");
+			if (s.Pointers != null && s.Pointers.Count > 0)
+			{
+				// Keep it short; pointers can be numerous
+				var sample = s.Pointers.Take(6)
+					.Select(pt => $"{pt.Symbol}->{pt.TargetOffset}({pt.TargetPos})");
+				GD.Print($"      Pointers(sample): {string.Join(", ", sample)}");
+			}
+		}
+	}
+
+	// -------------------------
+	// Helpers
+	// -------------------------
+
 	private static string GetArticle(string word)
 	{
 		if (string.IsNullOrEmpty(word)) return "a";
 		char first = char.ToLower(word[0]);
 		return first is 'a' or 'e' or 'i' or 'o' or 'u' ? "an" : "a";
+	}
+
+	/// <summary>
+	/// Accepts "noun"/"verb"/"adjective"/"adverb" or "n"/"v"/"a"/"r".
+	/// Returns '\0' if unknown.
+	/// </summary>
+	private static char ResolvePosChar(string pos)
+	{
+		if (string.IsNullOrWhiteSpace(pos)) return '\0';
+		pos = pos.Trim().ToLowerInvariant();
+
+		return pos switch
+		{
+			"n" or "noun" => 'n',
+			"v" or "verb" => 'v',
+			"a" or "adj" or "adjective" => 'a',
+			"r" or "adv" or "adverb" => 'r',
+			_ => '\0'
+		};
 	}
 }
