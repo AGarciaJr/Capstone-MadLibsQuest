@@ -1,0 +1,236 @@
+{
+  "version": 1,
+  "description": "MadLibs Quest element taxonomy and demo classification config",
+
+  "elements": [
+    {
+      "id": "physical",
+      "display_name": "Physical",
+      "definition": "Punching, slashing, piercing, clobbering, smashing, or any attack made directly by a person using their body or a weapon.",
+      "semantic_hints": [
+        "punch",
+        "kick",
+        "strike",
+        "smash",
+        "chop",
+        "slash",
+        "stab",
+        "hit",
+        "volley",
+        "leap"
+      ],
+      "forced_words": [
+        "punch",
+        "kick",
+        "chop",
+        "stab",
+        "slash",
+        "slug"
+      ]
+    },
+
+    {
+      "id": "fire",
+      "display_name": "Fire",
+      "definition": "Heat, flame, burning, ash, smoke, anger,or anything related to intense heat or combustion also relates to the emotion of anger.",
+      "semantic_hints": [
+        "fire",
+        "flame",
+        "burn",
+        "ember",
+        "ash",
+        "heat",
+        "ignite",
+        "inferno",
+        "magma",
+        "lava",
+        "anger",
+        "hate",
+        "enrage",
+        "rage",
+        "expload",
+        "nuclear",
+        "fury"
+      ],
+      "forced_words": [
+        "heat",
+        "burn",
+        "flame",
+        "ignite"
+      ]
+    },
+
+    {
+      "id": "water",
+      "display_name": "Water",
+      "definition": "Liquid, ocean, rain, flood, steam, sad, sadness, or forces driven by flowing or pressurized water also the emotion of sadness.",
+      "semantic_hints": [
+        "water",
+        "rain",
+        "flood",
+        "torrent",
+        "wave",
+        "steam",
+        "drown",
+        "riptide",
+        "crying",
+        "somber"
+      ],
+      "forced_words": [
+        "torrent",
+        "flood",
+        "rain",
+        "tsunami"
+      ]
+    },
+
+    {
+      "id": "ground",
+      "display_name": "Ground",
+      "definition": "Earth, stone, soil, mud, quakes, landslides, swamps, or terrain-based destructive forces also relates to the emotion of disgust.",
+      "semantic_hints": [
+        "earth",
+        "stone",
+        "rock",
+        "mud",
+        "quake",
+        "landslide",
+        "collapse",
+        "chemicals",
+        "acid",
+        "disgusting",
+        "garbage",
+        "chemicals",
+        "elemental",
+        "chemistry",
+        "digging",
+        "climbing",
+        "land",
+        "continent"
+      ],
+      "forced_words": [
+        "earthquake",
+        "landslide",
+        "quake"
+      ]
+    },
+
+    {
+      "id": "air",
+      "display_name": "Air",
+      "definition": "Wind, storms, gusts, pressure, joy, joyfull, and airborne or atmospheric forces or anything related to the emotion of joy.",
+      "semantic_hints": [
+        "wind",
+        "storm",
+        "gust",
+        "breeze",
+        "sky",
+        "tornado",
+        "cyclone",
+        "zephyr",
+        "joy",
+        "joyfull",
+        "happy",
+        "smile",
+        "bird",
+        "flapping",
+        "wings"
+      ],
+      "forced_words": [
+        "storm",
+        "tornado",
+        "gust",
+        "gale"
+      ]
+    },
+
+    {
+      "id": "spooky",
+      "display_name": "Spooky",
+      "definition": "Ghostly, cursed, fearful, shadowy, underhanded, fear, or dishonorable attacks and effects also anything relating to the emotion of fear",
+      "semantic_hints": [
+        "ghost",
+        "curse",
+        "shadow",
+        "fear",
+        "betray",
+        "backstab",
+        "haunt",
+        "hypnosis",
+        "psychic",
+        "evil",
+        "malice",
+        "gloom",
+        "afraid",
+        "scare",
+        "spider",
+        "bugs",
+        "taxes",
+        "bills",
+        "trouble",
+        "despair",
+        "darkness",
+        "dark",
+        "ghosts",
+        "supernatural",
+        "criminal",
+        "murder",
+        "unknown",
+        "awe"
+      ],
+      "forced_words": [
+        "backstab",
+        "sucker punch",
+        "curse",
+        "scare",
+        "evil",
+        "fear"
+      ]
+    },
+
+    {
+      "id": "gleaming",
+      "display_name": "Gleaming",
+      "definition": "Light, radiant, holy, just, honorable, or morally righteous power.",
+      "semantic_hints": [
+        "light",
+        "radiant",
+        "shine",
+        "holy",
+        "justice",
+        "focus",
+        "honor",
+        "fairy",
+        "divine",
+        "saviour",
+        "helper",
+        "helpful",
+        "sacrifice",
+        "smite",
+        "godly",
+        "angellic",
+        "perfection",
+        "holy",
+        "recover",
+        "draconic",
+        "awesome",
+        "awe",
+        "love"
+      ],
+      "forced_words": [
+        "justice",
+        "focus",
+        "honor",
+        "judge",
+        "smite"
+      ]
+    }
+  ],
+
+  "classification_settings": {
+    "fallback_element": "physical",
+    "confidence_threshold": 0.15,
+    "normalize_input": true,
+    "allow_manual_overrides": true
+  }
+}
