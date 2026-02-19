@@ -1,6 +1,6 @@
-[gd_scene format=4 uid="uid://dwvhd1vv8604u"]
+[gd_scene format=4 uid="uid://wtem35ok2k3g"]
 
-[ext_resource type="TileSet" uid="uid://85aurtxodlqo" path="res://assets/Art/Envoirnment/Tilesets/Enviornment tilesets/Sprout Lands.tres" id="1_um014"]
+[ext_resource type="TileSet" uid="uid://85aurtxodlqo" path="res://Art/Envoirnment/Tilesets/Enviornment tilesets/Sprout Lands.tres" id="1_um014"]
 
 [node name="Node2D" type="Node2D" unique_id=1031630712]
 

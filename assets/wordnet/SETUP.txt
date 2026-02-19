@@ -9,15 +9,15 @@ QUICK SETUP:
    
    assets/wordnet/
    └── dict/
-       ├── data.adj
-       ├── data.adv  
-       ├── data.noun
-       ├── data.verb
-       ├── index.adj
-       ├── index.adv
-       ├── index.noun
-       ├── index.verb
-       └── (other files...)
+	   ├── data.adj
+	   ├── data.adv  
+	   ├── data.noun
+	   ├── data.verb
+	   ├── index.adj
+	   ├── index.adv
+	   ├── index.noun
+	   ├── index.verb
+	   └── (other files...)
 
 MACOS USERS:
 If you have Homebrew:
