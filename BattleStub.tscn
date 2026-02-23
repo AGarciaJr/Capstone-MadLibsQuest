@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://pfl2pwsjocq5"]
+
+[ext_resource type="Script" uid="uid://c62o5gm0n8ri1" path="res://battle_stub.gd" id="1_lh1pn"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_lh1pn")
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "BATTLE STUB - Press Esc to Return"

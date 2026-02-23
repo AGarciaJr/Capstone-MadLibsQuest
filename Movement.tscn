@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=4 uid="uid://cckosd6u26y46"]
+[gd_scene load_steps=22 format=4 uid="uid://cckosd6u26y46"]
 
 [ext_resource type="Script" uid="uid://cfcetvppgxrxa" path="res://Overworld.gd" id="1_23xw5"]
 [ext_resource type="Texture2D" uid="uid://cfgu1ckfucop0" path="res://16X16.png" id="1_vcyby"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://cx8pvkrtp0m51" path="res://ProgressManager.gd" id="5_ar6wn"]
 [ext_resource type="Script" uid="uid://dmr2yk1uae30f" path="res://InteractionManager.gd" id="6_da0ye"]
 [ext_resource type="Script" uid="uid://q6sxydg2f7e5" path="res://KeyPickup.gd" id="7_jtn5j"]
+[ext_resource type="PackedScene" uid="uid://luaa1sn0h88v" path="res://EncounterActor.tscn" id="8_da0ye"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_6ljl2"]
 texture = ExtResource("1_vcyby")
@@ -316,12 +317,11 @@ position = Vector2(3.5000062, 4.000003)
 scale = Vector2(70.99997, 155.99998)
 texture = SubResource("PlaceholderTexture2D_hcjoj")
 
-[node name="GateInteractable" type="Area2D" parent="." node_paths=PackedStringArray("blocker", "progress") groups=["interactables"]]
+[node name="GateInteractable" type="Area2D" parent="." node_paths=PackedStringArray("blocker") groups=["interactables"]]
 position = Vector2(361, 382)
 collision_layer = 8
 script = ExtResource("4_hcjoj")
 blocker = NodePath("../GateBlocker")
-progress = NodePath("../Progress")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GateInteractable"]
 position = Vector2(-2, 2)
@@ -342,11 +342,10 @@ script = ExtResource("5_ar6wn")
 script = ExtResource("6_da0ye")
 prompt_label = NodePath("../CanvasLayer/PlayerPrompt")
 
-[node name="KeyPickup" type="Area2D" parent="." node_paths=PackedStringArray("progress") groups=["interactables"]]
+[node name="KeyPickup" type="Area2D" parent="." groups=["interactables"]]
 position = Vector2(-214, 407)
 script = ExtResource("7_jtn5j")
 key_id = "first_gate_key"
-progress = NodePath("../Progress")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="KeyPickup"]
 position = Vector2(2, 4.5)
@@ -356,3 +355,8 @@ shape = SubResource("RectangleShape2D_bm5um")
 position = Vector2(2.000002, 6)
 scale = Vector2(41.000004, 48.249992)
 texture = SubResource("PlaceholderTexture2D_ar6wn")
+
+[node name="EncounterActor" parent="." node_paths=PackedStringArray("overworld", "player") instance=ExtResource("8_da0ye")]
+position = Vector2(304, 66)
+overworld = NodePath("..")
+player = NodePath("../Player")

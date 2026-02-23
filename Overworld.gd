@@ -6,6 +6,9 @@ class_name Overworld
 
 var paused := false
 
+func _ready() -> void:
+	EncounterSceneTransition.apply_return_state(self)
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and not event.is_echo():
 		paused = !paused
