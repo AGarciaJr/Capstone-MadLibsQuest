@@ -3,6 +3,7 @@ extends Control
 @export var enforce_letter_rule: bool = true
 @export var require_all_letters: bool = false
 
+# TODO: these need to be moved into a json with the rest of the player and enemy data
 @export var enemy_max_hp: int = 30
 @export var player_max_hp: int = 100
 
@@ -29,7 +30,6 @@ var collected_words: Array[String] = []
 var player_stats := {"atk": 10, "crit_chance": 0.10, "crit_mult": 1.5, "def": 0, "armor": 0}
 var enemy_stats := {"atk": 6, "crit_chance": 0.05, "crit_mult": 1.4, "def": 2, "armor": 10}
 
-# Moves (these replace your old fixed damage numbers)
 # On correct word: player "attacks" enemy
 var player_move := {
 	"base_damage": 5,     
@@ -37,10 +37,12 @@ var player_move := {
 	"coefficient": 1.2, 
 	"accuracy": 1.0
 }
+
+# TODO: this is temp please change me enemies should always attack regardless if the player is correct or not 
 # On invalid word: enemy "punishes" player
 var enemy_move := {
 	"base_damage": 4,
-	"scaling": 0.6,
+	"scaling": 0.4,
 	"coefficient": 1.0,
 	"accuracy": 1.0
 }
@@ -163,9 +165,19 @@ func _submit_word(raw: String) -> void:
 	# Accept word
 	collected_words.append(word)
 	blank_index += 1
+	
+	var S: float = WordFreq.get_scaling_S(word)
 
+	# TODO: this and all other moves need to be moved to a json later 
+	var move := {
+		"base_damage": 5,      
+		"scaling": S,         
+		"coefficient": 1.2,    
+		"accuracy": 1.0
+	}
+	print("Word Freq Scaling: ", S)
 	# Combat: player attacks enemy (MOVED OUT of scene math)
-	var outcome := CombatEngine.compute_attack(player_stats, enemy_stats, player_move, rng)
+	var outcome := CombatEngine.compute_attack(player_stats, enemy_stats, move, rng)
 	print("PLAYER ATTACK -> ", outcome)
 	
 	enemy_hp = CombatEngine.apply_damage(enemy_hp, int(outcome.damage))
