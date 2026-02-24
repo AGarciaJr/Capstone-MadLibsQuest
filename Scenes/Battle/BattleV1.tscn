@@ -39,10 +39,10 @@ show_percentage = false
 
 [node name="EnemySprite" type="Label" parent="EnemyPanel" unique_id=1827132041]
 layout_mode = 0
-offset_left = 1.0
-offset_top = 47.0
-offset_right = 133.0
-offset_bottom = 87.0
+offset_left = -221.0
+offset_top = 97.0
+offset_right = -80.0
+offset_bottom = 136.0
 theme_override_font_sizes/font_size = 28
 text = "🐀"
 horizontal_alignment = 2
@@ -83,28 +83,6 @@ offset_bottom = 68.0
 theme_override_font_sizes/font_size = 10
 text = "Letters: A, E, S, T"
 
-[node name="StoryPanel" type="Control" parent="." unique_id=2039946188]
-anchors_preset = 0
-offset_left = 8.0
-offset_top = 90.0
-offset_right = 472.0
-offset_bottom = 170.0
-
-[node name="StoryBg" type="ColorRect" parent="StoryPanel" unique_id=1685944607]
-layout_mode = 0
-offset_right = 464.0
-offset_bottom = 80.0
-color = Color(0.08, 0.08, 0.1, 1)
-
-[node name="StoryText" type="Label" parent="StoryPanel" unique_id=1254485698]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 460.0
-offset_bottom = 76.0
-text = "~ The Bard's Tale ~"
-autowrap_mode = 2
-
 [node name="BottomPanel" type="Control" parent="." unique_id=1906281111]
 anchors_preset = 0
 offset_left = 8.0
@@ -121,9 +99,9 @@ color = Color(0.15, 0.12, 0.12, 1)
 [node name="PromptLabel" type="Label" parent="BottomPanel" unique_id=492319445]
 layout_mode = 0
 offset_left = 4.0
-offset_top = -5.0
+offset_top = -1.0
 offset_right = 460.0
-offset_bottom = 12.0
+offset_bottom = 16.0
 theme_override_font_sizes/font_size = 12
 text = "The Bard needs a NOUN!"
 horizontal_alignment = 1
@@ -131,9 +109,9 @@ horizontal_alignment = 1
 [node name="LinePreview" type="Label" parent="BottomPanel" unique_id=85055353]
 layout_mode = 0
 offset_left = 4.0
-offset_top = 11.0
+offset_top = 15.0
 offset_right = 460.0
-offset_bottom = 27.0
+offset_bottom = 31.0
 theme_override_colors/font_color = Color(0.7, 0.7, 0.5, 1)
 theme_override_font_sizes/font_size = 10
 text = "The hero faced a fearsome ___!"
@@ -141,33 +119,34 @@ horizontal_alignment = 1
 
 [node name="WordInput" type="LineEdit" parent="BottomPanel" unique_id=1728257523]
 layout_mode = 0
-offset_left = 131.0
-offset_top = 26.0
-offset_right = 323.0
-offset_bottom = 57.0
+offset_left = 20.0
+offset_top = 37.0
+offset_right = 212.0
+offset_bottom = 68.0
 placeholder_text = "Enter a word..."
 alignment = 1
 max_length = 30
 
 [node name="SubmitButton" type="Button" parent="BottomPanel" unique_id=1619930610]
 layout_mode = 0
-offset_left = 190.0
-offset_top = 60.0
-offset_right = 274.0
-offset_bottom = 80.0
+offset_left = 366.0
+offset_top = 37.0
+offset_right = 450.0
+offset_bottom = 68.0
 text = "Submit"
 
 [node name="ResultLabel" type="Label" parent="BottomPanel" unique_id=1046813908]
 layout_mode = 0
-offset_left = 148.0
-offset_top = -162.0
-offset_right = 324.0
-offset_bottom = -142.0
+offset_left = 83.0
+offset_top = -100.0
+offset_right = 394.0
+offset_bottom = -70.0
 theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
 theme_override_font_sizes/font_size = 8
 text = "Type a word and press Enter!"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 3
 
 [node name="VictoryPanel" type="Control" parent="." unique_id=1712753538]
 visible = false
