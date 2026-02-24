@@ -14,6 +14,7 @@ var required_letters: PackedStringArray = ["A", "E", "S", "T"]
 var battle_title: String = "~ The Bard's Tale ~"
 var template_line: String = "The hero faced a fearsome ___, chose to ___, and won with ___ force!"
 
+# TODO: move these to a json for clarity
 var blanks := [
 	{"type": "noun", "hint": "a creature/thing", "display": "NOUN"},
 	{"type": "verb", "hint": "an action", "display": "VERB"},
@@ -26,7 +27,7 @@ var player_hp: int
 var blank_index: int = 0
 var collected_words: Array[String] = []
 
-# Combat stats (for now, hardcoded demo dicts; later you can load from JSON)
+# TODO: move combat stats from this dict to a json later 
 var player_stats := {"atk": 10, "crit_chance": 0.10, "crit_mult": 1.5, "def": 0, "armor": 0}
 var enemy_stats := {"atk": 6, "crit_chance": 0.05, "crit_mult": 1.4, "def": 2, "armor": 10}
 
@@ -50,6 +51,7 @@ var enemy_move := {
 var rng := RandomNumberGenerator.new()
 
 const CombatEngine = preload("res://scripts/combat/combat_engine.gd")
+const ElementClassifier = preload("res://scripts/combat/element_classifier.gd")
 
 @onready var enemy_name: Label = $EnemyPanel/EnemyName
 @onready var enemy_hp_label: Label = $EnemyPanel/EnemyHP
@@ -78,6 +80,7 @@ func _ready() -> void:
 
 	_start_battle()
 
+
 func _start_battle() -> void:
 	enemy_hp = enemy_max_hp
 	player_hp = player_max_hp
@@ -98,6 +101,7 @@ func _start_battle() -> void:
 	word_input.text = ""
 	word_input.grab_focus()
 
+# TODO: probably needs to be refined and changed later 
 func _update_hp_ui() -> void:
 	enemy_hp = clamp(enemy_hp, 0, enemy_max_hp)
 	player_hp = clamp(player_hp, 0, player_max_hp)
@@ -167,6 +171,14 @@ func _submit_word(raw: String) -> void:
 	blank_index += 1
 	
 	var S: float = WordFreq.get_scaling_S(word)
+	
+	# elemental effects computed after word is validated
+	var elem_out := ElementClassifier.classify(word, expected_pos)
+	var elem: String = String(elem_out["element"])
+	var elem_score: float = float(elem_out["score"])
+	
+	print("Element match:", elem, " matched=", elem_out["matched"], " tokens=", elem_out["tokens"])
+
 
 	# TODO: this and all other moves need to be moved to a json later 
 	var move := {
@@ -175,8 +187,8 @@ func _submit_word(raw: String) -> void:
 		"coefficient": 1.2,    
 		"accuracy": 1.0
 	}
+	# just to see the word complexity scaling in action
 	print("Word Freq Scaling: ", S)
-	# Combat: player attacks enemy (MOVED OUT of scene math)
 	var outcome := CombatEngine.compute_attack(player_stats, enemy_stats, move, rng)
 	print("PLAYER ATTACK -> ", outcome)
 	
@@ -190,6 +202,7 @@ func _submit_word(raw: String) -> void:
 
 	_update_prompt_ui()
 
+# TODO: probably needs to change to have the enemy always attack and this needs to be just a fall back
 func _apply_invalid_input(message: String) -> void:
 	# Combat: enemy attacks player (MOVED OUT of scene math)
 	var outcome := CombatEngine.compute_attack(enemy_stats, player_stats, enemy_move, rng)
@@ -221,10 +234,7 @@ func _finish_battle() -> void:
 func _on_continue_pressed() -> void:
 	_start_battle()
 
-# -----------------------------
 # Validation helpers
-# -----------------------------
-
 func _passes_letter_rule(word: String) -> bool:
 	var w := word.to_upper()
 
