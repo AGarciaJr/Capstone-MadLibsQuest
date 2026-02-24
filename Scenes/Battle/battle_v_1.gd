@@ -56,6 +56,7 @@ const ElementClassifier = preload("res://scripts/combat/element_classifier.gd")
 @onready var enemy_name: Label = $EnemyPanel/EnemyName
 @onready var enemy_hp_label: Label = $EnemyPanel/EnemyHP
 @onready var enemy_hp_bar: ProgressBar = $EnemyPanel/EnemyHPBar
+@onready var goblin_sprite: AnimatedSprite2D = $EnemyPanel/GoblinSprite
 
 @onready var player_name: Label = $PlayerPanel/PlayerName
 @onready var player_hp_label: Label = $PlayerPanel/PlayerHP
@@ -86,6 +87,7 @@ func _start_battle() -> void:
 	player_hp = player_max_hp
 	blank_index = 0
 	collected_words.clear()
+	goblin_sprite.play("Goblin 2")
 
 	victory_panel.visible = false
 	submit_button.disabled = false

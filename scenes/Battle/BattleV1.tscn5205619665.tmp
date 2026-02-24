@@ -7,6 +7,10 @@
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_2nens")
+enforce_letter_rule = null
+require_all_letters = null
+enemy_max_hp = null
+player_max_hp = null
 
 [node name="EnemyPanel" type="Control" parent="." unique_id=1084018061]
 anchors_preset = 0
@@ -53,7 +57,7 @@ position = Vector2(-101, 110.00001)
 scale = Vector2(1.0531915, 0.96666664)
 sprite_frames = ExtResource("2_hjqhh")
 animation = &"Goblin 2"
-frame_progress = 0.02100068
+frame_progress = 0.004811565
 
 [node name="PlayerPanel" type="Control" parent="." unique_id=706879595]
 anchors_preset = 0
