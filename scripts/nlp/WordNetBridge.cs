@@ -42,19 +42,19 @@ public partial class WordNetBridge : Node
 			// ---- TEMP TEST BLOCK ----
 			if (SynsetsReady())
 			{
-				//GD.Print("---- TESTING SYNSETS ----");
-//
-				//var synsets = _wordNetService.GetSynsets("torrent", 'n');
-//
-				//GD.Print($"Synset count: {synsets.Count}");
-//
-				//foreach (var s in synsets)
-				//{
-					//GD.Print($"Words: {string.Join(", ", s.Words)}");
-					//GD.Print($"Gloss: {s.Gloss}");
-				//}
-//
-				//GD.Print("---- END TEST ----");
+				GD.Print("---- TESTING SYNSETS ----");
+
+				var synsets = _wordNetService.GetSynsets("torrent", 'n');
+
+				GD.Print($"Synset count: {synsets.Count}");
+
+				foreach (var s in synsets)
+				{
+					GD.Print($"Words: {string.Join(", ", s.Words)}");
+					GD.Print($"Gloss: {s.Gloss}");
+				}
+
+				GD.Print("---- END TEST ----");
 			}
 		}
 		else

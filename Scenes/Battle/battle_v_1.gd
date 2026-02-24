@@ -171,15 +171,15 @@ func _submit_word(raw: String) -> void:
 	blank_index += 1
 	
 	var S: float = WordFreq.get_scaling_S(word)
-	
-	# elemental effects computed after word is validated
-	var elem_out := ElementClassifier.classify(word, expected_pos)
-	var elem: String = String(elem_out["element"])
-	var elem_score: float = float(elem_out["score"])
-	
-	print("Element match:", elem, " matched=", elem_out["matched"], " tokens=", elem_out["tokens"])
+	var element_res := ElementClassifier.classify(word, expected_pos)
 
+	print("---- Element Scores ----")
+	print("Player Word Choice: ", word)
+	for k in element_res["raw_scores"].keys():
+		print(k, ":", element_res["raw_scores"][k])
 
+	print("Chosen:", element_res["element"], " | Confidence:", element_res["confidence"])
+	
 	# TODO: this and all other moves need to be moved to a json later 
 	var move := {
 		"base_damage": 5,      

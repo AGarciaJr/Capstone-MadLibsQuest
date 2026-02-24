@@ -174,7 +174,10 @@
 		"criminal",
 		"murder",
 		"unknown",
-        "awe"
+        "awe",
+		"demonic",
+		"satan",
+		"demon"
 	  ],
 	  "forced_words": [
 		"backstab",
