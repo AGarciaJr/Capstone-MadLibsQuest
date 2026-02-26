@@ -1,0 +1,22 @@
+{
+  "rat": {
+    "name": "Rat",
+    "max_hp": 30,
+    "atk": 8,
+    "def": 3,
+    "armor": 1,
+    "crit_chance": 0.1,
+    "crit_mult": 1.5,
+    "element_resist": { "fire": 0.8, "water": 1.0, "physical": 1.0 }
+  },
+  "goblin": {
+    "name": "Goblin",
+    "max_hp": 45,
+    "atk": 10,
+    "def": 5,
+    "armor": 2,
+    "crit_chance": 0.15,
+    "crit_mult": 1.6,
+    "element_resist": { "fire": 1.0, "water": 1.1, "physical": 0.9 }
+  }
+}

@@ -1,0 +1,239 @@
+[gd_scene format=3 uid="uid://by6ivvrwnhxn5"]
+
+[ext_resource type="Script" uid="uid://cru560hwwd3jy" path="res://scenes/Battle/battle_v_1.gd" id="1_2nens"]
+[ext_resource type="SpriteFrames" uid="uid://bw0afptnjumdi" path="res://assets/Art/Enemies/Monster_Creatures_Fantasy(Version 1.3)/Goblin/Goblin.tres" id="2_hjqhh"]
+
+[node name="control" type="Control" unique_id=1154209060]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_2nens")
+enforce_letter_rule = null
+require_all_letters = null
+enemy_max_hp = null
+player_max_hp = null
+
+[node name="EnemyPanel" type="Control" parent="." unique_id=1084018061]
+anchors_preset = 0
+offset_left = 340.0
+offset_top = 8.0
+offset_right = 472.0
+offset_bottom = 100.0
+
+[node name="EnemyName" type="Label" parent="EnemyPanel" unique_id=853772227]
+layout_mode = 0
+offset_right = 132.0
+offset_bottom = 18.0
+text = "Goblin"
+horizontal_alignment = 2
+
+[node name="EnemyHP" type="Label" parent="EnemyPanel" unique_id=1291644517]
+layout_mode = 0
+offset_top = 18.0
+offset_right = 132.0
+offset_bottom = 34.0
+text = "HP: 30/30"
+horizontal_alignment = 2
+
+[node name="EnemyHPBar" type="ProgressBar" parent="EnemyPanel" unique_id=848356691]
+layout_mode = 0
+offset_top = 39.0
+offset_right = 132.0
+offset_bottom = 51.0
+value = 100.0
+show_percentage = false
+
+[node name="EnemySprite" type="Label" parent="EnemyPanel" unique_id=1827132041]
+layout_mode = 0
+offset_left = 194.0
+offset_top = 104.0
+offset_right = 335.0
+offset_bottom = 143.0
+theme_override_font_sizes/font_size = 28
+text = "🐀"
+horizontal_alignment = 2
+
+[node name="GoblinSprite" type="AnimatedSprite2D" parent="EnemyPanel" unique_id=106992168]
+position = Vector2(-101, 110.00001)
+scale = Vector2(1.0531915, 0.96666664)
+sprite_frames = ExtResource("2_hjqhh")
+animation = &"Goblin 2"
+frame_progress = 0.848116
+
+[node name="PlayerPanel" type="Control" parent="." unique_id=706879595]
+anchors_preset = 0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 140.0
+offset_bottom = 80.0
+
+[node name="PlayerName" type="Label" parent="PlayerPanel" unique_id=152628146]
+layout_mode = 0
+offset_right = 132.0
+offset_bottom = 18.0
+text = "Hero"
+
+[node name="PlayerHP" type="Label" parent="PlayerPanel" unique_id=1846511350]
+layout_mode = 0
+offset_top = 18.0
+offset_right = 132.0
+offset_bottom = 34.0
+text = "HP: 100/100"
+
+[node name="PlayerHPBar" type="ProgressBar" parent="PlayerPanel" unique_id=1540109774]
+layout_mode = 0
+offset_top = 40.0
+offset_right = 132.0
+offset_bottom = 52.0
+value = 100.0
+show_percentage = false
+
+[node name="LettersLabel" type="Label" parent="PlayerPanel" unique_id=113959554]
+layout_mode = 0
+offset_top = 52.0
+offset_right = 132.0
+offset_bottom = 68.0
+theme_override_font_sizes/font_size = 10
+text = "Letters: A, E, S, T"
+
+[node name="BottomPanel" type="Control" parent="." unique_id=1906281111]
+anchors_preset = 0
+offset_left = 8.0
+offset_top = 178.0
+offset_right = 472.0
+offset_bottom = 262.0
+
+[node name="PanelBg" type="ColorRect" parent="BottomPanel" unique_id=80094568]
+layout_mode = 0
+offset_right = 464.0
+offset_bottom = 84.0
+color = Color(0.15, 0.12, 0.12, 1)
+
+[node name="PromptLabel" type="Label" parent="BottomPanel" unique_id=492319445]
+layout_mode = 0
+offset_left = 4.0
+offset_top = -1.0
+offset_right = 460.0
+offset_bottom = 16.0
+theme_override_font_sizes/font_size = 12
+text = "The Bard needs a NOUN!"
+horizontal_alignment = 1
+
+[node name="LinePreview" type="Label" parent="BottomPanel" unique_id=85055353]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 15.0
+offset_right = 460.0
+offset_bottom = 31.0
+theme_override_colors/font_color = Color(0.7, 0.7, 0.5, 1)
+theme_override_font_sizes/font_size = 10
+text = "The hero faced a fearsome ___!"
+horizontal_alignment = 1
+
+[node name="WordInput" type="LineEdit" parent="BottomPanel" unique_id=1728257523]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 37.0
+offset_right = 212.0
+offset_bottom = 68.0
+placeholder_text = "Enter a word..."
+alignment = 1
+max_length = 30
+
+[node name="SubmitButton" type="Button" parent="BottomPanel" unique_id=1619930610]
+layout_mode = 0
+offset_left = 366.0
+offset_top = 37.0
+offset_right = 450.0
+offset_bottom = 68.0
+text = "Submit"
+
+[node name="ResultLabel" type="Label" parent="BottomPanel" unique_id=1046813908]
+layout_mode = 0
+offset_left = 83.0
+offset_top = -100.0
+offset_right = 394.0
+offset_bottom = -70.0
+theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
+theme_override_font_sizes/font_size = 8
+text = "Type a word and press Enter!"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="AttackButton" type="Button" parent="BottomPanel" unique_id=1906161930]
+layout_mode = 0
+offset_left = 19.0
+offset_top = 104.0
+offset_right = 176.0
+offset_bottom = 140.0
+text = "Verb"
+
+[node name="BuffButton" type="Button" parent="BottomPanel" unique_id=714913797]
+layout_mode = 0
+offset_left = 203.0
+offset_top = 105.0
+offset_right = 361.0
+offset_bottom = 142.0
+text = "Adjective"
+
+[node name="VictoryPanel" type="Control" parent="." unique_id=1712753538]
+visible = false
+anchors_preset = 0
+offset_left = 160.0
+offset_top = 100.0
+offset_right = 320.0
+offset_bottom = 170.0
+
+[node name="PanelBg" type="ColorRect" parent="VictoryPanel" unique_id=150240134]
+layout_mode = 0
+offset_right = 160.0
+offset_bottom = 70.0
+color = Color(0.1, 0.2, 0.1, 1)
+
+[node name="Label" type="Label" parent="VictoryPanel" unique_id=203399291]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 8.0
+offset_right = 156.0
+offset_bottom = 28.0
+text = "VICTORY!"
+horizontal_alignment = 1
+
+[node name="ContinueButton" type="Button" parent="VictoryPanel" unique_id=1507458738]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 36.0
+offset_right = 120.0
+offset_bottom = 60.0
+text = "Continue"
+
+[node name="DefeatPanel" type="Control" parent="." unique_id=1074227658]
+visible = false
+anchors_preset = 0
+offset_left = 160.0
+offset_top = 100.0
+offset_right = 320.0
+offset_bottom = 170.0
+
+[node name="PanelBg" type="ColorRect" parent="DefeatPanel" unique_id=170777154]
+layout_mode = 0
+offset_right = 160.0
+offset_bottom = 70.0
+color = Color(0.2, 0.1, 0.1, 1)
+
+[node name="Label" type="Label" parent="DefeatPanel" unique_id=1044913764]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 8.0
+offset_right = 156.0
+offset_bottom = 28.0
+text = "DEFEAT..."
+horizontal_alignment = 1
+
+[node name="RetryButton" type="Button" parent="DefeatPanel" unique_id=211577530]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 36.0
+offset_right = 120.0
+offset_bottom = 60.0
+text = "Try Again"
