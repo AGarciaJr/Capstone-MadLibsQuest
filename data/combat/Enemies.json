@@ -18,5 +18,25 @@
     "crit_chance": 0.15,
     "crit_mult": 1.6,
     "element_resist": { "fire": 1.0, "water": 1.1, "physical": 0.9 }
+  },
+  "skeleton": {
+    "name": "Rattling Skeleton",
+    "max_hp": 40,
+    "atk": 9,
+    "def": 4,
+    "armor": 3,
+    "crit_chance": 0.12,
+    "crit_mult": 1.7,
+    "element_resist": { "fire": 1.2, "water": 1.0, "physical": 0.8 }
+  },
+  "bug": {
+    "name": "Swarm Bug",
+    "max_hp": 35,
+    "atk": 7,
+    "def": 2,
+    "armor": 1,
+    "crit_chance": 0.18,
+    "crit_mult": 1.5,
+    "element_resist": { "fire": 0.7, "water": 1.0, "physical": 1.1 }
   }
 }
