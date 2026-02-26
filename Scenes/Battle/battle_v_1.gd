@@ -7,19 +7,59 @@ extends Control
 @export var enemy_max_hp: int = 30
 @export var player_max_hp: int = 100
 
+## Which tutorial enemy this battle is currently using.
+## For now we support: "goblin", "skeleton", "bug".
+@export var enemy_id: String = "goblin"
+
 # Letter set shown to player
 var required_letters: PackedStringArray = ["A", "E", "S", "T"]
 
-# Demo madlib template + blanks
+# Per-enemy madlib templates + blanks (tutorial-focused)
+var enemy_templates: Dictionary = {
+	"goblin": {
+		"title": "~ Greedy Roadside Robber ~",
+		"template": "The hero met a {0} goblin guarding a pile of {1}, clutching a {2} and snarling about unpaid {3}.",
+		"blanks": [
+			{"type": "adjective", "hint": "Describe the goblin's look or mood", "display": "ADJECTIVE"},
+			{"type": "plural_noun", "hint": "Treasure the goblin might guard", "display": "PLURAL NOUN"},
+			{"type": "noun", "hint": "Something the goblin might swing or hold", "display": "NOUN"},
+			{"type": "plural_noun", "hint": "Things people owe: taxes? debts? favors?", "display": "PLURAL NOUN"}
+		]
+	},
+	"skeleton": {
+		"title": "~ Rattling Graveguard ~",
+		"template": "A {0} wind blew as a {1} skeleton crawled from a cracked {2}, its {3} bones clacking in time with your {4} heartbeat.",
+		"blanks": [
+			{"type": "adjective", "hint": "Describe the wind or weather", "display": "ADJECTIVE"},
+			{"type": "adjective", "hint": "Describe the skeleton", "display": "ADJECTIVE"},
+			{"type": "noun", "hint": "Something in a graveyard (tomb, coffin...)", "display": "NOUN"},
+			{"type": "adjective", "hint": "How do the bones sound?", "display": "ADJECTIVE"},
+			{"type": "noun", "hint": "What pounds in your chest?", "display": "NOUN"}
+		]
+	},
+	"bug": {
+		"title": "~ Chittering Swarm ~",
+		"template": "Across the {0} forest floor, a {1} bug scuttled from a {2} log, soon followed by a buzzing {3} drawn to the scent of {4}.",
+		"blanks": [
+			{"type": "adjective", "hint": "Describe the ground or path", "display": "ADJECTIVE"},
+			{"type": "adjective", "hint": "Describe the first bug", "display": "ADJECTIVE"},
+			{"type": "adjective", "hint": "Describe the old log or stump", "display": "ADJECTIVE"},
+			{"type": "noun", "hint": "A word for a group: swarm? cloud?", "display": "NOUN"},
+			{"type": "noun", "hint": "Something sweet or smelly that attracts bugs", "display": "NOUN"}
+		]
+	}
+}
+
 var battle_title: String = "~ The Bard's Tale ~"
 var template_line: String = "The hero faced a fearsome ___, chose to ___, and won with ___ force!"
 
-# TODO: move these to a json for clarity
-var blanks := [
-	{"type": "noun", "hint": "a creature/thing", "display": "NOUN"},
-	{"type": "verb", "hint": "an action", "display": "VERB"},
-	{"type": "adjective", "hint": "a describing word", "display": "ADJECTIVE"},
-]
+# The active blanks for the current enemy (copied from enemy_templates)
+# Keep this untyped Array so we can assign JSON-like data without cast issues.
+var blanks: Array = []
+
+# Accumulated damage for the current completed sentence
+var pending_sentence_damage: float = 0.0
+var pending_sentence_debug: Array[String] = []
 
 # State
 var enemy_hp: int
@@ -50,8 +90,19 @@ var enemy_move := {
 
 var rng := RandomNumberGenerator.new()
 
-const CombatEngine = preload("res://scripts/combat/combat_engine.gd")
-const ElementClassifier = preload("res://scripts/combat/element_classifier.gd")
+# Use different constant names than the global classes to avoid conflicts
+const CombatEngineScript = preload("res://scripts/combat/combat_engine.gd")
+const ElementClassifierScript = preload("res://scripts/combat/element_classifier.gd")
+
+# Track word chaining across turns
+var last_word: String = ""
+var last_pos: String = ""
+var chain_count: int = 0
+
+func _reset_chain() -> void:
+	last_word = ""
+	last_pos = ""
+	chain_count = 0
 
 @onready var enemy_name: Label = $EnemyPanel/EnemyName
 @onready var enemy_hp_label: Label = $EnemyPanel/EnemyHP
@@ -87,7 +138,24 @@ func _start_battle() -> void:
 	player_hp = player_max_hp
 	blank_index = 0
 	collected_words.clear()
+	pending_sentence_damage = 0.0
+	pending_sentence_debug.clear()
 	goblin_sprite.play("Goblin 2")
+	_reset_chain()
+
+	# Configure template and blanks based on enemy_id
+	if enemy_templates.has(enemy_id):
+		var cfg: Dictionary = enemy_templates.get(enemy_id, {})
+		battle_title = cfg.get("title", battle_title)
+		template_line = cfg.get("template", template_line)
+		blanks = cfg.get("blanks", [])
+	else:
+		# Fallback: keep defaults
+		blanks = [
+			{"type": "noun", "hint": "a creature/thing", "display": "NOUN"},
+			{"type": "verb", "hint": "an action", "display": "VERB"},
+			{"type": "adjective", "hint": "a describing word", "display": "ADJECTIVE"},
+		]
 
 	victory_panel.visible = false
 	submit_button.disabled = false
@@ -119,7 +187,8 @@ func _update_hp_ui() -> void:
 
 func _update_prompt_ui() -> void:
 	if blank_index >= blanks.size():
-		_finish_battle()
+		# All blanks for this sentence are filled; damage will be applied
+		# when the last word is submitted.
 		return
 
 	var b: Dictionary = blanks[blank_index]
@@ -129,8 +198,9 @@ func _update_prompt_ui() -> void:
 
 func _render_preview_line() -> String:
 	var text := template_line
-	for w in collected_words:
-		text = _replace_first(text, "___", w)
+	for i in range(collected_words.size()):
+		var placeholder := "{" + str(i) + "}"
+		text = text.replace(placeholder, collected_words[i])
 	return text
 
 func _replace_first(haystack: String, needle: String, replacement: String) -> String:
@@ -173,7 +243,7 @@ func _submit_word(raw: String) -> void:
 	blank_index += 1
 	
 	var S: float = WordFreq.get_scaling_S(word)
-	var element_res := ElementClassifier.classify(word, expected_pos)
+	var element_res := ElementClassifierScript.classify(word, expected_pos)
 
 	print("---- Element Scores ----")
 	print("Player Word Choice: ", word)
@@ -182,33 +252,101 @@ func _submit_word(raw: String) -> void:
 
 	print("Chosen:", element_res["element"], " | Confidence:", element_res["confidence"])
 	
-	# TODO: this and all other moves need to be moved to a json later 
+	# Base move values
 	var move := {
-		"base_damage": 5,      
-		"scaling": S,         
-		"coefficient": 1.2,    
+		"base_damage": 5,
+		"scaling": S,
+		"coefficient": 1.2,
 		"accuracy": 1.0
 	}
+
+	# Apply word chaining bonus/debuff
+	var chain_multiplier := _get_chain_multiplier(word, expected_pos)
+	move["coefficient"] *= chain_multiplier
+
 	# just to see the word complexity scaling in action
 	print("Word Freq Scaling: ", S)
-	var outcome := CombatEngine.compute_attack(player_stats, enemy_stats, move, rng)
-	print("PLAYER ATTACK -> ", outcome)
+	var outcome := CombatEngineScript.compute_attack(player_stats, enemy_stats, move, rng)
+	print("PLAYER ATTACK (stored) -> ", outcome)
 	
-	enemy_hp = CombatEngine.apply_damage(enemy_hp, int(outcome.damage))
-	_update_hp_ui()
-
-	result_label.text = "Accepted '%s'. %s" % [word, str(outcome.debug)]
+	# Store this word's damage contribution for the current sentence
+	pending_sentence_damage += outcome.damage
+	pending_sentence_debug.append(str(outcome.debug))
+	
+	result_label.text = "Accepted '%s'. Your sentence grows in power..." % word
 
 	word_input.text = ""
 	word_input.grab_focus()
+	
+	if blank_index >= blanks.size():
+		_apply_sentence_damage()
+	else:
+		_update_prompt_ui()
 
+
+func _get_chain_multiplier(word: String, expected_pos: String) -> float:
+	# Same exact word repeatedly = debuff
+	if word.to_lower() == last_word.to_lower():
+		chain_count += 1
+		last_pos = expected_pos
+		result_label.text = "You repeat yourself... the magic fizzles."
+		return 0.5
+
+	# Same type of word chained = bonus
+	if expected_pos == last_pos and last_pos != "":
+		chain_count += 1
+		# Cap bonus so it does not explode
+		var capped_chain: int = min(chain_count, 3)
+		var bonus := 1.0 + float(capped_chain) * 0.15
+		result_label.text = "Word chain! Staying with %s powers up your attack." % expected_pos
+		last_word = word
+		last_pos = expected_pos
+		return bonus
+
+	# New type breaks the chain but is neutral
+	chain_count = 0
+	last_word = word
+	last_pos = expected_pos
+	return 1.0
+
+
+func _apply_sentence_damage() -> void:
+	# Apply all stored damage from this completed sentence at once.
+	var total_damage := int(round(pending_sentence_damage))
+	
+	# Ensure each enemy takes at least two sentences: cap per-sentence damage
+	var max_sentence_damage := int(ceil(float(enemy_max_hp) / 2.0))
+	if total_damage <= 0:
+		total_damage = 1
+	else:
+		total_damage = clamp(total_damage, 1, max_sentence_damage)
+	
+	enemy_hp = CombatEngineScript.apply_damage(enemy_hp, total_damage)
+	_update_hp_ui()
+	
+	var debug_summary := ", ".join(pending_sentence_debug)
+	result_label.text = "Your completed sentence strikes for %d damage! (%s)" % [total_damage, debug_summary]
+	
+	# Reset sentence accumulators
+	pending_sentence_damage = 0.0
+	pending_sentence_debug.clear()
+	collected_words.clear()
+	blank_index = 0
+	line_preview.text = template_line
+	
+	# Check for victory
+	if enemy_hp <= 0:
+		_finish_battle()
+		return
+	
+	# Otherwise, start a fresh sentence
 	_update_prompt_ui()
 
 # TODO: probably needs to change to have the enemy always attack and this needs to be just a fall back
 func _apply_invalid_input(message: String) -> void:
 	# Combat: enemy attacks player (MOVED OUT of scene math)
-	var outcome := CombatEngine.compute_attack(enemy_stats, player_stats, enemy_move, rng)
-	player_hp = CombatEngine.apply_damage(player_hp, int(outcome.damage))
+	var outcome := CombatEngineScript.compute_attack(enemy_stats, player_stats, enemy_move, rng)
+	player_hp = CombatEngineScript.apply_damage(player_hp, int(outcome.damage))
 	_update_hp_ui()
 
 	result_label.text = "%s  (%s)" % [message, str(outcome.debug)]
@@ -224,12 +362,6 @@ func _apply_invalid_input(message: String) -> void:
 func _finish_battle() -> void:
 	word_input.editable = false
 	submit_button.disabled = true
-
-	# For demo: force victory if blanks are done
-	if enemy_hp > 0:
-		enemy_hp = 0
-		_update_hp_ui()
-
 	result_label.text = "The Bard weaves your words into legend!"
 	victory_panel.visible = true
 
