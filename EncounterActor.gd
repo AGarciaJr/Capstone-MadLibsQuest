@@ -1,9 +1,6 @@
 extends Area2D
 class_name EncounterActor
 
-@export var overworld: Node2D
-@export var player: Player
-
 @export var encounter_id: String = "rat"
 @export var auto_start: bool = true
 @export var one_time: bool = true
@@ -26,17 +23,22 @@ func _on_body_entered(body: Node) -> void:
 	if body is Player:
 		_player_inside = true
 		if auto_start:
-			_start_encounter()
+			_start_encounter(body as Player)
 
 func _on_body_exited(body: Node) -> void:
 	if body is Player:
 		_player_inside = false
 
-func _start_encounter() -> void:
+func _start_encounter(player: Player) -> void:
 	if _used:
 		return
-	if not overworld or not player:
+	if not player:
 		push_error("EncounterActor missing overworld or player")
+		return
+	
+	var overworld = get_tree().current_scene as Node2D
+	if overworld == null:
+		push_error("current_scene is not Node2D, could not start encounter")
 		return
 	
 	_used = true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=4 uid="uid://cckosd6u26y46"]
+[gd_scene load_steps=24 format=4 uid="uid://cckosd6u26y46"]
 
 [ext_resource type="Script" uid="uid://cfcetvppgxrxa" path="res://Overworld.gd" id="1_23xw5"]
 [ext_resource type="Texture2D" uid="uid://cfgu1ckfucop0" path="res://16X16.png" id="1_vcyby"]
@@ -8,6 +8,8 @@
 [ext_resource type="Script" uid="uid://dmr2yk1uae30f" path="res://InteractionManager.gd" id="6_da0ye"]
 [ext_resource type="Script" uid="uid://q6sxydg2f7e5" path="res://KeyPickup.gd" id="7_jtn5j"]
 [ext_resource type="PackedScene" uid="uid://luaa1sn0h88v" path="res://EncounterActor.tscn" id="8_da0ye"]
+[ext_resource type="Script" uid="uid://yvody3sgv8sv" path="res://SpawnManager.gd" id="9_jtn5j"]
+[ext_resource type="PackedScene" uid="uid://dvj48su2ewxn5" path="res://SpawnZone.tscn" id="10_bm5um"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_6ljl2"]
 texture = ExtResource("1_vcyby")
@@ -356,7 +358,18 @@ position = Vector2(2.000002, 6)
 scale = Vector2(41.000004, 48.249992)
 texture = SubResource("PlaceholderTexture2D_ar6wn")
 
-[node name="EncounterActor" parent="." node_paths=PackedStringArray("overworld", "player") instance=ExtResource("8_da0ye")]
+[node name="EncounterActor" parent="." instance=ExtResource("8_da0ye")]
 position = Vector2(304, 66)
-overworld = NodePath("..")
+
+[node name="SpawnManager" type="Node" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("9_jtn5j")
 player = NodePath("../Player")
+encounter_actor_scene = ExtResource("8_da0ye")
+
+[node name="Area2D" parent="." groups=["spawn_zones"] instance=ExtResource("10_bm5um")]
+position = Vector2(-124, 139)
+
+[node name="CollisionShape2D" parent="Area2D" index="0"]
+position = Vector2(188.5, -11.5)
+
+[editable path="Area2D"]
