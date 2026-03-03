@@ -63,6 +63,9 @@ var rng := RandomNumberGenerator.new()
 @onready var word_input: LineEdit = $BottomPanel/WordInput
 @onready var submit_button: Button = $BottomPanel/SubmitButton
 @onready var result_label: Label = $BottomPanel/ResultLabel
+# @onready var attack_button: Label = $BottomPanel/AttackButton
+# @onready var buff_button: Label = $BottomPanel/BuffButton
+# @onready var cancel_button: Label = $BottomPanel/CancelButton
 
 @onready var victory_panel: Control = $VictoryPanel
 @onready var victory_continue_button: Button = $VictoryPanel/ContinueButton
@@ -74,6 +77,8 @@ func _ready() -> void:
 	rng.randomize()
 
 	submit_button.pressed.connect(_on_submit_pressed)
+	# TODO: make shii for all of the buttons that we need for basic combat
+	# attack_button.pressed.connect(_on_attack_pressed)
 	word_input.text_submitted.connect(_on_text_submitted)
 	victory_continue_button.pressed.connect(_on_continue_pressed)
 
