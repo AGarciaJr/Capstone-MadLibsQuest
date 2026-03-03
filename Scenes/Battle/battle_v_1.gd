@@ -14,38 +14,70 @@ extends Control
 # Letter set shown to player
 var required_letters: PackedStringArray = ["A", "E", "S", "T"]
 
-# Per-enemy madlib templates + blanks (tutorial-focused)
+# Per-enemy madlib templates + blanks (tutorial-focused).
+# Each enemy can have multiple sentences; the player must defeat them within
+# the available sentences or lose the fight.
 var enemy_templates: Dictionary = {
 	"goblin": {
 		"title": "~ Greedy Roadside Robber ~",
-		"template": "The hero met a {0} goblin guarding a pile of {1}, clutching a {2} and snarling about unpaid {3}.",
-		"blanks": [
-			{"type": "adjective", "hint": "Describe the goblin's look or mood", "display": "ADJECTIVE"},
-			{"type": "plural_noun", "hint": "Treasure the goblin might guard", "display": "PLURAL NOUN"},
-			{"type": "noun", "hint": "Something the goblin might swing or hold", "display": "NOUN"},
-			{"type": "plural_noun", "hint": "Things people owe: taxes? debts? favors?", "display": "PLURAL NOUN"}
+		"sentences": [
+			{
+				"template": "The hero met a {0} goblin guarding a pile of {1}, clutching a {2} and snarling about unpaid {3}.",
+				"blanks": [
+					{"type": "adjective", "hint": "Describe the goblin's look or mood", "display": "ADJECTIVE"},
+					{"type": "plural_noun", "hint": "Treasure the goblin might guard", "display": "PLURAL NOUN"},
+					{"type": "noun", "hint": "Something the goblin might swing or hold", "display": "NOUN"},
+					{"type": "plural_noun", "hint": "Things people owe: taxes? debts? favors?", "display": "PLURAL NOUN"}
+				]
+			},
+			{
+				"template": "When the goblin spotted the hero's {0}, its {1} eyes gleamed and it waved a {2}, shrieking about a \"special {3} tax\".",
+				"blanks": [
+					{"type": "noun", "hint": "Something valuable the hero carries", "display": "NOUN"},
+					{"type": "adjective", "hint": "Describe the goblin's eyes", "display": "ADJECTIVE"},
+					{"type": "noun", "hint": "Something the goblin might wave around", "display": "NOUN"},
+					{"type": "noun", "hint": "What kind of tax or fee?", "display": "NOUN"}
+				]
+			},
+			{
+				"template": "Cornered near a {0} bridge, the goblin hugged its {1} bag of {2} and muttered about {3} as it prepared one last ambush.",
+				"blanks": [
+					{"type": "adjective", "hint": "Describe the bridge", "display": "ADJECTIVE"},
+					{"type": "adjective", "hint": "Describe the goblin's bag", "display": "ADJECTIVE"},
+					{"type": "plural_noun", "hint": "What spills from the bag?", "display": "PLURAL NOUN"},
+					{"type": "noun", "hint": "What is the goblin obsessed with now?", "display": "NOUN"}
+				]
+			}
 		]
 	},
 	"skeleton": {
 		"title": "~ Rattling Graveguard ~",
-		"template": "A {0} wind blew as a {1} skeleton crawled from a cracked {2}, its {3} bones clacking in time with your {4} heartbeat.",
-		"blanks": [
-			{"type": "adjective", "hint": "Describe the wind or weather", "display": "ADJECTIVE"},
-			{"type": "adjective", "hint": "Describe the skeleton", "display": "ADJECTIVE"},
-			{"type": "noun", "hint": "Something in a graveyard (tomb, coffin...)", "display": "NOUN"},
-			{"type": "adjective", "hint": "How do the bones sound?", "display": "ADJECTIVE"},
-			{"type": "noun", "hint": "What pounds in your chest?", "display": "NOUN"}
+		"sentences": [
+			{
+				"template": "A {0} wind blew as a {1} skeleton crawled from a cracked {2}, its {3} bones clacking in time with your {4} heartbeat.",
+				"blanks": [
+					{"type": "adjective", "hint": "Describe the wind or weather", "display": "ADJECTIVE"},
+					{"type": "adjective", "hint": "Describe the skeleton", "display": "ADJECTIVE"},
+					{"type": "noun", "hint": "Something in a graveyard (tomb, coffin...)", "display": "NOUN"},
+					{"type": "adjective", "hint": "How do the bones sound?", "display": "ADJECTIVE"},
+					{"type": "noun", "hint": "What pounds in your chest?", "display": "NOUN"}
+				]
+			}
 		]
 	},
 	"bug": {
 		"title": "~ Chittering Swarm ~",
-		"template": "Across the {0} forest floor, a {1} bug scuttled from a {2} log, soon followed by a buzzing {3} drawn to the scent of {4}.",
-		"blanks": [
-			{"type": "adjective", "hint": "Describe the ground or path", "display": "ADJECTIVE"},
-			{"type": "adjective", "hint": "Describe the first bug", "display": "ADJECTIVE"},
-			{"type": "adjective", "hint": "Describe the old log or stump", "display": "ADJECTIVE"},
-			{"type": "noun", "hint": "A word for a group: swarm? cloud?", "display": "NOUN"},
-			{"type": "noun", "hint": "Something sweet or smelly that attracts bugs", "display": "NOUN"}
+		"sentences": [
+			{
+				"template": "Across the {0} forest floor, a {1} bug scuttled from a {2} log, soon followed by a buzzing {3} drawn to the scent of {4}.",
+				"blanks": [
+					{"type": "adjective", "hint": "Describe the ground or path", "display": "ADJECTIVE"},
+					{"type": "adjective", "hint": "Describe the first bug", "display": "ADJECTIVE"},
+					{"type": "adjective", "hint": "Describe the old log or stump", "display": "ADJECTIVE"},
+					{"type": "noun", "hint": "A word for a group: swarm? cloud?", "display": "NOUN"},
+					{"type": "noun", "hint": "Something sweet or smelly that attracts bugs", "display": "NOUN"}
+				]
+			}
 		]
 	}
 }
@@ -54,10 +86,11 @@ var battle_title: String = "~ The Bard's Tale ~"
 var template_line: String = "The hero faced a fearsome ___, chose to ___, and won with ___ force!"
 
 # The active blanks for the current enemy (copied from enemy_templates)
-# Keep this untyped Array so we can assign JSON-like data without cast issues.
 var blanks: Array = []
 
-# Accumulated damage for the current completed sentence
+# Sentence-level state
+var current_sentence_index: int = 0
+var max_sentences: int = 1
 var pending_sentence_damage: float = 0.0
 var pending_sentence_debug: Array[String] = []
 
@@ -138,6 +171,8 @@ func _start_battle() -> void:
 	player_hp = player_max_hp
 	blank_index = 0
 	collected_words.clear()
+	current_sentence_index = 0
+	max_sentences = 1
 	pending_sentence_damage = 0.0
 	pending_sentence_debug.clear()
 	goblin_sprite.play("Goblin 2")
@@ -147,8 +182,7 @@ func _start_battle() -> void:
 	if enemy_templates.has(enemy_id):
 		var cfg: Dictionary = enemy_templates.get(enemy_id, {})
 		battle_title = cfg.get("title", battle_title)
-		template_line = cfg.get("template", template_line)
-		blanks = cfg.get("blanks", [])
+		_load_sentence_from_config(cfg)
 	else:
 		# Fallback: keep defaults
 		blanks = [
@@ -187,8 +221,6 @@ func _update_hp_ui() -> void:
 
 func _update_prompt_ui() -> void:
 	if blank_index >= blanks.size():
-		# All blanks for this sentence are filled; damage will be applied
-		# when the last word is submitted.
 		return
 
 	var b: Dictionary = blanks[blank_index]
@@ -202,12 +234,6 @@ func _render_preview_line() -> String:
 		var placeholder := "{" + str(i) + "}"
 		text = text.replace(placeholder, collected_words[i])
 	return text
-
-func _replace_first(haystack: String, needle: String, replacement: String) -> String:
-	var i := haystack.find(needle)
-	if i == -1:
-		return haystack
-	return haystack.substr(0, i) + replacement + haystack.substr(i + needle.length())
 
 func _on_submit_pressed() -> void:
 	_submit_word(word_input.text)
@@ -269,7 +295,7 @@ func _submit_word(raw: String) -> void:
 	var outcome := CombatEngineScript.compute_attack(player_stats, enemy_stats, move, rng)
 	print("PLAYER ATTACK (stored) -> ", outcome)
 	
-	# Store this word's damage contribution for the current sentence
+	# Accumulate damage and debug info for this sentence; we apply at the end.
 	pending_sentence_damage += outcome.damage
 	pending_sentence_debug.append(str(outcome.debug))
 	
@@ -277,9 +303,9 @@ func _submit_word(raw: String) -> void:
 
 	word_input.text = ""
 	word_input.grab_focus()
-	
+
 	if blank_index >= blanks.size():
-		_apply_sentence_damage()
+		await _resolve_sentence()
 	else:
 		_update_prompt_ui()
 
@@ -310,36 +336,95 @@ func _get_chain_multiplier(word: String, expected_pos: String) -> float:
 	return 1.0
 
 
-func _apply_sentence_damage() -> void:
+func _load_sentence_from_config(cfg: Dictionary) -> void:
+	if cfg.has("sentences"):
+		var sentences: Array = cfg["sentences"]
+		max_sentences = max(1, sentences.size())
+		var safe_index: int = clamp(current_sentence_index, 0, sentences.size() - 1)
+		var s: Dictionary = sentences[safe_index]
+		template_line = s.get("template", template_line)
+		blanks = s.get("blanks", [])
+	else:
+		# Fallback: single-sentence config
+		max_sentences = 1
+		template_line = cfg.get("template", template_line)
+		blanks = cfg.get("blanks", [])
+
+
+func _enemy_sentence_attack() -> Dictionary:
+	var outcome := CombatEngineScript.compute_attack(enemy_stats, player_stats, enemy_move, rng)
+	player_hp = CombatEngineScript.apply_damage(player_hp, int(outcome.damage))
+	_update_hp_ui()
+	return outcome
+
+
+func _resolve_sentence() -> void:
 	# Apply all stored damage from this completed sentence at once.
 	var total_damage := int(round(pending_sentence_damage))
-	
-	# Ensure each enemy takes at least two sentences: cap per-sentence damage
-	var max_sentence_damage := int(ceil(float(enemy_max_hp) / 2.0))
 	if total_damage <= 0:
 		total_damage = 1
-	else:
-		total_damage = clamp(total_damage, 1, max_sentence_damage)
-	
+
+	# Prevent a full-HP enemy from being one-shot on the very first sentence.
+	if current_sentence_index == 0 and total_damage >= enemy_hp:
+		total_damage = max(enemy_hp - 1, 1)
+
 	enemy_hp = CombatEngineScript.apply_damage(enemy_hp, total_damage)
 	_update_hp_ui()
-	
+
 	var debug_summary := ", ".join(pending_sentence_debug)
-	result_label.text = "Your completed sentence strikes for %d damage! (%s)" % [total_damage, debug_summary]
-	
+	result_label.text = "Your sentence strikes for %d damage! (%s)" % [total_damage, debug_summary]
+
 	# Reset sentence accumulators
 	pending_sentence_damage = 0.0
 	pending_sentence_debug.clear()
 	collected_words.clear()
 	blank_index = 0
-	line_preview.text = template_line
-	
-	# Check for victory
+
+	# Check if enemy was defeated by the sentence
 	if enemy_hp <= 0:
 		_finish_battle()
 		return
-	
-	# Otherwise, start a fresh sentence
+
+	# Enemy counter-attacks after every completed sentence
+	var enemy_outcome := _enemy_sentence_attack()
+	result_label.text += " The %s strikes back for %d! (%s)" % [
+		enemy_name.text,
+		int(enemy_outcome.damage),
+		str(enemy_outcome.debug)
+	]
+
+	if player_hp <= 0:
+		result_label.text = "You were defeated. Restarting..."
+		await get_tree().create_timer(0.75).timeout
+		_start_battle()
+		return
+
+	# Move to next sentence; if we run out and the enemy is still alive, player loses.
+	current_sentence_index += 1
+	if current_sentence_index >= max_sentences:
+		if enemy_hp > 0:
+			result_label.text = "You reach the end of your tale, but the %s still stands. You lose the fight." % enemy_name.text
+			await get_tree().create_timer(1.0).timeout
+			_start_battle()
+			return
+		else:
+			_finish_battle()
+			return
+
+	# Load next sentence and continue the battle.
+	if enemy_templates.has(enemy_id):
+		var cfg: Dictionary = enemy_templates.get(enemy_id, {})
+		_load_sentence_from_config(cfg)
+	else:
+		# Fallback: reuse default template
+		template_line = "The hero faced a fearsome ___, chose to ___, and won with ___ force!"
+		blanks = [
+			{"type": "noun", "hint": "a creature/thing", "display": "NOUN"},
+			{"type": "verb", "hint": "an action", "display": "VERB"},
+			{"type": "adjective", "hint": "a describing word", "display": "ADJECTIVE"},
+		]
+
+	line_preview.text = template_line
 	_update_prompt_ui()
 
 # TODO: probably needs to change to have the enemy always attack and this needs to be just a fall back
