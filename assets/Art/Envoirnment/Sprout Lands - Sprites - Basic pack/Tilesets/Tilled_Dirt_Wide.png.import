@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cfgu1ckfucop0"
-path="res://.godot/imported/16X16.png-4930d71564373f0ab58c4957670fa237.ctex"
+uid="uid://dd6ks7f3s8lui"
+path="res://.godot/imported/Tilled_Dirt_Wide.png-d8847cfe11d4a4f47cffae50a61ef3bd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://16X16.png"
-dest_files=["res://.godot/imported/16X16.png-4930d71564373f0ab58c4957670fa237.ctex"]
+source_file="res://assets/Art/Envoirnment/Sprout Lands - Sprites - Basic pack/Tilesets/Tilled_Dirt_Wide.png"
+dest_files=["res://.godot/imported/Tilled_Dirt_Wide.png-d8847cfe11d4a4f47cffae50a61ef3bd.ctex"]
 
 [params]
 
