@@ -1,0 +1,153 @@
+{
+  "modifiers": [
+    {
+        "id": "cursed",
+        "display_name": "Cursed",
+        "definition": "Hexed, haunted, doomed; spooky/ominous affix.",
+        "semantic_hints": [
+            "cursed",
+            "hexed",
+            "haunted", 
+            "doomed", 
+            "unholy", 
+            "blighted"
+        ],
+        "forced_words": [
+            "cursed", 
+            "hexed"
+        ],
+        "flat_modifiers": { 
+            "hp": -10 
+        },
+        "mult_modifiers": { 
+            "crit_chance": 1.5
+        },
+        "status_effects_on_turn_start": ["self_damage"],
+        "difficulty": 1,
+        "post_fight_modifiers": [],
+        "element_override": "spooky",
+        "behavior_flags": ["reckless"],
+        "stackable": false,
+        "rarity_weight": 6
+    },
+    {
+        "id": "big",
+        "display_name": "Big",
+        "definition": "A larger-than-normal foe: tougher and harder to bring down, but clumsier and less accurate.",
+        "semantic_hints": [
+            "big",
+            "large",
+            "huge",
+            "massive",
+            "giant",
+            "colossal",
+            "hulking",
+            "towering",
+            "oversized",
+            "bulky",
+            "heavy",
+            "thick",
+            "muscular"
+        ],
+        "forced_words": [
+            "big",
+            "giant",
+            "huge",
+            "massive",
+            "colossal"
+        ],
+
+        "flat_modifiers": {
+            "hp": 40
+        },
+        "mult_modifiers": {
+            "hp": 1.35,
+            "accuracy": 0.95
+        },
+
+        "status_effects_on_hit": [],
+        "status_effects_on_turn_start": [],
+        "post_fight_modifiers": [],
+        "difficulty": 3,
+        "element_override": null,
+        "behavior_flags": ["slow_but_tanky"],
+        "stackable": false,
+        "rarity_weight": 10
+    },
+    {
+        "id": "small",
+        "display_name": "Small",
+        "definition": "A smaller-than-normal foe: fragile, but quick and more accurate.",
+        "semantic_hints": [
+            "small",
+            "tiny",
+            "little",
+            "mini",
+            "minuscule",
+            "petite",
+            "compact",
+            "slight",
+            "short",
+            "puny",
+            "shrimp",
+            "pocket",
+            "skinny"
+        ],
+        "forced_words": [
+            "small",
+            "tiny",
+            "mini",
+            "minuscule"
+        ],
+
+        "flat_modifiers": {
+            "hp": -15
+        },
+        "mult_modifiers": {
+            "hp": 0.85,
+            "accuracy": 1.15
+        },
+        "status_effects_on_hit": [],
+        "status_effects_on_turn_start": [],
+        "post_fight_modifiers": [],
+        "difficulty": 1,
+        "element_override": null,
+        "behavior_flags": ["fast_but_fragile"],
+        "stackable": false,
+        "rarity_weight": 10
+    },
+    {
+        "id": "plain",
+        "display_name": "Plain",
+        "definition": "A normal foe with no unusual traits. No stat changes are applied.",
+        "semantic_hints": [
+            "plain",
+            "normal",
+            "regular",
+            "standard",
+            "ordinary",
+            "basic",
+            "typical",
+            "average",
+            "generic",
+            "common",
+            "john"
+        ],
+        "forced_words": [
+            "plain",
+            "normal",
+            "regular"
+        ],
+        "flat_modifiers": {},
+        "mult_modifiers": {},
+        "status_effects_on_hit": [],
+        "status_effects_on_turn_start": [],
+        "post_fight_modifiers": [],
+        "difficulty": 3,
+        "element_override": null,
+        "behavior_flags": [],
+        "stackable": false,
+        "rarity_weight": 0
+    }
+  ]
+}

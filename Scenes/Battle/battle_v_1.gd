@@ -1,20 +1,26 @@
 extends Control
 
-@export var enforce_letter_rule: bool = true
-@export var require_all_letters: bool = false
 
-# TODO: these need to be moved into a json with the rest of the player and enemy data
+# Config
+
+# TODO: move these into a json with the rest of the player and enemy data
 @export var enemy_max_hp: int = 30
 @export var player_max_hp: int = 100
 
-# Letter set shown to player
-var required_letters: PackedStringArray = ["A", "E", "S", "T"]
+# TODO: also move this to the player json
+# Letter set shown to player (now used for BONUS, not rejection)
+@export var bonus_letters: PackedStringArray = ["A", "E", "S", "T"]
+
+# Bonus tuning
+@export var letter_bonus_per_match: float = 0.05      # +5% dmg per matched featured letter
+@export var letter_bonus_all_letters_extra: float = 0.15 # extra +15% if word contains ALL featured letters
+@export var letter_bonus_cap: float = 0.50            # cap total bonus to +50%
 
 # Demo madlib template + blanks
 var battle_title: String = "~ The Bard's Tale ~"
 var template_line: String = "The hero faced a fearsome ___, chose to ___, and won with ___ force!"
 
-# TODO: move these to a json for clarity
+# TODO: move these to a json for clarity probably need a bunch of different word prompts per move used 
 var blanks := [
 	{"type": "noun", "hint": "a creature/thing", "display": "NOUN"},
 	{"type": "verb", "hint": "an action", "display": "VERB"},
@@ -27,20 +33,11 @@ var player_hp: int
 var blank_index: int = 0
 var collected_words: Array[String] = []
 
-# TODO: move combat stats from this dict to a json later 
+# TODO: move combat stats from this dict to a json later
 var player_stats := {"atk": 10, "crit_chance": 0.10, "crit_mult": 1.5, "def": 0, "armor": 0}
 var enemy_stats := {"atk": 6, "crit_chance": 0.05, "crit_mult": 1.4, "def": 2, "armor": 10}
 
-# On correct word: player "attacks" enemy
-var player_move := {
-	"base_damage": 5,     
-	"scaling": 0.8,       
-	"coefficient": 1.2, 
-	"accuracy": 1.0
-}
-
-# TODO: this is temp please change me enemies should always attack regardless if the player is correct or not 
-# On invalid word: enemy "punishes" player
+# Enemy move (still used on invalid input for now)
 var enemy_move := {
 	"base_damage": 4,
 	"scaling": 0.4,
@@ -50,9 +47,7 @@ var enemy_move := {
 
 var rng := RandomNumberGenerator.new()
 
-const CombatEngine = preload("res://scripts/combat/combat_engine.gd")
-const ElementClassifier = preload("res://scripts/combat/element_classifier.gd")
-
+# UI refs
 @onready var enemy_name: Label = $EnemyPanel/EnemyName
 @onready var enemy_hp_label: Label = $EnemyPanel/EnemyHP
 @onready var enemy_hp_bar: ProgressBar = $EnemyPanel/EnemyHPBar
@@ -68,25 +63,36 @@ const ElementClassifier = preload("res://scripts/combat/element_classifier.gd")
 @onready var word_input: LineEdit = $BottomPanel/WordInput
 @onready var submit_button: Button = $BottomPanel/SubmitButton
 @onready var result_label: Label = $BottomPanel/ResultLabel
+# @onready var attack_button: Label = $BottomPanel/AttackButton
+# @onready var buff_button: Label = $BottomPanel/BuffButton
+# @onready var cancel_button: Label = $BottomPanel/CancelButton
 
 @onready var victory_panel: Control = $VictoryPanel
 @onready var victory_continue_button: Button = $VictoryPanel/ContinueButton
 
+
+# Lifecycle
 func _ready() -> void:
+	# Godot 4 auto-seeds globally at startup, but per-instance RNG randomize is
 	rng.randomize()
 
 	submit_button.pressed.connect(_on_submit_pressed)
+	# TODO: make shii for all of the buttons that we need for basic combat
+	# attack_button.pressed.connect(_on_attack_pressed)
 	word_input.text_submitted.connect(_on_text_submitted)
 	victory_continue_button.pressed.connect(_on_continue_pressed)
 
 	_start_battle()
 
 
+# Battle flow
 func _start_battle() -> void:
 	enemy_hp = enemy_max_hp
 	player_hp = player_max_hp
 	blank_index = 0
 	collected_words.clear()
+
+	# TODO: have the different animations for the goblin and change the idle animation 
 	goblin_sprite.play("Goblin 2")
 
 	victory_panel.visible = false
@@ -94,7 +100,7 @@ func _start_battle() -> void:
 	word_input.editable = true
 
 	line_preview.text = template_line
-	letters_label.text = "Letters: %s" % ", ".join(required_letters)
+	letters_label.text = "Letters (bonus): %s" % ", ".join(bonus_letters)
 
 	_update_hp_ui()
 	_update_prompt_ui()
@@ -103,10 +109,9 @@ func _start_battle() -> void:
 	word_input.text = ""
 	word_input.grab_focus()
 
-# TODO: probably needs to be refined and changed later 
 func _update_hp_ui() -> void:
-	enemy_hp = clamp(enemy_hp, 0, enemy_max_hp)
-	player_hp = clamp(player_hp, 0, player_max_hp)
+	enemy_hp = clampi(enemy_hp, 0, enemy_max_hp)  
+	player_hp = clampi(player_hp, 0, player_max_hp)
 
 	enemy_hp_label.text = "HP: %d/%d" % [enemy_hp, enemy_max_hp]
 	player_hp_label.text = "HP: %d/%d" % [player_hp, player_max_hp]
@@ -155,11 +160,6 @@ func _submit_word(raw: String) -> void:
 	if blank_index >= blanks.size():
 		return
 
-	# Local validation: letters rule
-	if enforce_letter_rule and not _passes_letter_rule(word):
-		_apply_invalid_input("That word doesn't match the letter rule.")
-		return
-
 	# POS validation via WordNet autoload if available
 	var expected_pos: String = str(blanks[blank_index].get("type", "noun"))
 	if not _validate_pos_if_possible(word, expected_pos):
@@ -171,42 +171,56 @@ func _submit_word(raw: String) -> void:
 	# Accept word
 	collected_words.append(word)
 	blank_index += 1
-	
-	var S: float = WordFreq.get_scaling_S(word)
+
+	# Word complexity scaling (fails open if WordFreq autoload not present)
+	var S: float = _get_word_freq_scaling(word)
+
+	# Element classification (your existing system)
 	var element_res := ElementClassifier.classify(word, expected_pos)
 
+	# TODO: for debugging purposes only 
 	print("---- Element Scores ----")
 	print("Player Word Choice: ", word)
 	for k in element_res["raw_scores"].keys():
 		print(k, ":", element_res["raw_scores"][k])
-
 	print("Chosen:", element_res["element"], " | Confidence:", element_res["confidence"])
-	
-	# TODO: this and all other moves need to be moved to a json later 
-	var move := {
-		"base_damage": 5,      
-		"scaling": S,         
-		"coefficient": 1.2,    
-		"accuracy": 1.0
-	}
-	# just to see the word complexity scaling in action
 	print("Word Freq Scaling: ", S)
-	var outcome := CombatEngine.compute_attack(player_stats, enemy_stats, move, rng)
-	print("PLAYER ATTACK -> ", outcome)
-	
+
+	# Player attack with letter bonus
+	var bonus_mult := _compute_letter_bonus_multiplier(word)
+	var outcome := _player_attack(S, bonus_mult)
+
 	enemy_hp = CombatEngine.apply_damage(enemy_hp, int(outcome.damage))
 	_update_hp_ui()
 
-	result_label.text = "Accepted '%s'. %s" % [word, str(outcome.debug)]
+	# End battle immediately if enemy or player dies
+	if enemy_hp <= 0 || player_hp <=0:
+		_finish_battle()
+		return
+
+	var bonus_msg := _format_letter_bonus_msg(word, bonus_mult)
+	result_label.text = "Accepted '%s'%s  (%s)" % [word, bonus_msg, str(outcome.debug)]
 
 	word_input.text = ""
 	word_input.grab_focus()
 
 	_update_prompt_ui()
 
-# TODO: probably needs to change to have the enemy always attack and this needs to be just a fall back
+func _player_attack(freq_scaling: float, letter_bonus_mult: float) -> Dictionary:
+	# Base move (still TODO: move to json later)
+	var move := {
+		"base_damage": 5,
+		"scaling": freq_scaling,
+		"coefficient": 1.2 * letter_bonus_mult, # apply bonus as multiplicative coefficient
+		"accuracy": 1.0
+	}
+
+	var outcome := CombatEngine.compute_attack(player_stats, enemy_stats, move, rng)
+	print("PLAYER ATTACK -> ", outcome)
+	return outcome
+
 func _apply_invalid_input(message: String) -> void:
-	# Combat: enemy attacks player (MOVED OUT of scene math)
+	# Still: enemy attacks on invalid input (you noted this is temporary)
 	var outcome := CombatEngine.compute_attack(enemy_stats, player_stats, enemy_move, rng)
 	player_hp = CombatEngine.apply_damage(player_hp, int(outcome.damage))
 	_update_hp_ui()
@@ -236,23 +250,40 @@ func _finish_battle() -> void:
 func _on_continue_pressed() -> void:
 	_start_battle()
 
-# Validation helpers
-func _passes_letter_rule(word: String) -> bool:
+
+# Letter bonus
+func _compute_letter_bonus_multiplier(word: String) -> float:
+	if bonus_letters.is_empty():
+		return 1.0
+
 	var w := word.to_upper()
 
-	if require_all_letters:
-		for letter in required_letters:
-			if not w.contains(letter):
-				return false
-		return true
-	else:
-		for letter in required_letters:
-			if w.contains(letter):
-				return true
-		return false
+	# Count UNIQUE featured letters present
+	var match_count := 0
+	for letter in bonus_letters:
+		if w.contains(letter):
+			match_count += 1
 
+	var bonus := float(match_count) * letter_bonus_per_match
+
+	# Optional: extra bonus if ALL featured letters are present
+	if match_count == bonus_letters.size():
+		bonus += letter_bonus_all_letters_extra
+
+	bonus = clampf(bonus, 0.0, letter_bonus_cap)  # type-safe clamp :contentReference[oaicite:5]{index=5}
+	return 1.0 + bonus
+
+#TODO: fix me this function can be combined with the regular letter bonus function
+func _format_letter_bonus_msg(word: String, mult: float) -> String:
+	var bonus := mult - 1.0
+	if bonus <= 0.00001:
+		return ""
+	var pct := int(round(bonus * 100.0))
+	return " (+%d%% letter bonus)" % pct
+
+
+# POS / autoload guards
 func _validate_pos_if_possible(word: String, expected_pos: String) -> bool:
-	# If WordNet autoload isn't present or not initialized, fail open.
 	if not _has_wordnet():
 		return true
 	if not WordNet.IsReady:
@@ -267,8 +298,15 @@ func _get_pos_hint_if_possible(word: String, expected_pos: String) -> String:
 	return WordNet.GetPosHint(word, expected_pos)
 
 func _has_wordnet() -> bool:
-	# Autoload name must be "WordNet"
 	return get_tree() != null and get_tree().root.has_node("WordNet")
+
+func _get_word_freq_scaling(word: String) -> float:
+	# If WordFreq autoload isn't present, fail open to neutral scaling.
+	if get_tree() == null:
+		return 1.0
+	if not get_tree().root.has_node("WordFreq"):
+		return 1.0
+	return WordFreq.get_scaling_S(word)
 
 func _get_article(word: String) -> String:
 	if word.length() == 0:
