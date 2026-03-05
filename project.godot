@@ -31,8 +31,8 @@ Elements="*uid://bvgm7byk5q4hw"
 
 [display]
 
-window/size/viewport_width=480
-window/size/viewport_height=270
+window/size/viewport_width=640
+window/size/viewport_height=360
 window/size/borderless=true
 window/size/window_width_override=1720
 window/size/window_height_override=980
@@ -60,3 +60,5 @@ attack={
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
+textures/size/viewport_height=270
+textures/size/viewport_width=480
