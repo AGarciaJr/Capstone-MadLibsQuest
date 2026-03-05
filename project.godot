@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 
 EncounterSceneTransition="*res://EncounterSceneTransition.gd"
 Progress="*res://ProgressManager.gd"
+Run="*res://RunManager.gd"
 
 [dotnet]
 

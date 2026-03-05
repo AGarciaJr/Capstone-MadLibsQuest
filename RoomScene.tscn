@@ -1,0 +1,44 @@
+[gd_scene load_steps=2 format=3 uid="uid://cpbvhlkx6fgg7"]
+
+[ext_resource type="Script" uid="uid://v0ocw0aa1l8c" path="res://RoomScene.gd" id="1_8ye1f"]
+
+[node name="RoomScene" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -1.0
+offset_top = 1.0
+offset_right = 1151.0
+offset_bottom = 647.0
+script = ExtResource("1_8ye1f")
+
+[node name="TitleLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 381.0
+offset_top = 17.0
+offset_right = 500.0
+offset_bottom = 62.0
+text = "title"
+
+[node name="NodeInfoLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 382.0
+offset_top = 52.0
+offset_right = 465.0
+offset_bottom = 101.0
+text = "info
+"
+
+[node name="DoorContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 353.0
+offset_top = 264.0
+offset_right = 465.0
+offset_bottom = 304.0
+
+[node name="HintLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 384.0
+offset_top = 104.0
+offset_right = 433.0
+offset_bottom = 127.0
+text = "hint"

@@ -1,0 +1,66 @@
+[gd_scene load_steps=6 format=3 uid="uid://cwtitldoo8dvx"]
+
+[ext_resource type="Script" uid="uid://cwh0iyo32lve3" path="res://Room3D.gd" id="1_swdye"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_swdye"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_wr36d"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_swdye"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wr36d"]
+size = Vector3(0.23, 0.33, 0.01)
+
+[node name="Room3D" type="Node3D"]
+script = ExtResource("1_swdye")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.21445385, 0.36207408)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.21978512, 0.48564696)
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_swdye")
+
+[node name="Door1" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17121464, -0.34508294)
+physics_material_override = SubResource("PhysicsMaterial_wr36d")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Door1"]
+transform = Transform3D(0.23277678, 0, 0, 0, 0.32955495, 0, 0, 0, 0.008609951, 0, 0, 0)
+mesh = SubResource("BoxMesh_swdye")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Door1"]
+shape = SubResource("BoxShape3D_wr36d")
+
+[node name="Door2" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.322198, 0.17121464, -0.34508294)
+physics_material_override = SubResource("PhysicsMaterial_wr36d")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Door2"]
+transform = Transform3D(0.23277678, 0, 0, 0, 0.32955495, 0, 0, 0, 0.008609951, 0, 0, 0)
+mesh = SubResource("BoxMesh_swdye")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Door2"]
+shape = SubResource("BoxShape3D_wr36d")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HintLabel" type="Label" parent="CanvasLayer"]
+offset_left = 550.0
+offset_top = 579.0
+offset_right = 606.0
+offset_bottom = 617.0
+text = "hello"
+
+[node name="Door3" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.31627053, 0.17121464, -0.34508294)
+physics_material_override = SubResource("PhysicsMaterial_wr36d")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Door3"]
+transform = Transform3D(0.23277678, 0, 0, 0, 0.32955495, 0, 0, 0, 0.008609951, 0, 0, 0)
+mesh = SubResource("BoxMesh_swdye")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Door3"]
+shape = SubResource("BoxShape3D_wr36d")
