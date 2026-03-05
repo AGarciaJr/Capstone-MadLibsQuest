@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://dj2rv4eiyvciw"]
+[gd_scene load_steps=0 format=3 uid="uid://dj2rv4eiyvciw"]
 
 [node name="BattleMenu" type="Control" unique_id=1784590527]
 layout_mode = 3

@@ -48,10 +48,10 @@ shape = SubResource("BoxShape3D_wr36d")
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="HintLabel" type="Label" parent="CanvasLayer"]
-offset_left = 141.0
-offset_top = 232.0
-offset_right = 233.0
-offset_bottom = 257.0
+offset_left = 253.0
+offset_top = 318.0
+offset_right = 345.0
+offset_bottom = 343.0
 text = "placeholder"
 
 [node name="Door3" type="StaticBody3D" parent="."]
