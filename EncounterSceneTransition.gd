@@ -1,6 +1,6 @@
 extends Node
 
-const BATTLE_SCENE := preload("res://BattleStub.tscn")
+const BATTLE_SCENE := preload("res://Scenes/Battle/BattleV1.tscn")
 
 var current_encounter: Dictionary = {}
 

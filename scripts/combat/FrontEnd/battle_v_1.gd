@@ -73,6 +73,8 @@ var rng := RandomNumberGenerator.new()
 
 # Lifecycle
 func _ready() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	
 	# Godot 4 auto-seeds globally at startup, but per-instance RNG randomize is
 	rng.randomize()
 
@@ -87,6 +89,32 @@ func _ready() -> void:
 
 # Battle flow
 func _start_battle() -> void:
+	var enc = EncounterSceneTransition.current_encounter
+	var encounter_id: String = enc.get("encounter_id", "Goblin 2")
+	
+	match encounter_id:
+		"Goblin 2":
+			enemy_max_hp = 30
+			enemy_name.text = "Goblin"
+			template_line = "The hero faced a fearsome ___, chose to ___, and won with ___ force!"
+			blanks = [
+				{"type": "noun", "hint": "a creature/thing", "display": "NOUN"},
+				{"type": "verb", "hint": "an action", "display": "VERB"},
+				{"type": "adjective", "hint": "a describing word", "display": "ADJECTIVE"},
+			]
+		"Boss Rat":
+			enemy_max_hp = 50
+			enemy_name.text = "Rat King"
+			template_line = "The hero challenged the monstrous ___, tried to ___, and struck with ___ power!"
+			blanks = [
+				{"type": "noun", "hint": "a monster/title", "display": "NOUN"},
+				{"type": "verb", "hint": "an action", "display": "VERB"},
+				{"type": "adjective", "hint": "a powerful describing word", "display": "ADJECTIVE"},
+			]
+		_:
+			enemy_max_hp = 30
+			enemy_name.text = "Enemy"
+	
 	enemy_hp = enemy_max_hp
 	player_hp = player_max_hp
 	blank_index = 0
@@ -248,7 +276,12 @@ func _finish_battle() -> void:
 	victory_panel.visible = true
 
 func _on_continue_pressed() -> void:
-	_start_battle()
+	var enc = EncounterSceneTransition.current_encounter
+	var encounter_id: String = enc.get("encounter_id", "")
+	if encounter_id != "":
+		Progress.clear_encounter(encounter_id)
+
+	EncounterSceneTransition.return_to_scene()
 
 
 # Letter bonus
