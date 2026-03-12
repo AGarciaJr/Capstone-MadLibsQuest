@@ -8,3 +8,6 @@ func clear_encounter(id: String) -> void:
 
 func is_encounter_cleared(id: String) -> bool:
 	return cleared_encounters.get(id, false)
+
+func reset_progress() -> void:
+	cleared_encounters.clear()
