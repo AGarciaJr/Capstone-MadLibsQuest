@@ -56,4 +56,9 @@ func _on_door_clicked(index: int):
 
 func _refresh_ui() -> void:
 	var curr := Run.node()
-	hint_label.text = "Current %s (%s). Click a door." % [str(Run.current_id), curr.get("type", "?")]
+	var nexts = Run.next_ids()
+	
+	if nexts.is_empty() and curr.get("type", "") == "boss":
+		hint_label.text = "Boss cleared. Tutorial complete."
+	else:
+		hint_label.text = "Current %s (%s). Click a door." % [str(Run.current_id), curr.get("type", "?")]
