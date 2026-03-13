@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://cwtitldoo8dvx"]
+[gd_scene load_steps=12 format=3 uid="uid://cwtitldoo8dvx"]
 
 [ext_resource type="Script" uid="uid://cwh0iyo32lve3" path="res://Room3D.gd" id="1_swdye"]
+[ext_resource type="Script" uid="uid://b2rnibk3oeqpl" path="res://scripts/Interactables/DoorInteractable.gd" id="2_yg70w"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_swdye"]
 
@@ -8,8 +9,17 @@
 
 [sub_resource type="BoxMesh" id="BoxMesh_swdye"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yg70w"]
+albedo_color = Color(0.3647059, 0.3647059, 0.3647059, 1)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_wr36d"]
 size = Vector3(0.23, 0.33, 0.01)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7pfex"]
+albedo_color = Color(0.3647059, 0.3647059, 0.3647059, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_33av0"]
+albedo_color = Color(0.36282945, 0.36282945, 0.36282945, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_swdye"]
 
@@ -40,10 +50,13 @@ mesh = SubResource("PlaneMesh_swdye")
 [node name="Door1" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17121464, -0.34508294)
 physics_material_override = SubResource("PhysicsMaterial_wr36d")
+script = ExtResource("2_yg70w")
+mesh_path = NodePath("MeshInstance3D")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Door1"]
 transform = Transform3D(0.23277678, 0, 0, 0, 0.32955495, 0, 0, 0, 0.008609951, 0, 0, 0)
 mesh = SubResource("BoxMesh_swdye")
+surface_material_override/0 = SubResource("StandardMaterial3D_yg70w")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Door1"]
 shape = SubResource("BoxShape3D_wr36d")
@@ -51,12 +64,29 @@ shape = SubResource("BoxShape3D_wr36d")
 [node name="Door2" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.322198, 0.17121464, -0.34508294)
 physics_material_override = SubResource("PhysicsMaterial_wr36d")
+script = ExtResource("2_yg70w")
+mesh_path = NodePath("MeshInstance3D")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Door2"]
 transform = Transform3D(0.23277678, 0, 0, 0, 0.32955495, 0, 0, 0, 0.008609951, 0, 0, 0)
 mesh = SubResource("BoxMesh_swdye")
+surface_material_override/0 = SubResource("StandardMaterial3D_7pfex")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Door2"]
+shape = SubResource("BoxShape3D_wr36d")
+
+[node name="Door3" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.31627053, 0.17121464, -0.34508294)
+physics_material_override = SubResource("PhysicsMaterial_wr36d")
+script = ExtResource("2_yg70w")
+mesh_path = NodePath("MeshInstance3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Door3"]
+transform = Transform3D(0.23277678, 0, 0, 0, 0.32955495, 0, 0, 0, 0.008609951, 0, 0, 0)
+mesh = SubResource("BoxMesh_swdye")
+surface_material_override/0 = SubResource("StandardMaterial3D_33av0")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Door3"]
 shape = SubResource("BoxShape3D_wr36d")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -122,14 +152,3 @@ custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Restart Tutorial"
-
-[node name="Door3" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.31627053, 0.17121464, -0.34508294)
-physics_material_override = SubResource("PhysicsMaterial_wr36d")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Door3"]
-transform = Transform3D(0.23277678, 0, 0, 0, 0.32955495, 0, 0, 0, 0.008609951, 0, 0, 0)
-mesh = SubResource("BoxMesh_swdye")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Door3"]
-shape = SubResource("BoxShape3D_wr36d")

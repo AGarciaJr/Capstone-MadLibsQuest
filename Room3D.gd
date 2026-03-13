@@ -6,6 +6,7 @@ extends Node3D
 @onready var restart_button: Button = $CanvasLayer/UIRoot/CompletionCenter/CompletionPanel/CompletionVBox/RestartButton
 
 var sensitivity := 0.003
+var _hovered_door: DoorInteractable = null
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -25,17 +26,16 @@ func _input(event):
 		if completion_center.visible:
 			return
 		
-		var center = get_viewport().get_visible_rect().size * 0.5
-		
-		var from = camera.project_ray_origin(center)
-		var to = from + camera.project_ray_normal(center) * 1000.0
-		
-		var query = PhysicsRayQueryParameters3D.create(from, to)
-		var result = get_world_3d().direct_space_state.intersect_ray(query)
-		
-		if result and result.collider:
-			if result.collider.name == "Door1" or result.collider.name == "Door2" or result.collider.name == "Door3":
-				_on_door_clicked(0)
+		var door := _get_targeted_door()
+		if door != null:
+			door.interact()
+
+func _process(_delta: float) -> void:
+	if completion_center.visible:
+		_set_hovered_door(null)
+		return
+	var targeted_door := _get_targeted_door()
+	_set_hovered_door(targeted_door)
 
 func _on_door_clicked(index: int):
 	var nexts = Run.next_ids()
@@ -59,6 +59,34 @@ func _on_door_clicked(index: int):
 			get_tree().current_scene.scene_file_path,
 			{"node_id": Run.current_id}
 		)
+		
+
+func _get_targeted_door() -> DoorInteractable:
+	var center = get_viewport().get_visible_rect().size * 0.5
+		
+	var from = camera.project_ray_origin(center)
+	var to = from + camera.project_ray_normal(center) * 1000.0
+	
+	var query = PhysicsRayQueryParameters3D.create(from, to)
+	var result = get_world_3d().direct_space_state.intersect_ray(query)
+	
+	if result and result.collider is DoorInteractable:
+		return result.collider as DoorInteractable
+	
+	return null
+
+	
+func _set_hovered_door(targeted_door: DoorInteractable) -> void:
+	if _hovered_door == targeted_door:
+		return
+	
+	if _hovered_door != null:
+		_hovered_door.set_highlight(false)
+	
+	_hovered_door = targeted_door
+	
+	if _hovered_door != null:
+		_hovered_door.set_highlight(true)
 
 func _refresh_ui() -> void:
 	var curr := Run.node()
