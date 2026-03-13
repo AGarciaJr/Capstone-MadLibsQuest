@@ -47,6 +47,8 @@ var enemy_move := {
 
 var rng := RandomNumberGenerator.new()
 
+@onready var fade: ColorRect = $Fade
+
 # UI refs
 @onready var enemy_name: Label = $EnemyPanel/EnemyName
 @onready var enemy_hp_label: Label = $EnemyPanel/EnemyHP
@@ -75,6 +77,8 @@ var rng := RandomNumberGenerator.new()
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	
+	fade.color = Color( 0, 0, 0, 1)
+	
 	# Godot 4 auto-seeds globally at startup, but per-instance RNG randomize is
 	rng.randomize()
 
@@ -85,6 +89,8 @@ func _ready() -> void:
 	victory_continue_button.pressed.connect(_on_continue_pressed)
 
 	_start_battle()
+	var tween = create_tween()
+	tween.tween_property(fade, "color", Color(0, 0, 0, 0), 0.35)
 
 
 # Battle flow
@@ -280,6 +286,14 @@ func _on_continue_pressed() -> void:
 	var encounter_id: String = enc.get("encounter_id", "")
 	if encounter_id != "":
 		Progress.clear_encounter(encounter_id)
+		
+	word_input.editable = false
+	submit_button.disabled = true
+	victory_continue_button.disabled = true
+	
+	var tween := create_tween()
+	tween.tween_property(fade, "color", Color(0, 0, 0, 1), 0.35)
+	await tween.finished
 
 	EncounterSceneTransition.return_to_scene()
 
