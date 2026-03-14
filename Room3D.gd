@@ -5,6 +5,7 @@ extends Node3D
 @onready var completion_center: Control = $CanvasLayer/UIRoot/CompletionCenter
 @onready var restart_button: Button = $CanvasLayer/UIRoot/CompletionCenter/CompletionPanel/CompletionVBox/RestartButton
 @onready var fade: ColorRect = $CanvasLayer/UIRoot/Fade
+@onready var crosshair: Control = $CanvasLayer/UIRoot/Crosshair
 
 var sensitivity := 0.003
 var _hovered_door: DoorInteractable = null
@@ -59,6 +60,8 @@ func _on_door_clicked(index: int):
 		var encounter_id : String = curr.get("encounter_id", "")
 		
 		_is_transitioning = true
+		crosshair.visible = false
+		hint_label.visible = false
 		_set_hovered_door(null)
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		
@@ -107,8 +110,9 @@ func _refresh_ui() -> void:
 	var boss_cleared := encounter_id != "" and Progress.is_encounter_cleared(encounter_id)
 	var tutorial_complete: bool = nexts.is_empty() and curr.get("type", "") == "boss" and boss_cleared
 	
-	completion_center.visible = tutorial_complete
-	hint_label.visible = not tutorial_complete
+	completion_center.visible = tutorial_complete and not _is_transitioning
+	hint_label.visible = not tutorial_complete and not _is_transitioning
+	crosshair.visible = not tutorial_complete and not _is_transitioning
 	
 	if tutorial_complete:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
