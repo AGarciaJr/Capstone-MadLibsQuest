@@ -1,4 +1,3 @@
-# res://scripts/data/enemy_db.gd
 extends Node
 class_name EnemyDB
 
