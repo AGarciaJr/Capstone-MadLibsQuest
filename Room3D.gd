@@ -56,12 +56,7 @@ func _on_door_clicked(index: int):
 	var type = curr.get("type", "?")
 	
 	if type == "fight" or type == "boss":
-		# For regular fights pick a random encounter from the pool each time a door is opened.
-		var encounter_id: String
-		if type == "fight":
-			encounter_id = MapBuilder.FIGHT_ENCOUNTER_POOL[randi() % MapBuilder.FIGHT_ENCOUNTER_POOL.size()]
-		else:
-			encounter_id = curr.get("encounter_id", "")
+		var encounter_id: String = curr.get("encounter_id", "")
 		
 		_is_transitioning = true
 		_set_hovered_door(null)

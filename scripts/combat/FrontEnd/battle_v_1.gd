@@ -7,6 +7,7 @@ extends Control
 const ENEMY_REGISTRY := {
 	"goblin":   preload("res://scripts/entities/enemies/goblin.gd"),
 	"skeleton": preload("res://scripts/entities/enemies/skeleton.gd"),
+	"mushroom": preload("res://scripts/entities/enemies/mushroom.gd"),
 }
 
 # Config
