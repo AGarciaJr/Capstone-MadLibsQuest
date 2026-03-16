@@ -1,14 +1,18 @@
 extends Control
 
 
-# Config
+# --- Enemy entity registry ---
+# Maps encounter_id strings (from MapBuilder) to their entity scripts.
+# Add new enemies here as more are created in scripts/entities/enemies/.
+const ENEMY_REGISTRY := {
+	"goblin":   preload("res://scripts/entities/enemies/goblin.gd"),
+	"skeleton": preload("res://scripts/entities/enemies/skeleton.gd"),
+}
 
-# TODO: move these into a json with the rest of the player and enemy data
-@export var enemy_max_hp: int = 30
+# Config
 @export var player_max_hp: int = 100
 
-# TODO: also move this to the player json
-# Letter set shown to player (now used for BONUS, not rejection)
+# Letter set shown to player (used for BONUS, not rejection)
 @export var bonus_letters: PackedStringArray = ["A", "E", "S", "T"]
 
 # Bonus tuning
@@ -16,33 +20,26 @@ extends Control
 @export var letter_bonus_all_letters_extra: float = 0.15 # extra +15% if word contains ALL featured letters
 @export var letter_bonus_cap: float = 0.50            # cap total bonus to +50%
 
-# Demo madlib template + blanks
+# Battle template — populated dynamically from the loaded enemy entity
 var battle_title: String = "~ The Bard's Tale ~"
-var template_line: String = "The hero faced a fearsome ___, chose to ___, and won with ___ force!"
-
-# TODO: move these to a json for clarity probably need a bunch of different word prompts per move used 
-var blanks := [
-	{"type": "noun", "hint": "a creature/thing", "display": "NOUN"},
-	{"type": "verb", "hint": "an action", "display": "VERB"},
-	{"type": "adjective", "hint": "a describing word", "display": "ADJECTIVE"},
-]
+var template_line: String = ""
+var blanks: Array = []
 
 # State
+var enemy_max_hp: int = 30
 var enemy_hp: int
 var player_hp: int
 var blank_index: int = 0
 var collected_words: Array[String] = []
 
-# TODO: move combat stats from this dict to a json later
 var player_stats := {"atk": 10, "crit_chance": 0.10, "crit_mult": 1.5, "def": 0, "armor": 0}
-var enemy_stats := {"atk": 6, "crit_chance": 0.05, "crit_mult": 1.4, "def": 2, "armor": 10}
+var enemy_stats  := {"atk": 6,  "crit_chance": 0.05, "crit_mult": 1.4, "def": 2, "armor": 10}
 
-# Enemy move (still used on invalid input for now)
 var enemy_move := {
 	"base_damage": 4,
 	"scaling": 0.4,
 	"coefficient": 1.0,
-	"accuracy": 1.0
+	"accuracy": 1.0,
 }
 
 var rng := RandomNumberGenerator.new()
@@ -96,38 +93,49 @@ func _ready() -> void:
 # Battle flow
 func _start_battle() -> void:
 	var enc = EncounterSceneTransition.current_encounter
-	var encounter_id: String = enc.get("encounter_id", "Goblin 2")
-	
-	match encounter_id:
-		"Goblin 2":
-			enemy_max_hp = 30
-			enemy_name.text = "Goblin"
-			template_line = "The hero faced a fearsome ___, chose to ___, and won with ___ force!"
-			blanks = [
-				{"type": "noun", "hint": "a creature/thing", "display": "NOUN"},
-				{"type": "verb", "hint": "an action", "display": "VERB"},
-				{"type": "adjective", "hint": "a describing word", "display": "ADJECTIVE"},
-			]
-		"Boss Rat":
-			enemy_max_hp = 50
-			enemy_name.text = "Rat King"
-			template_line = "The hero challenged the monstrous ___, tried to ___, and struck with ___ power!"
-			blanks = [
-				{"type": "noun", "hint": "a monster/title", "display": "NOUN"},
-				{"type": "verb", "hint": "an action", "display": "VERB"},
-				{"type": "adjective", "hint": "a powerful describing word", "display": "ADJECTIVE"},
-			]
-		_:
-			enemy_max_hp = 30
-			enemy_name.text = "Enemy"
-	
+	var encounter_id: String = enc.get("encounter_id", "goblin")
+
+	# Load enemy data from entity registry
+	var enemy: BaseEnemy = _load_enemy(encounter_id)
+	if enemy == null:
+		push_error("BattleV1: No entity found for encounter_id '%s'. Using defaults." % encounter_id)
+		enemy_max_hp  = 30
+		enemy_name.text = "Enemy"
+		template_line = "The hero faced a fearsome ___, chose to ___, and won with ___ force!"
+		blanks = [
+			{"type": "noun",      "hint": "a creature/thing", "display": "NOUN"},
+			{"type": "verb",      "hint": "an action",         "display": "VERB"},
+			{"type": "adjective", "hint": "a describing word", "display": "ADJECTIVE"},
+		]
+	else:
+		enemy_max_hp      = enemy.max_hp
+		enemy_name.text   = enemy.entity_name
+		template_line     = enemy.template_line
+		blanks            = enemy.blanks
+		enemy_stats       = enemy.get_combat_stats()
+		enemy_move        = enemy.base_move
+
+		# Load enemy's SpriteFrames and play idle animation
+		if enemy.sprite_frames_path != "":
+			var frames: SpriteFrames = load(enemy.sprite_frames_path) as SpriteFrames
+			if frames != null:
+				goblin_sprite.sprite_frames = frames
+				if enemy.sprite_animation_name != "" \
+						and frames.has_animation(enemy.sprite_animation_name):
+					goblin_sprite.play(enemy.sprite_animation_name)
+				else:
+					goblin_sprite.stop()
+			else:
+				goblin_sprite.stop()
+		else:
+			goblin_sprite.stop()
+
+		enemy.free()
+
 	enemy_hp = enemy_max_hp
 	player_hp = player_max_hp
 	blank_index = 0
 	collected_words.clear()
-
-	# TODO: have the different animations for the goblin and change the idle animation 
-	goblin_sprite.play("Goblin 2")
 
 	victory_panel.visible = false
 	submit_button.disabled = false
@@ -142,6 +150,13 @@ func _start_battle() -> void:
 	result_label.text = "Type a word and press Enter!"
 	word_input.text = ""
 	word_input.grab_focus()
+
+## Instantiates the enemy entity for the given encounter_id, or null if not found.
+func _load_enemy(encounter_id: String) -> BaseEnemy:
+	if not ENEMY_REGISTRY.has(encounter_id):
+		return null
+	return ENEMY_REGISTRY[encounter_id].new() as BaseEnemy
+
 
 func _update_hp_ui() -> void:
 	enemy_hp = clampi(enemy_hp, 0, enemy_max_hp)  
