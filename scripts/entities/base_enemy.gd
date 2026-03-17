@@ -28,6 +28,14 @@ var base_move: Dictionary = {
 	"accuracy":    1.0,
 }
 
+# --- Multi-sentence battle config ---
+## All Mad Lib sentences for this enemy. Each entry: {line: String, blanks: Array}
+var templates: Array = []
+## How many sentences the player gets before losing (regardless of enemy HP).
+var max_sentences: int = 3
+## Shown on the defeat screen when this enemy kills the player.
+var defeat_message: String = "You were defeated!"
+
 # --- Sprite resources for the battle scene ---
 ## Path to a SpriteFrames .tres resource for this enemy.
 var sprite_frames_path: String = ""
