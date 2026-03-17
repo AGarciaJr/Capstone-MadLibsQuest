@@ -52,27 +52,27 @@ var items: Array[Dictionary] = [
 	},
 ]
 
-## Builds the full item pool including one Letter X item for each letter A-Z.
-func _build_full_pool() -> Array[Dictionary]:
-	var pool: Array[Dictionary] = items.duplicate()
+func get_random_choices(n: int = 3) -> Array[Dictionary]:
+	var non_letter_pool: Array[Dictionary] = items.duplicate()
+	non_letter_pool.shuffle()
+	var letter_pool: Array[Dictionary] = []
 	for i in range(ALPHABET.length()):
 		var letter: String = ALPHABET.substr(i, 1)
-		pool.append({
+		letter_pool.append({
 			"id": "letter_%s" % letter,
 			"name": "Letter %s" % letter,
 			"description": "Adds '%s' as a bonus letter. If you already have it, doubles the damage bonus for that letter!" % letter,
 			"effect_type": "add_bonus_letter",
 			"params": {"letter": letter}
 		})
-	return pool
-
-func get_random_choices(n: int = 3) -> Array[Dictionary]:
-	var pool: Array[Dictionary] = _build_full_pool()
-	pool.shuffle()
-	var count: int = min(n, pool.size())
+	letter_pool.shuffle()
 	var out: Array[Dictionary] = []
-	for i in range(count):
-		out.append(pool[i])
+	var letter_slot: int = randi() % n
+	for i in range(n):
+		if i == letter_slot:
+			out.append(letter_pool[0])
+		else:
+			out.append(non_letter_pool.pop_back())
 	return out
 
 func apply_item(item: Dictionary) -> void:

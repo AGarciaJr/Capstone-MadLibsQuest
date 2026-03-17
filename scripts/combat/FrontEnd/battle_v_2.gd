@@ -145,8 +145,8 @@ func _update_hp_ui() -> void:
 
 func _update_prompt_ui() -> void:
 	if blank_index >= blanks.size():
-		_finish_battle()
-		return
+		blank_index = 0
+		collected_words.clear()
 
 	var b: Dictionary = blanks[blank_index]
 	var display: String = str(b.get("display", "WORD"))
@@ -288,10 +288,6 @@ func _apply_invalid_turn(message: String) -> void:
 func _finish_battle() -> void:
 	word_input.editable = false
 	submit_button.disabled = true
-
-	if enemy_hp > 0:
-		enemy_hp = 0
-		_update_hp_ui()
 
 	var enc: Dictionary = EncounterSceneTransition.current_encounter
 	var encounter_id: String = str(enc.get("encounter_id", ""))
