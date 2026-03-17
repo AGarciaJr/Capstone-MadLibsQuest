@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=16 format=3 uid="uid://bw0afptnjumdi"]
+[gd_resource type="SpriteFrames" format=3 uid="uid://bw0afptnjumdi"]
 
 [ext_resource type="Texture2D" uid="uid://dbxbw8bbohsad" path="res://assets/Art/Enemies/Monster_Creatures_Fantasy(Version 1.3)/Goblin/Attack3.png" id="1_21v4p"]
 

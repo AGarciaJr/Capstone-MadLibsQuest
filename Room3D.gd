@@ -127,7 +127,7 @@ func _refresh_ui() -> void:
 
 func _on_restart_pressed():
 	# Reset tutorial run state
-	Run.new_linear_demo_run()
+	Run.new_tutorial_run()
 	
 	# Reset progress manager
 	Progress.reset_progress()

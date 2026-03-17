@@ -96,10 +96,10 @@ func _ready() -> void:
 # Battle flow
 func _start_battle() -> void:
 	var enc = EncounterSceneTransition.current_encounter
-	var encounter_id: String = enc.get("encounter_id", "Goblin 2")
+	var encounter_id: String = enc.get("encounter_id", "Goblin")
 	
 	match encounter_id:
-		"Goblin 2":
+		"Goblin":
 			enemy_max_hp = 30
 			enemy_name.text = "Goblin"
 			template_line = "The hero faced a fearsome ___, chose to ___, and won with ___ force!"

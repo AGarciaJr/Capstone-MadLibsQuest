@@ -1,16 +1,35 @@
 extends Node
 class_name RunManager
 
+enum RunMode {
+	TUTORIAL,
+	GENERATED
+}
+
 var map := {}
 var current_id := 0
+var run_mode : RunMode = RunMode.TUTORIAL
 
 func _ready() -> void:
 	if map.is_empty():
-		new_linear_demo_run()
-
-func new_linear_demo_run() -> void:
-	map = MapBuilder.build_linear_demo()
+		start_run()
+		
+func start_run() -> void:
+	match run_mode:
+		RunMode.TUTORIAL:
+			map = MapBuilder.build_tutorial_run()
+		RunMode.GENERATED:
+			map = MapBuilder.build_generated_run()
+	
 	current_id = map["start_id"]
+
+func new_tutorial_run() -> void:
+	run_mode = RunMode.TUTORIAL
+	start_run()
+
+func new_generated_run() -> void:
+	run_mode = RunMode.GENERATED
+	start_run()
 
 func node() -> Dictionary:
 	if map.is_empty() or not map.has("nodes"):
