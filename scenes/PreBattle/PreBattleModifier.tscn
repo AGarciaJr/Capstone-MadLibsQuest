@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://cd024qap737m8" path="res://assets/Themes/Default_UI_Theme.tres" id="1_ixufq"]
 [ext_resource type="FontFile" uid="uid://c6ty4nsegylvr" path="res://assets/Fonts/Montserrat Fonts/Montserrat-SemiBold.otf" id="2_ux6d3"]
-[ext_resource type="Script" uid="uid://d3w5iy4nioeul" path="res://scenes/PreBattle/PreBattleModifier.gd" id="3_script"]
+[ext_resource type="Script" uid="uid://d3w5iy4nioeul" path="res://scripts/combat/BackEnd/EnemySystems/PreBattleModifier.gd" id="3_script"]
 
 [node name="PreBattleModifier" type="Control" unique_id=2100343089]
 layout_mode = 3
