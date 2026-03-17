@@ -1,5 +1,7 @@
 extends Node
 
+const ALPHABET := "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
 var items: Array[Dictionary] = [
 	{
 		"id": "hp_and_stats_boost",
@@ -50,8 +52,22 @@ var items: Array[Dictionary] = [
 	},
 ]
 
-func get_random_choices(n: int = 3) -> Array[Dictionary]:
+## Builds the full item pool including one Letter X item for each letter A-Z.
+func _build_full_pool() -> Array[Dictionary]:
 	var pool: Array[Dictionary] = items.duplicate()
+	for i in range(ALPHABET.length()):
+		var letter: String = ALPHABET.substr(i, 1)
+		pool.append({
+			"id": "letter_%s" % letter,
+			"name": "Letter %s" % letter,
+			"description": "Adds '%s' as a bonus letter. If you already have it, doubles the damage bonus for that letter!" % letter,
+			"effect_type": "add_bonus_letter",
+			"params": {"letter": letter}
+		})
+	return pool
+
+func get_random_choices(n: int = 3) -> Array[Dictionary]:
+	var pool: Array[Dictionary] = _build_full_pool()
 	pool.shuffle()
 	var count: int = min(n, pool.size())
 	var out: Array[Dictionary] = []

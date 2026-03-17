@@ -15,7 +15,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="madlibsquest"
-run/main_scene="uid://covfo82jjaeye"
+run/main_scene="uid://b3ngh1tx3dcpc"
 config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -28,8 +28,8 @@ GameData="*res://scripts/GameData.gd"
 WordNet="*res://scripts/nlp/WordNetBridge.cs"
 WordFreq="*uid://d2b46q28jxqrr"
 Elements="*uid://bvgm7byk5q4hw"
-PlayerState="*uid://dcb4rux2nw6vi"
 ItemSystem="*uid://orag13re17qh"
+PlayerState="*uid://dcb4rux2nw6vi"
 EnemyModifierDB="*uid://dgarlludqnkf7"
 
 [display]

@@ -50,7 +50,7 @@ func apply_stat_mod(flat: Dictionary, mult: Dictionary) -> void:
 
 func add_bonus_letter(letter: String) -> void:
 	var up := letter.to_upper()
-	if not bonus_letters.has(up):
+	if up.length() == 1 and up in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
 		bonus_letters.append(up)
 
 func add_random_bonus_letters(count: int, rng: RandomNumberGenerator = null) -> PackedStringArray:
@@ -60,14 +60,10 @@ func add_random_bonus_letters(count: int, rng: RandomNumberGenerator = null) -> 
 
 	var added: PackedStringArray = PackedStringArray()
 	var alphabet := "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	var attempts: int = 0
 
-	while added.size() < max(0, count) and attempts < 200:
-		attempts += 1
+	for _i in range(max(0, count)):
 		var idx: int = rng.randi_range(0, alphabet.length() - 1)
 		var letter: String = alphabet.substr(idx, 1)
-		if bonus_letters.has(letter) or added.has(letter):
-			continue
 		add_bonus_letter(letter)
 		added.append(letter)
 

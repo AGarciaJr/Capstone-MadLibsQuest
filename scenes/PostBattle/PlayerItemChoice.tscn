@@ -3,7 +3,7 @@
 [ext_resource type="FontFile" uid="uid://rqd0nt2kx661" path="res://assets/Fonts/Junicode-Bold.ttf" id="1_b455q"]
 [ext_resource type="FontFile" uid="uid://cidaxvdq4u675" path="res://assets/Fonts/Junicode.ttf" id="2_03u8h"]
 [ext_resource type="FontFile" uid="uid://dppulj7gfoex6" path="res://assets/Fonts/Montserrat Fonts/Montserrat-Black.ttf" id="3_03u8h"]
-[ext_resource type="Script" uid="uid://dfl3iot7nwkg6" path="res://Scenes/PostBattle/PlayerItemChoice.gd" id="4_script"]
+[ext_resource type="Script" uid="uid://dfl3iot7nwkg6" path="res://scenes/PostBattle/PlayerItemChoice.gd" id="4_script"]
 
 [node name="ItemChoice" type="Control" unique_id=1618093229]
 layout_mode = 3
@@ -13,17 +13,16 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4_script")
-metadata/_edit_lock_ = true
 
 [node name="ItemNodeOriginContainer" type="HBoxContainer" parent="." unique_id=516770831]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.081
-anchor_top = 0.16700001
-anchor_right = 0.9370001
-anchor_bottom = 0.889
-offset_left = 0.15999985
-offset_top = -0.12000275
+anchor_left = 0.062000003
+anchor_top = 0.178
+anchor_right = 0.93700004
+anchor_bottom = 0.88900006
+offset_left = 0.3199997
+offset_top = -4.080002
 offset_right = 0.3199463
 offset_bottom = -0.040008545
 grow_horizontal = 2
@@ -45,6 +44,7 @@ theme_override_font_sizes/font_size = 25
 text = "Item Name"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 2
 metadata/_edit_use_anchors_ = true
 
 [node name="ItemDescription" type="Label" parent="ItemNodeOriginContainer/ItemChoice1" unique_id=2145187652]
@@ -55,6 +55,7 @@ theme_override_font_sizes/font_size = 12
 text = "Item Description"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 2
 metadata/_edit_use_anchors_ = true
 
 [node name="Button" type="Button" parent="ItemNodeOriginContainer/ItemChoice1" unique_id=1101779858]
@@ -76,6 +77,7 @@ theme_override_font_sizes/font_size = 25
 text = "Item Name"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 2
 metadata/_edit_use_anchors_ = true
 
 [node name="ItemDescription" type="Label" parent="ItemNodeOriginContainer/ItemChoice2" unique_id=7851437]
@@ -86,6 +88,7 @@ theme_override_font_sizes/font_size = 12
 text = "Item Description"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 2
 metadata/_edit_use_anchors_ = true
 
 [node name="Button" type="Button" parent="ItemNodeOriginContainer/ItemChoice2" unique_id=574333059]
@@ -107,6 +110,7 @@ theme_override_font_sizes/font_size = 25
 text = "Item Name"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 2
 metadata/_edit_use_anchors_ = true
 
 [node name="ItemDescription" type="Label" parent="ItemNodeOriginContainer/ItemChoice3" unique_id=2041964588]
@@ -117,6 +121,7 @@ theme_override_font_sizes/font_size = 12
 text = "Item Description"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 2
 metadata/_edit_use_anchors_ = true
 
 [node name="Button" type="Button" parent="ItemNodeOriginContainer/ItemChoice3" unique_id=1241336081]
@@ -125,11 +130,16 @@ layout_mode = 2
 text = "Select"
 
 [node name="TitleCard" type="Label" parent="." unique_id=1703987879]
-layout_mode = 0
-offset_left = 192.0
-offset_top = 8.0
-offset_right = 448.0
-offset_bottom = 40.0
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_top = 12.0
+offset_right = 200.0
+offset_bottom = 44.0
+grow_horizontal = 2
+grow_vertical = 0
 theme_override_fonts/font = ExtResource("3_03u8h")
 theme_override_font_sizes/font_size = 30
 text = "Choose an Item"
