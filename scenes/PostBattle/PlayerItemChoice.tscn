@@ -1,21 +1,131 @@
 [gd_scene format=3 uid="uid://b3ngh1tx3dcpc"]
 
+[ext_resource type="FontFile" uid="uid://rqd0nt2kx661" path="res://assets/Fonts/Junicode-Bold.ttf" id="1_b455q"]
+[ext_resource type="FontFile" uid="uid://cidaxvdq4u675" path="res://assets/Fonts/Junicode.ttf" id="2_03u8h"]
+[ext_resource type="FontFile" uid="uid://dppulj7gfoex6" path="res://assets/Fonts/Montserrat Fonts/Montserrat-Black.ttf" id="3_03u8h"]
+[ext_resource type="Script" path="res://scenes/PostBattle/PlayerItemChoice.gd" id="4_script"]
+
 [node name="ItemChoice" type="Control" unique_id=1618093229]
 layout_mode = 3
+script = ExtResource("4_script")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_lock_ = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=516770831]
+[node name="ItemNodeOriginContainer" type="HBoxContainer" parent="." unique_id=516770831]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.4
-anchor_top = 0.53333336
-anchor_right = 0.5995
-anchor_bottom = 0.7332223
+anchor_left = 0.0125
+anchor_right = 0.9745
+anchor_bottom = 0.99988896
 offset_top = -1.5258789e-05
 offset_right = 0.32000732
 offset_bottom = 0.039993286
+alignment = 1
 metadata/_edit_use_anchors_ = true
+metadata/_edit_lock_ = true
+
+[node name="ItemChoice1" type="VBoxContainer" parent="ItemNodeOriginContainer" unique_id=691807465]
+custom_minimum_size = Vector2(205, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="ItemName" type="Label" parent="ItemNodeOriginContainer/ItemChoice1" unique_id=290381069]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_b455q")
+theme_override_font_sizes/font_size = 25
+text = "Item Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="ItemDescription" type="Label" parent="ItemNodeOriginContainer/ItemChoice1" unique_id=2145187652]
+custom_minimum_size = Vector2(100, 20)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_03u8h")
+theme_override_font_sizes/font_size = 12
+text = "Item Description"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Button" type="Button" parent="ItemNodeOriginContainer/ItemChoice1" unique_id=1101779858]
+custom_minimum_size = Vector2(50, 30)
+layout_mode = 2
+text = "Select"
+
+[node name="ItemChoice2" type="VBoxContainer" parent="ItemNodeOriginContainer" unique_id=1326729742]
+custom_minimum_size = Vector2(205, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="ItemName" type="Label" parent="ItemNodeOriginContainer/ItemChoice2" unique_id=1702349602]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_b455q")
+theme_override_font_sizes/font_size = 25
+text = "Item Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="ItemDescription" type="Label" parent="ItemNodeOriginContainer/ItemChoice2" unique_id=7851437]
+custom_minimum_size = Vector2(100, 20)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_03u8h")
+theme_override_font_sizes/font_size = 12
+text = "Item Description"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Button" type="Button" parent="ItemNodeOriginContainer/ItemChoice2" unique_id=574333059]
+custom_minimum_size = Vector2(50, 30)
+layout_mode = 2
+text = "Select"
+
+[node name="ItemChoice3" type="VBoxContainer" parent="ItemNodeOriginContainer" unique_id=1051740337]
+custom_minimum_size = Vector2(205, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="ItemName" type="Label" parent="ItemNodeOriginContainer/ItemChoice3" unique_id=217927833]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_b455q")
+theme_override_font_sizes/font_size = 25
+text = "Item Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="ItemDescription" type="Label" parent="ItemNodeOriginContainer/ItemChoice3" unique_id=2041964588]
+custom_minimum_size = Vector2(100, 20)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_03u8h")
+theme_override_font_sizes/font_size = 12
+text = "Item Description"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Button" type="Button" parent="ItemNodeOriginContainer/ItemChoice3" unique_id=1241336081]
+custom_minimum_size = Vector2(50, 30)
+layout_mode = 2
+text = "Select"
+
+[node name="TitleCard" type="Label" parent="." unique_id=1703987879]
+layout_mode = 0
+offset_left = 192.0
+offset_top = 8.0
+offset_right = 448.0
+offset_bottom = 40.0
+theme_override_fonts/font = ExtResource("3_03u8h")
+theme_override_font_sizes/font_size = 30
+text = "Choose an Item"
+horizontal_alignment = 1
+vertical_alignment = 1

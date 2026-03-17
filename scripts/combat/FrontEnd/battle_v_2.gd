@@ -32,6 +32,8 @@ var enemy_move := {
 var rng := RandomNumberGenerator.new()
 var pending_item_choices: Array[Dictionary] = []
 
+@export var use_standalone_postbattle_rewards: bool = true
+
 @onready var fade: ColorRect = $Fade
 
 @onready var enemy_name: Label = $EnemyPanel/EnemyName
@@ -65,7 +67,7 @@ func _ready() -> void:
 	victory_continue_button.pressed.connect(_on_continue_pressed)
 
 	_start_battle()
-	var tween = create_tween()
+	var tween := create_tween()
 	tween.tween_property(fade, "color", Color(0, 0, 0, 0), 0.35)
 
 
@@ -100,6 +102,11 @@ func _start_battle() -> void:
 	enemy_attacks_per_turn = int(cfg.get("enemy_attacks_per_turn", enemy_attacks_per_turn))
 
 	enemy_name.text = str(cfg.get("enemy_name", enemy_name.text))
+
+	var modifier_id: String = EncounterSceneTransition.current_encounter_modifier_id
+	var encounter_modifier: EncounterModifier = EnemyModifierDB.get_modifier(modifier_id)
+	if encounter_modifier != null:
+		enemy_max_hp = encounter_modifier.apply_to_enemy(enemy_max_hp, enemy_stats, enemy_move)
 
 	enemy_hp = enemy_max_hp
 	blank_index = 0
@@ -286,13 +293,22 @@ func _finish_battle() -> void:
 		enemy_hp = 0
 		_update_hp_ui()
 
-	# Generate item choices as post-fight rewards
 	pending_item_choices = ItemSystem.get_random_choices(3)
-	_show_item_choice_prompt()
+	result_label.text = "The Bard weaves your words into legend!"
+	victory_panel.visible = true
+	victory_continue_button.visible = true
 
 
 func _on_continue_pressed() -> void:
-	var enc = EncounterSceneTransition.current_encounter
+	# If we have rewards queued, go to the standalone post-battle item scene.
+	if use_standalone_postbattle_rewards and pending_item_choices.size() > 0:
+		EncounterSceneTransition.transition_to_postbattle(pending_item_choices)
+		return
+	_return_to_map()
+
+
+func _return_to_map() -> void:
+	var enc: Dictionary = EncounterSceneTransition.current_encounter
 	var encounter_id: String = enc.get("encounter_id", "")
 	if encounter_id != "":
 		Progress.clear_encounter(encounter_id)
@@ -306,33 +322,6 @@ func _on_continue_pressed() -> void:
 	await tween.finished
 
 	EncounterSceneTransition.return_to_scene()
-
-
-func _show_item_choice_prompt() -> void:
-	# Simple text-only version; you can wire this to real buttons later.
-	if pending_item_choices.is_empty():
-		result_label.text = "The Bard weaves your words into legend!"
-		victory_panel.visible = true
-		return
-
-	var lines: Array[String] = []
-	for i in range(pending_item_choices.size()):
-		var it := pending_item_choices[i]
-		lines.append("%d) %s - %s" % [i + 1, it.get("name", "Item"), it.get("description", "")])
-	result_label.text = "Choose a reward:\n" + "\n".join(lines)
-	victory_panel.visible = true
-
-	# For now, auto-pick the first item after a brief delay.
-	await get_tree().create_timer(0.5).timeout
-	_on_item_chosen(0)
-
-
-func _on_item_chosen(index: int) -> void:
-	if index < 0 or index >= pending_item_choices.size():
-		return
-	var item := pending_item_choices[index]
-	ItemSystem.apply_item(item)
-	_on_continue_pressed()
 
 
 func _compute_letter_bonus_multiplier(word: String) -> float:

@@ -149,7 +149,7 @@ position = Vector2(0, 112.00001)
 scale = Vector2(1.6733333, 1.46)
 sprite_frames = ExtResource("1_fgcfu")
 animation = &"Idle"
-frame_progress = 0.9152715
+frame_progress = 0.21085407
 
 [node name="PlayerInfoSection" type="Control" parent="." unique_id=447415281]
 layout_mode = 1

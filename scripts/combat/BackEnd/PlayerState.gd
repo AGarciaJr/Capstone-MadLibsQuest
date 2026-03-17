@@ -53,5 +53,25 @@ func add_bonus_letter(letter: String) -> void:
 	if not bonus_letters.has(up):
 		bonus_letters.append(up)
 
+func add_random_bonus_letters(count: int, rng: RandomNumberGenerator = null) -> PackedStringArray:
+	if rng == null:
+		rng = RandomNumberGenerator.new()
+		rng.randomize()
+
+	var added: PackedStringArray = PackedStringArray()
+	var alphabet := "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	var attempts: int = 0
+
+	while added.size() < max(0, count) and attempts < 200:
+		attempts += 1
+		var idx: int = rng.randi_range(0, alphabet.length() - 1)
+		var letter: String = alphabet.substr(idx, 1)
+		if bonus_letters.has(letter) or added.has(letter):
+			continue
+		add_bonus_letter(letter)
+		added.append(letter)
+
+	return added
+
 func modify_bonus_letter_power(extra_per_match: float) -> void:
 	letter_bonus_per_match += extra_per_match

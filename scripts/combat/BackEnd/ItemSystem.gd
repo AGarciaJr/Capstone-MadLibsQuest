@@ -15,10 +15,19 @@ var items: Array[Dictionary] = [
 	{
 		"id": "add_bonus_letter",
 		"name": "Glyph of Letters",
-		"description": "Adds a new bonus letter.",
-		"effect_type": "add_bonus_letter",
+		"description": "Adds 1 random bonus letter.",
+		"effect_type": "add_random_bonus_letters",
 		"params": {
-			"letter": "R"
+			"count": 1
+		}
+	},
+	{
+		"id": "add_bonus_letters_2",
+		"name": "Glyph of Many Letters",
+		"description": "Adds 2 random bonus letters.",
+		"effect_type": "add_random_bonus_letters",
+		"params": {
+			"count": 2
 		}
 	},
 	{
@@ -68,6 +77,10 @@ func apply_item(item: Dictionary) -> void:
 
 		"add_bonus_letter":
 			PlayerState.add_bonus_letter(String(p.get("letter", "A")))
+
+		"add_random_bonus_letters":
+			var count: int = int(p.get("count", 1))
+			PlayerState.add_random_bonus_letters(count)
 
 		"improve_bonus_letter":
 			PlayerState.modify_bonus_letter_power(float(p.get("extra_per_match", 0.01)))

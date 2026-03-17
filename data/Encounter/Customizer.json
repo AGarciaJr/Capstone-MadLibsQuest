@@ -58,13 +58,12 @@
 		],
 
 		"flat_modifiers": {
-			"hp": 40
+			"hp": 10
 		},
 		"mult_modifiers": {
 			"hp": 1.35,
 			"accuracy": 0.95
 		},
-
 		"status_effects_on_hit": [],
 		"status_effects_on_turn_start": [],
 		"post_fight_modifiers": [],
