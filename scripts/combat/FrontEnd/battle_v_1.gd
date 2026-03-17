@@ -108,9 +108,9 @@ func _start_battle() -> void:
 				{"type": "verb", "hint": "an action", "display": "VERB"},
 				{"type": "adjective", "hint": "a describing word", "display": "ADJECTIVE"},
 			]
-		"Boss Rat":
+		"Goblin King":
 			enemy_max_hp = 50
-			enemy_name.text = "Rat King"
+			enemy_name.text = "Goblin King"
 			template_line = "The hero challenged the monstrous ___, tried to ___, and struck with ___ power!"
 			blanks = [
 				{"type": "noun", "hint": "a monster/title", "display": "NOUN"},

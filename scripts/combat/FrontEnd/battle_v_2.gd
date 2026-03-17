@@ -293,6 +293,11 @@ func _finish_battle() -> void:
 		enemy_hp = 0
 		_update_hp_ui()
 
+	var enc: Dictionary = EncounterSceneTransition.current_encounter
+	var encounter_id: String = str(enc.get("encounter_id", ""))
+	if encounter_id != "":
+		Progress.clear_encounter(encounter_id)
+
 	pending_item_choices = ItemSystem.get_random_choices(3)
 	result_label.text = "The Bard weaves your words into legend!"
 	victory_panel.visible = true

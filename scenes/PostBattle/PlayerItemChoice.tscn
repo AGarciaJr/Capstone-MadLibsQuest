@@ -3,7 +3,7 @@
 [ext_resource type="FontFile" uid="uid://rqd0nt2kx661" path="res://assets/Fonts/Junicode-Bold.ttf" id="1_b455q"]
 [ext_resource type="FontFile" uid="uid://cidaxvdq4u675" path="res://assets/Fonts/Junicode.ttf" id="2_03u8h"]
 [ext_resource type="FontFile" uid="uid://dppulj7gfoex6" path="res://assets/Fonts/Montserrat Fonts/Montserrat-Black.ttf" id="3_03u8h"]
-[ext_resource type="Script" uid="uid://dfl3iot7nwkg6" path="res://scenes/PostBattle/PlayerItemChoice.gd" id="4_script"]
+[ext_resource type="Script" uid="uid://dfl3iot7nwkg6" path="res://Scenes/PostBattle/PlayerItemChoice.gd" id="4_script"]
 
 [node name="ItemChoice" type="Control" unique_id=1618093229]
 layout_mode = 3

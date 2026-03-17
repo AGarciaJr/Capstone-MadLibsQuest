@@ -64,9 +64,9 @@ static func build(encounter: Dictionary) -> Dictionary:
 			]
 			# Element system enabled by default here.
 			cfg.use_element_system = true
-		"Boss Rat":
+		"Goblin King":
 			cfg.enemy_max_hp = 50
-			cfg.enemy_name = "Rat King"
+			cfg.enemy_name = "Goblin King"
 			cfg.template_line = "The hero challenged the monstrous ___, tried to ___, and struck with ___ power!"
 			cfg.blanks = [
 				{"type": "noun", "hint": "a monster/title", "display": "NOUN"},

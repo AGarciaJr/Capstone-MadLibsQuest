@@ -28,8 +28,8 @@ GameData="*res://scripts/GameData.gd"
 WordNet="*res://scripts/nlp/WordNetBridge.cs"
 WordFreq="*uid://d2b46q28jxqrr"
 Elements="*uid://bvgm7byk5q4hw"
-ItemSystem="*uid://orag13re17qh"
 PlayerState="*uid://dcb4rux2nw6vi"
+ItemSystem="*uid://orag13re17qh"
 EnemyModifierDB="*uid://dgarlludqnkf7"
 
 [display]
