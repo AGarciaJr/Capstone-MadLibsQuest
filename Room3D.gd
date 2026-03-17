@@ -69,7 +69,7 @@ func _on_door_clicked(index: int):
 		tween.tween_property(fade, "color", Color(0, 0, 0, 1), 0.35)
 		await tween.finished
 		
-		EncounterSceneTransition.start_battle(
+		EncounterSceneTransition.start_battle_with_prebattle(
 			{"encounter_id": encounter_id},
 			get_tree().current_scene.scene_file_path,
 			{"node_id": Run.current_id}
