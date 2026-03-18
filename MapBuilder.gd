@@ -17,11 +17,22 @@ func build_tutorial_run() -> Dictionary:
 		}
 	}
 
-func build_generated_run() -> Dictionary:
+func build_generated_run(
+	num_layers: int = 3,
+	min_nodes_per_leyer: int = 1,
+	max_nodes_per_layer: int = 3,
+	encounters: Array = ["Goblin", "Skeleton", "Mushroom"],
+	boss_encounter_id: String = "Goblin King",
+	seed: int = -1
+) -> Dictionary:
 	_rng = RandomNumberGenerator.new()
-	_rng.randomize()
 	
-	_seed = _rng.randi()
+	if seed == -1:
+		_rng.randomize()
+		_seed = _rng.randi()
+	else:
+		_seed = seed
+	
 	_rng.seed = _seed
 	
 	_nodes = { }
@@ -29,30 +40,24 @@ func build_generated_run() -> Dictionary:
 	
 	var start_id := _make_node("start")
 	
-	# Generate random sizes for node layers between start and boss
-	var layer_sizes := [
-		_rng.randi_range(1, 3),
-		_rng.randi_range(1, 3),
-		_rng.randi_range(1, 3),
-	]
-	
 	var layers: Array = []
 	layers.append([start_id])
 	
-	# Fill layers with nodes
-	for size in layer_sizes:
+	# Create normal encounter layers
+	for i in range(num_layers):
+		var layer_size := _rng.randi_range(min_nodes_per_leyer, max_nodes_per_layer)
 		var layer : Array = []
 		
-		for i in range(size):
+		for j in range(layer_size):
 			layer.append(_make_node("fight", {
-				"encounter_id": _choose_random_encounter(),
+				"encounter_id": _choose_random_encounter(encounters),
 			}))
 		
 		layers.append(layer)
 	
 	# Add boss node
 	var boss_id := _make_node("boss", {
-		"encounter_id": "Boss Rat",
+		"encounter_id": boss_encounter_id,
 	})
 	layers.append([boss_id])
 	
@@ -79,8 +84,7 @@ func _make_node(node_type: String, attributes: Dictionary = {}) -> int:
 	_nodes[id] = node
 	return id
 
-func _choose_random_encounter() -> String:
-	var encounters := ["Goblin", "Skeleton", "Eye"]
+func _choose_random_encounter(encounters: Array) -> String:
 	return encounters[_rng.randi_range(0, encounters.size() - 1)]
 
 func _connect_layers(layers: Array) -> void:
@@ -88,7 +92,7 @@ func _connect_layers(layers: Array) -> void:
 		var curr_layer : Array = layers[ndx]
 		var next_layer : Array = layers[ndx + 1]
 		
-		# Connect each node in this layer to nodes in the next layer
+		# Connect each node in this layer to at least one node in the next layer
 		for node_id in curr_layer:
 			# choose a random number of nodes in the next layer to connect to
 			var connections: Array = []
@@ -103,3 +107,16 @@ func _connect_layers(layers: Array) -> void:
 				available_nodes.remove_at(chosen_ndx)
 			
 			_nodes[node_id]["next"] = connections 
+		# Ensure every node in the next layer is reachable from somewhere in this layer
+		for next_id in next_layer:
+			var reachable := false
+			
+			for node_id in curr_layer:
+				if next_id in _nodes[node_id]["next"]:
+					reachable = true
+					break
+			
+			if not reachable:
+				var node_id = curr_layer[_rng.randi_range(0, curr_layer.size() - 1)]
+				_nodes[node_id]["next"].append(target_node)
+		
