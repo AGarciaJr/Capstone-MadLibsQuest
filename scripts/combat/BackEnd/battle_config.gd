@@ -51,7 +51,7 @@ static func build(encounter: Dictionary) -> Dictionary:
 			cfg.enemy_move         = enemy.base_move
 			cfg.sprite_frames_path    = enemy.sprite_frames_path
 			cfg.sprite_animation_name = enemy.sprite_animation_name
-			# Use first template for the single-sentence v2 battle
+			cfg["templates"]          = enemy.templates
 			if enemy.templates.size() > 0:
 				cfg.template_line = enemy.templates[0].get("line", cfg.template_line)
 				cfg.blanks        = enemy.templates[0].get("blanks", cfg.blanks)

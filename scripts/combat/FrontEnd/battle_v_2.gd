@@ -21,6 +21,10 @@ var blanks: Array = []
 var enemy_hp: int
 var blank_index: int = 0
 var collected_words: Array[String] = []
+var templates: Array = []
+var current_sentence_index: int = 0
+var _sprite_idle_animation: String = ""
+var _battle_log: Array[String] = []
 
 var enemy_stats := {"atk": 6, "crit_chance": 0.05, "crit_mult": 1.4, "def": 2, "armor": 10}
 
@@ -63,6 +67,10 @@ var _bonus_strikes_remaining: int = 0
 @onready var victory_panel: Control = $VictoryPanel
 @onready var victory_continue_button: Button = $VictoryPanel/ContinueButton
 
+@onready var battle_log_button: Button = $BattleLogButton
+@onready var battle_log_panel: Control = $BattleLogPanel
+@onready var battle_log_content: Label = $BattleLogPanel/ScrollContainer/LogContent
+
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -73,6 +81,8 @@ func _ready() -> void:
 	submit_button.pressed.connect(_on_submit_pressed)
 	word_input.text_submitted.connect(_on_text_submitted)
 	victory_continue_button.pressed.connect(_on_continue_pressed)
+	battle_log_button.pressed.connect(func(): battle_log_panel.visible = true)
+	$BattleLogPanel/CloseButton.pressed.connect(func(): battle_log_panel.visible = false)
 
 	_start_battle()
 	var tween := create_tween()
@@ -92,6 +102,8 @@ func _start_battle() -> void:
 	enemy_stats = cfg.get("enemy_stats", enemy_stats)
 	enemy_move = cfg.get("enemy_move", enemy_move)
 
+	templates = cfg.get("templates", [])
+	current_sentence_index = 0
 	template_line = str(cfg.get("template_line", template_line))
 	blanks = cfg.get("blanks", blanks)
 
@@ -126,6 +138,11 @@ func _start_battle() -> void:
 	collected_words.clear()
 	_bonus_strikes_remaining = 0
 
+	_battle_log.clear()
+	battle_log_content.text = ""
+	battle_log_panel.visible = false
+
+	_sprite_idle_animation = str(cfg.get("sprite_animation_name", ""))
 	enemy_sprite.stop()
 	enemy_sprite.sprite_frames = null
 	var sprite_path: String = str(cfg.get("sprite_frames_path", ""))
@@ -133,11 +150,13 @@ func _start_battle() -> void:
 		var frames := load(sprite_path) as SpriteFrames
 		if frames != null:
 			enemy_sprite.sprite_frames = frames
-			var anim := str(cfg.get("sprite_animation_name", ""))
-			if anim != "" and frames.has_animation(anim):
-				enemy_sprite.play(anim)
+			if _sprite_idle_animation != "" and frames.has_animation(_sprite_idle_animation):
+				enemy_sprite.play(_sprite_idle_animation)
 		else:
 			push_error("BattleV2: Failed to load SpriteFrames from '%s'" % sprite_path)
+
+	if not enemy_sprite.animation_finished.is_connected(_on_enemy_animation_finished):
+		enemy_sprite.animation_finished.connect(_on_enemy_animation_finished)
 
 	victory_panel.visible = false
 	submit_button.disabled = false
@@ -172,13 +191,31 @@ func _update_hp_ui() -> void:
 
 func _update_prompt_ui() -> void:
 	if blank_index >= blanks.size():
-		blank_index = 0
-		collected_words.clear()
+		_advance_sentence()
+		return
 
 	var b: Dictionary = blanks[blank_index]
 	var display: String = str(b.get("display", "WORD"))
 	prompt_label.text = "The Bard needs a %s!" % display
 	line_preview.text = _render_preview_line()
+
+
+func _advance_sentence() -> void:
+	current_sentence_index += 1
+	if current_sentence_index >= templates.size():
+		# All sentences exhausted — loop back to the first
+		current_sentence_index = 0
+
+	var t: Dictionary = templates[current_sentence_index]
+	template_line = t.get("line", template_line)
+	blanks        = t.get("blanks", blanks)
+	blank_index   = 0
+	collected_words.clear()
+
+	line_preview.text = template_line
+	word_input.text   = ""
+	word_input.grab_focus()
+	_update_prompt_ui()
 
 
 func _render_preview_line() -> String:
@@ -250,12 +287,17 @@ func _resolve_turn(word: String, freq_scaling: float) -> void:
 	var ctx := _build_turn_context(freq_scaling, _compute_letter_bonus_multiplier(word), word)
 	var result: Dictionary = _turn_resolver.resolve_valid_turn(ctx)
 
+	var hp_before := PlayerState.current_hp
 	enemy_hp = int(result["enemy_hp"])
 	PlayerState.current_hp = int(result["player_hp"])
 	_update_hp_ui()
 
+	if PlayerState.current_hp < hp_before:
+		_play_enemy_attack()
+
 	var damage_messages: Array = result["damage_messages"]
 	for msg in damage_messages:
+		_append_log(msg)
 		result_label.text = msg
 		await get_tree().create_timer(1.0).timeout
 
@@ -284,6 +326,7 @@ func _resolve_multi_strike_turn_first_word(word: String, freq_scaling: float) ->
 	_update_hp_ui()
 
 	for msg in result["damage_messages"]:
+		_append_log(msg)
 		result_label.text = msg
 		await get_tree().create_timer(1.0).timeout
 
@@ -323,6 +366,7 @@ func _submit_bonus_strike_word(word: String) -> void:
 	_update_hp_ui()
 
 	for msg in result["damage_messages"]:
+		_append_log(msg)
 		result_label.text = msg
 		await get_tree().create_timer(1.0).timeout
 
@@ -347,11 +391,16 @@ func _finish_player_round_after_strikes() -> void:
 	var ctx := _build_turn_context(0.0, 1.0)
 	var result: Dictionary = _turn_resolver.resolve_enemy_and_status(ctx)
 
+	var hp_before := PlayerState.current_hp
 	enemy_hp = int(result["enemy_hp"])
 	PlayerState.current_hp = int(result["player_hp"])
 	_update_hp_ui()
 
+	if PlayerState.current_hp < hp_before:
+		_play_enemy_attack()
+
 	for msg in result["damage_messages"]:
+		_append_log(msg)
 		result_label.text = msg
 		await get_tree().create_timer(1.0).timeout
 
@@ -406,21 +455,28 @@ func _apply_invalid_turn(message: String) -> void:
 	var ctx := _build_turn_context(0.0, 1.0)
 	var result: Dictionary = _turn_resolver.resolve_invalid_turn(ctx)
 
+	var hp_before := PlayerState.current_hp
 	enemy_hp = int(result["enemy_hp"])
 	PlayerState.current_hp = int(result["player_hp"])
 	_update_hp_ui()
 
+	if PlayerState.current_hp < hp_before:
+		_play_enemy_attack()
+
 	var damage_messages: Array = result["damage_messages"]
 	if result["enemy_defeated"]:
 		for msg in damage_messages:
+			_append_log(msg)
 			result_label.text = msg
 			await get_tree().create_timer(1.0).timeout
 		_finish_battle()
 		return
 
+	_append_log(message)
 	result_label.text = message
 	await get_tree().create_timer(1.0).timeout
 	for msg in damage_messages:
+		_append_log(msg)
 		result_label.text = msg
 		await get_tree().create_timer(1.0).timeout
 
@@ -471,6 +527,25 @@ func _return_to_map() -> void:
 	await tween.finished
 
 	EncounterSceneTransition.return_to_scene()
+
+
+func _play_enemy_attack() -> void:
+	var frames := enemy_sprite.sprite_frames
+	if frames != null and frames.has_animation("Attack"):
+		enemy_sprite.play("Attack")
+
+
+func _on_enemy_animation_finished() -> void:
+	if enemy_sprite.animation == "Attack":
+		var frames := enemy_sprite.sprite_frames
+		if frames != null and _sprite_idle_animation != "" \
+				and frames.has_animation(_sprite_idle_animation):
+			enemy_sprite.play(_sprite_idle_animation)
+
+
+func _append_log(msg: String) -> void:
+	_battle_log.append(msg)
+	battle_log_content.text = "\n".join(_battle_log)
 
 
 func _compute_letter_bonus_multiplier(word: String) -> float:

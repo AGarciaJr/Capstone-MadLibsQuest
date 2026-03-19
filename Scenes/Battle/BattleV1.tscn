@@ -257,24 +257,74 @@ theme_override_font_sizes/font_size = 22
 text = "DEFEAT..."
 horizontal_alignment = 1
 
-[node name="DefeatMessage" type="Label" parent="DefeatPanel"]
+[node name="DefeatMessage" type="Label" parent="DefeatPanel" unique_id=2091193072]
 layout_mode = 0
 offset_left = 8.0
 offset_top = 46.0
 offset_right = 392.0
 offset_bottom = 130.0
 theme_override_font_sizes/font_size = 13
-autowrap_mode = 3
 horizontal_alignment = 1
-text = ""
+autowrap_mode = 3
 
-[node name="RetryButton" type="Button" parent="DefeatPanel"]
+[node name="RetryButton" type="Button" parent="DefeatPanel" unique_id=392767969]
 layout_mode = 0
 offset_left = 150.0
 offset_top = 140.0
 offset_right = 250.0
 offset_bottom = 168.0
 text = "Try Again"
+
+[node name="BattleLogButton" type="Button" parent="." unique_id=927040926]
+layout_mode = 0
+offset_left = 504.0
+offset_top = 283.0
+offset_right = 590.0
+offset_bottom = 314.0
+text = "Battle Log"
+
+[node name="BattleLogPanel" type="Control" parent="." unique_id=881644895]
+visible = false
+anchors_preset = 0
+offset_left = 120.0
+offset_top = 50.0
+offset_right = 520.0
+offset_bottom = 290.0
+
+[node name="PanelBg" type="ColorRect" parent="BattleLogPanel" unique_id=950278503]
+layout_mode = 0
+offset_right = 400.0
+offset_bottom = 240.0
+color = Color(0.08, 0.08, 0.12, 0.97)
+
+[node name="TitleLabel" type="Label" parent="BattleLogPanel" unique_id=1696652626]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 360.0
+offset_bottom = 20.0
+text = "Battle Log"
+
+[node name="CloseButton" type="Button" parent="BattleLogPanel" unique_id=2023950651]
+layout_mode = 0
+offset_left = 372.0
+offset_top = 4.0
+offset_right = 396.0
+offset_bottom = 20.0
+text = "X"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="BattleLogPanel" unique_id=60272713]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 24.0
+offset_right = 396.0
+offset_bottom = 236.0
+
+[node name="LogContent" type="Label" parent="BattleLogPanel/ScrollContainer" unique_id=2015320866]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 9
+autowrap_mode = 3
 
 [node name="Fade" type="ColorRect" parent="." unique_id=684147215]
 layout_mode = 1
