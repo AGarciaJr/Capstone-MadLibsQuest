@@ -1,12 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://by6ivvrwnhxn5"]
+[gd_scene format=3 uid="uid://by6ivvrwnhxn5"]
 
-[ext_resource type="Script" uid="uid://cru560hwwd3jy" path="res://scripts/combat/FrontEnd/battle_v_1.gd" id="1_2nens"]
+[ext_resource type="Script" uid="uid://w81077twrwsa" path="res://scripts/combat/FrontEnd/battle_v_2.gd" id="1_2msnx"]
 [ext_resource type="SpriteFrames" uid="uid://bw0afptnjumdi" path="res://assets/Art/Enemies/Monster_Creatures_Fantasy(Version 1.3)/Goblin/Goblin.tres" id="2_hjqhh"]
 [ext_resource type="FontFile" uid="uid://cidaxvdq4u675" path="res://assets/Fonts/Junicode.ttf" id="3_2msnx"]
 [ext_resource type="FontFile" uid="uid://c1n3r6n1s0e1w" path="res://assets/Fonts/BLKCHCRY.TTF" id="3_47d8v"]
 [ext_resource type="FontFile" uid="uid://xrdaqecbc33" path="res://assets/Fonts/MorrisRomanAlternate-Black.ttf" id="4_g8wve"]
 
-[node name="control" type="Control"]
+[node name="control" type="Control" unique_id=495714525]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,16 +15,16 @@ offset_right = -2.0
 offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_2nens")
+script = ExtResource("1_2msnx")
 
-[node name="EnemyPanel" type="Control" parent="."]
+[node name="EnemyPanel" type="Control" parent="." unique_id=718284901]
 anchors_preset = 0
 offset_left = 504.0
 offset_top = 8.0
 offset_right = 636.0
 offset_bottom = 100.0
 
-[node name="EnemyName" type="Label" parent="EnemyPanel"]
+[node name="EnemyName" type="Label" parent="EnemyPanel" unique_id=1038074097]
 layout_mode = 0
 offset_right = 132.0
 offset_bottom = 18.0
@@ -32,7 +32,7 @@ text = "Enemy
 "
 horizontal_alignment = 2
 
-[node name="EnemyHP" type="Label" parent="EnemyPanel"]
+[node name="EnemyHP" type="Label" parent="EnemyPanel" unique_id=404579806]
 layout_mode = 0
 offset_top = 18.0
 offset_right = 132.0
@@ -40,7 +40,7 @@ offset_bottom = 34.0
 text = "HP: 30/30"
 horizontal_alignment = 2
 
-[node name="EnemyHPBar" type="ProgressBar" parent="EnemyPanel"]
+[node name="EnemyHPBar" type="ProgressBar" parent="EnemyPanel" unique_id=1600683976]
 layout_mode = 0
 offset_top = 39.0
 offset_right = 132.0
@@ -48,33 +48,33 @@ offset_bottom = 51.0
 value = 100.0
 show_percentage = false
 
-[node name="GoblinSprite" type="AnimatedSprite2D" parent="EnemyPanel"]
+[node name="GoblinSprite" type="AnimatedSprite2D" parent="EnemyPanel" unique_id=1897032973]
 position = Vector2(-205, 96.00001)
 scale = Vector2(1.0531915, 0.96666664)
 sprite_frames = ExtResource("2_hjqhh")
 animation = &"Goblin 2"
 
-[node name="PlayerPanel" type="Control" parent="."]
+[node name="PlayerPanel" type="Control" parent="." unique_id=98662082]
 anchors_preset = 0
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 140.0
 offset_bottom = 80.0
 
-[node name="PlayerName" type="Label" parent="PlayerPanel"]
+[node name="PlayerName" type="Label" parent="PlayerPanel" unique_id=1696940253]
 layout_mode = 0
 offset_right = 132.0
 offset_bottom = 18.0
 text = "Hero"
 
-[node name="PlayerHP" type="Label" parent="PlayerPanel"]
+[node name="PlayerHP" type="Label" parent="PlayerPanel" unique_id=236812317]
 layout_mode = 0
 offset_top = 18.0
 offset_right = 132.0
 offset_bottom = 34.0
 text = "HP: 100/100"
 
-[node name="PlayerHPBar" type="ProgressBar" parent="PlayerPanel"]
+[node name="PlayerHPBar" type="ProgressBar" parent="PlayerPanel" unique_id=1654011952]
 layout_mode = 0
 offset_top = 40.0
 offset_right = 132.0
@@ -82,7 +82,7 @@ offset_bottom = 52.0
 value = 100.0
 show_percentage = false
 
-[node name="LettersLabel" type="Label" parent="PlayerPanel"]
+[node name="LettersLabel" type="Label" parent="PlayerPanel" unique_id=370220454]
 layout_mode = 0
 offset_top = 52.0
 offset_right = 132.0
@@ -90,14 +90,14 @@ offset_bottom = 68.0
 theme_override_font_sizes/font_size = 10
 text = "Letters: A, E, S, T"
 
-[node name="BottomPanel" type="Control" parent="."]
+[node name="BottomPanel" type="Control" parent="." unique_id=1099714150]
 anchors_preset = 0
 offset_left = 8.0
 offset_top = 178.0
 offset_right = 472.0
 offset_bottom = 262.0
 
-[node name="PromptLabel" type="Label" parent="BottomPanel"]
+[node name="PromptLabel" type="Label" parent="BottomPanel" unique_id=1623631982]
 layout_mode = 0
 offset_left = 60.0
 offset_top = 21.0
@@ -108,7 +108,7 @@ theme_override_font_sizes/font_size = 15
 text = "The Bard needs a NOUN!"
 horizontal_alignment = 1
 
-[node name="LinePreview" type="Label" parent="BottomPanel"]
+[node name="LinePreview" type="Label" parent="BottomPanel" unique_id=1785196963]
 layout_mode = 0
 offset_left = 60.0
 offset_top = 3.0
@@ -120,7 +120,7 @@ theme_override_font_sizes/font_size = 10
 text = "The hero faced a fearsome ___!"
 horizontal_alignment = 1
 
-[node name="WordInput" type="LineEdit" parent="BottomPanel"]
+[node name="WordInput" type="LineEdit" parent="BottomPanel" unique_id=1693271094]
 layout_mode = 0
 offset_left = 33.0
 offset_top = 72.0
@@ -130,7 +130,7 @@ placeholder_text = "Enter a word..."
 alignment = 1
 max_length = 30
 
-[node name="SubmitButton" type="Button" parent="BottomPanel"]
+[node name="SubmitButton" type="Button" parent="BottomPanel" unique_id=2135709036]
 layout_mode = 0
 offset_left = 497.0
 offset_top = 68.0
@@ -139,7 +139,7 @@ offset_bottom = 99.0
 theme_override_fonts/font = ExtResource("3_47d8v")
 text = "Submit"
 
-[node name="ResultLabel" type="Label" parent="BottomPanel"]
+[node name="ResultLabel" type="Label" parent="BottomPanel" unique_id=1234699025]
 layout_mode = 0
 offset_left = 139.0
 offset_top = -43.0
@@ -152,7 +152,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="AttackButton" type="Button" parent="BottomPanel"]
+[node name="AttackButton" type="Button" parent="BottomPanel" unique_id=1914066688]
 visible = false
 layout_mode = 0
 offset_left = 29.0
@@ -162,7 +162,7 @@ offset_bottom = 108.0
 text = "Attack
 "
 
-[node name="BuffButton" type="Button" parent="BottomPanel"]
+[node name="BuffButton" type="Button" parent="BottomPanel" unique_id=449357629]
 visible = false
 layout_mode = 0
 offset_left = 165.0
@@ -171,7 +171,7 @@ offset_right = 314.0
 offset_bottom = 105.0
 text = "Buff"
 
-[node name="Button" type="Button" parent="BottomPanel"]
+[node name="Button" type="Button" parent="BottomPanel" unique_id=354180369]
 visible = false
 layout_mode = 0
 offset_left = 393.0
@@ -181,7 +181,7 @@ offset_bottom = 107.0
 text = "Chain Attack
 "
 
-[node name="CancelButton" type="Button" parent="BottomPanel"]
+[node name="CancelButton" type="Button" parent="BottomPanel" unique_id=1611767109]
 visible = false
 layout_mode = 0
 offset_left = 497.0
@@ -190,21 +190,27 @@ offset_right = 617.0
 offset_bottom = 168.0
 text = "Cancel"
 
-[node name="VictoryPanel" type="Control" parent="."]
-visible = false
-anchors_preset = 0
-offset_left = 160.0
-offset_top = 100.0
-offset_right = 320.0
-offset_bottom = 170.0
+[node name="VictoryPanel" type="Control" parent="." unique_id=911848340]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -35.0
+offset_right = 80.0
+offset_bottom = 35.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="PanelBg" type="ColorRect" parent="VictoryPanel"]
+[node name="PanelBg" type="ColorRect" parent="VictoryPanel" unique_id=1500870292]
 layout_mode = 0
 offset_right = 160.0
 offset_bottom = 70.0
 color = Color(0.1, 0.2, 0.1, 1)
 
-[node name="Label" type="Label" parent="VictoryPanel"]
+[node name="Label" type="Label" parent="VictoryPanel" unique_id=2073411731]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 8.0
@@ -213,7 +219,7 @@ offset_bottom = 28.0
 text = "VICTORY!"
 horizontal_alignment = 1
 
-[node name="ContinueButton" type="Button" parent="VictoryPanel"]
+[node name="ContinueButton" type="Button" parent="VictoryPanel" unique_id=552772643]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 36.0
@@ -221,7 +227,7 @@ offset_right = 120.0
 offset_bottom = 60.0
 text = "Continue"
 
-[node name="DefeatPanel" type="Control" parent="."]
+[node name="DefeatPanel" type="Control" parent="." unique_id=355079481]
 visible = false
 anchors_preset = 0
 offset_left = 160.0
@@ -229,13 +235,13 @@ offset_top = 100.0
 offset_right = 320.0
 offset_bottom = 170.0
 
-[node name="PanelBg" type="ColorRect" parent="DefeatPanel"]
+[node name="PanelBg" type="ColorRect" parent="DefeatPanel" unique_id=831040101]
 layout_mode = 0
 offset_right = 160.0
 offset_bottom = 70.0
 color = Color(0.2, 0.1, 0.1, 1)
 
-[node name="Label" type="Label" parent="DefeatPanel"]
+[node name="Label" type="Label" parent="DefeatPanel" unique_id=251495618]
 layout_mode = 0
 offset_left = 4.0
 offset_top = 8.0
@@ -244,7 +250,7 @@ offset_bottom = 28.0
 text = "DEFEAT..."
 horizontal_alignment = 1
 
-[node name="RetryButton" type="Button" parent="DefeatPanel"]
+[node name="RetryButton" type="Button" parent="DefeatPanel" unique_id=832897387]
 layout_mode = 0
 offset_left = 40.0
 offset_top = 36.0
@@ -252,7 +258,7 @@ offset_right = 120.0
 offset_bottom = 60.0
 text = "Try Again"
 
-[node name="Fade" type="ColorRect" parent="."]
+[node name="Fade" type="ColorRect" parent="." unique_id=684147215]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

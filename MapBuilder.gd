@@ -13,7 +13,7 @@ func build_tutorial_run() -> Dictionary:
 		"nodes": {
 			0: {"type": "start", "next": [1]},
 			1: {"type": "fight", "next": [2], "encounter_id": "Goblin 2"},
-			2: {"type": "boss", "next": [], "encounter_id": "Boss Rat"},
+			2: {"type": "boss", "next": [], "encounter_id": "Goblin King"},
 		},
 		"layers": [
 			[0],

@@ -108,9 +108,9 @@ func _start_battle() -> void:
 				{"type": "verb", "hint": "an action", "display": "VERB"},
 				{"type": "adjective", "hint": "a describing word", "display": "ADJECTIVE"},
 			]
-		"Boss Rat":
+		"Goblin King":
 			enemy_max_hp = 50
-			enemy_name.text = "Rat King"
+			enemy_name.text = "Goblin King"
 			template_line = "The hero challenged the monstrous ___, tried to ___, and struck with ___ power!"
 			blanks = [
 				{"type": "noun", "hint": "a monster/title", "display": "NOUN"},
@@ -158,8 +158,8 @@ func _update_hp_ui() -> void:
 
 func _update_prompt_ui() -> void:
 	if blank_index >= blanks.size():
-		_finish_battle()
-		return
+		blank_index = 0
+		collected_words.clear()
 
 	var b: Dictionary = blanks[blank_index]
 	var display: String = str(b.get("display", "WORD"))
@@ -227,9 +227,14 @@ func _submit_word(raw: String) -> void:
 	enemy_hp = CombatEngine.apply_damage(enemy_hp, int(outcome.damage))
 	_update_hp_ui()
 
-	# End battle immediately if enemy or player dies
-	if enemy_hp <= 0 || player_hp <=0:
+	# End battle only when enemy or player HP reaches 0
+	if enemy_hp <= 0:
 		_finish_battle()
+		return
+	if player_hp <= 0:
+		result_label.text = "You were defeated. Restarting..."
+		await get_tree().create_timer(0.75).timeout
+		_start_battle()
 		return
 
 	var bonus_msg := _format_letter_bonus_msg(word, bonus_mult)
@@ -272,11 +277,6 @@ func _apply_invalid_input(message: String) -> void:
 func _finish_battle() -> void:
 	word_input.editable = false
 	submit_button.disabled = true
-
-	# For demo: force victory if blanks are done
-	if enemy_hp > 0:
-		enemy_hp = 0
-		_update_hp_ui()
 
 	result_label.text = "The Bard weaves your words into legend!"
 	victory_panel.visible = true
