@@ -3,6 +3,8 @@ extends BaseEnemy
 ## A rattling skeleton warrior — tanky bones, slow but relentless.
 ## Stats and template are set in _init() so .new() is safe outside the scene tree.
 
+const ENCOUNTER_ID: String = "skeleton"
+
 
 func _init() -> void:
 	entity_name   = "Skeleton"

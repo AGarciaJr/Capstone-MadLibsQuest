@@ -46,7 +46,7 @@ var _bonus_strikes_remaining: int = 0
 @onready var enemy_name: Label = $EnemyPanel/EnemyName
 @onready var enemy_hp_label: Label = $EnemyPanel/EnemyHP
 @onready var enemy_hp_bar: ProgressBar = $EnemyPanel/EnemyHPBar
-@onready var goblin_sprite: AnimatedSprite2D = $EnemyPanel/GoblinSprite
+@onready var enemy_sprite: AnimatedSprite2D = $EnemyPanel/EnemySprite
 
 @onready var player_name: Label = $PlayerPanel/PlayerName
 @onready var player_hp_label: Label = $PlayerPanel/PlayerHP
@@ -126,7 +126,18 @@ func _start_battle() -> void:
 	collected_words.clear()
 	_bonus_strikes_remaining = 0
 
-	goblin_sprite.play("Goblin 2")
+	enemy_sprite.stop()
+	enemy_sprite.sprite_frames = null
+	var sprite_path: String = str(cfg.get("sprite_frames_path", ""))
+	if sprite_path != "":
+		var frames := load(sprite_path) as SpriteFrames
+		if frames != null:
+			enemy_sprite.sprite_frames = frames
+			var anim := str(cfg.get("sprite_animation_name", ""))
+			if anim != "" and frames.has_animation(anim):
+				enemy_sprite.play(anim)
+		else:
+			push_error("BattleV2: Failed to load SpriteFrames from '%s'" % sprite_path)
 
 	victory_panel.visible = false
 	submit_button.disabled = false

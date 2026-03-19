@@ -1,8 +1,8 @@
 extends Node
 
 const BATTLE_SCENE := preload("res://Scenes/Battle/BattleV1.tscn")
-const PREBATTLE_SCENE := preload("res://scenes/PreBattle/PreBattleModifier.tscn")
-const POSTBATTLE_SCENE := preload("res://scenes/PostBattle/PlayerItemChoice.tscn")
+const PREBATTLE_SCENE := preload("res://Scenes/PreBattle/PreBattleModifier.tscn")
+const POSTBATTLE_SCENE := preload("res://Scenes/PostBattle/PlayerItemChoice.tscn")
 
 var current_encounter: Dictionary = {}
 ## Set by PreBattle when player continues; battle reads this and applies the modifier.

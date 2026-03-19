@@ -11,9 +11,9 @@ func build_tutorial_run() -> Dictionary:
 		"seed": 0,
 		"start_id": 0,
 		"nodes": {
-			0: {"type": "start", "next": [1]},
-			1: {"type": "fight", "next": [2], "encounter_id": "Goblin 2"},
-			2: {"type": "boss", "next": [], "encounter_id": "Goblin King"},
+			0: {"type": "start",  "next": [1]},
+			1: {"type": "fight",  "next": [2], "encounter_id": Goblin.ENCOUNTER_ID},
+			2: {"type": "boss",   "next": [],  "encounter_id": Mushroom.ENCOUNTER_ID},
 		},
 		"layers": [
 			[0],
@@ -26,17 +26,22 @@ func build_generated_run(
 	num_layers: int = 3,
 	min_nodes_per_layer: int = 1,
 	max_nodes_per_layer: int = 3,
-	encounters: Array = ["Goblin", "Skeleton", "Mushroom"],
-	boss_encounter_id: String = "Goblin King",
-	seed: int = -1
+	encounters: Array = [],
+	boss_encounter_id: String = "",
+	run_seed: int = -1
 ) -> Dictionary:
+	# Default pool: all three enemies. Callers can override.
+	if encounters.is_empty():
+		encounters = [Goblin.ENCOUNTER_ID, Skeleton.ENCOUNTER_ID, Mushroom.ENCOUNTER_ID]
+	if boss_encounter_id.is_empty():
+		boss_encounter_id = Mushroom.ENCOUNTER_ID
 	_rng = RandomNumberGenerator.new()
-	
-	if seed == -1:
+
+	if run_seed == -1:
 		_rng.randomize()
 		_seed = _rng.randi()
 	else:
-		_seed = seed
+		_seed = run_seed
 	
 	_rng.seed = _seed
 	
@@ -78,16 +83,16 @@ func build_generated_run(
 func _make_node(node_type: String, attributes: Dictionary = {}) -> int:
 	var id := _next_id
 	_next_id += 1
-	
-	var node := {
+
+	var node_data := {
 		"type": node_type,
 		"next": [],
 	}
-	
+
 	for key in attributes.keys():
-		node[key] = attributes[key]
-	
-	_nodes[id] = node
+		node_data[key] = attributes[key]
+
+	_nodes[id] = node_data
 	return id
 
 func _choose_random_encounter(encounters: Array) -> String:

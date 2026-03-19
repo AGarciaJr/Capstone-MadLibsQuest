@@ -3,6 +3,8 @@ extends BaseEnemy
 ## A spore-spewing mushroom creature — the toughest of the three demo encounters.
 ## Stats and template are set in _init() so .new() is safe outside the scene tree.
 
+const ENCOUNTER_ID: String = "mushroom"
+
 
 func _init() -> void:
 	entity_name   = "Mushroom"

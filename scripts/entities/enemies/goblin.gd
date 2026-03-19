@@ -3,6 +3,8 @@ extends BaseEnemy
 ## A sneaky goblin — fast, aggressive, and loves a good ambush.
 ## Stats and template are set in _init() so .new() is safe outside the scene tree.
 
+const ENCOUNTER_ID: String = "goblin"
+
 
 func _init() -> void:
 	entity_name   = "Goblin"

@@ -1,30 +1,18 @@
 class_name BattleConfigFactory
 
-# Pure data/config builder for basic battles.
+# Maps encounter_id strings to enemy entity scripts.
+# Keys must match each enemy class's ENCOUNTER_ID constant.
+const ENEMY_REGISTRY := {
+	"goblin":   preload("res://scripts/entities/enemies/goblin.gd"),
+	"skeleton": preload("res://scripts/entities/enemies/skeleton.gd"),
+	"mushroom": preload("res://scripts/entities/enemies/mushroom.gd"),
+}
+
+# Builds a battle config dict from the encounter dictionary.
+# Loads stats, templates, and sprite data from the enemy entity when available.
 static func build(encounter: Dictionary) -> Dictionary:
-	# Input: EncounterSceneTransition.current_encounter (or any Dictionary
-	# with at least "encounter_id": String).
-	#
-	# Output example:
-	# {
-	#   "enemy_max_hp": int,
-	#   "player_max_hp": int,
-	#   "enemy_name": String,
-	#   "template_line": String,
-	#   "blanks": Array[Dictionary],
-	#   "bonus_letters": PackedStringArray,
-	#   "letter_bonus_per_match": float,
-	#   "letter_bonus_all_letters_extra": float,
-	#   "letter_bonus_cap": float,
-	#   "player_stats": Dictionary,
-	#   "enemy_stats": Dictionary,
-	#   "enemy_move": Dictionary,
-	#   "use_element_system": bool
-	# }
+	var encounter_id: String = encounter.get("encounter_id", "")
 
-	var encounter_id: String = encounter.get("encounter_id", "Goblin 2")
-
-	# Defaults that work for any simple encounter.
 	var cfg: Dictionary = {
 		"enemy_max_hp": 30,
 		"player_max_hp": 100,
@@ -47,38 +35,26 @@ static func build(encounter: Dictionary) -> Dictionary:
 			"coefficient": 1.0,
 			"accuracy": 1.0,
 		},
-		"use_element_system": false,
+		"use_element_system": true,
 		"player_attacks_per_turn": 1,
 		"enemy_attacks_per_turn": 1,
+		"sprite_frames_path": "",
+		"sprite_animation_name": "",
 	}
 
-	match encounter_id:
-		"Goblin 2":
-			cfg.enemy_max_hp = 30
-			cfg.enemy_name = "Goblin"
-			cfg.template_line = "The hero faced a fearsome ___, chose to ___, and won with ___ force!"
-			cfg.blanks = [
-				{"type": "noun", "hint": "a creature/thing", "display": "NOUN"},
-				{"type": "verb", "hint": "an action", "display": "VERB"},
-				{"type": "adjective", "hint": "a describing word", "display": "ADJECTIVE"},
-			]
-			# Element system enabled by default here.
-			cfg.use_element_system = true
-		"Goblin King":
-			cfg.enemy_max_hp = 50
-			cfg.enemy_name = "Goblin King"
-			cfg.template_line = "The hero challenged the monstrous ___, tried to ___, and struck with ___ power!"
-			cfg.blanks = [
-				{"type": "noun", "hint": "a monster/title", "display": "NOUN"},
-				{"type": "verb", "hint": "an action", "display": "VERB"},
-				{"type": "adjective", "hint": "a powerful describing word", "display": "ADJECTIVE"},
-			]
-			# Example: maybe you do NOT want elements for this fight.
-			cfg.use_element_system = false
-			# Example: boss gets 2 attacks, player still gets 1
-			cfg.enemy_attacks_per_turn = 2
-		_:
-			# Keep defaults.
-			pass
+	if ENEMY_REGISTRY.has(encounter_id):
+		var enemy: BaseEnemy = ENEMY_REGISTRY[encounter_id].new() as BaseEnemy
+		if enemy != null:
+			cfg.enemy_max_hp       = enemy.max_hp
+			cfg.enemy_name         = enemy.entity_name
+			cfg.enemy_stats        = enemy.get_combat_stats()
+			cfg.enemy_move         = enemy.base_move
+			cfg.sprite_frames_path    = enemy.sprite_frames_path
+			cfg.sprite_animation_name = enemy.sprite_animation_name
+			# Use first template for the single-sentence v2 battle
+			if enemy.templates.size() > 0:
+				cfg.template_line = enemy.templates[0].get("line", cfg.template_line)
+				cfg.blanks        = enemy.templates[0].get("blanks", cfg.blanks)
+			enemy.free()
 
 	return cfg

@@ -2,8 +2,11 @@ extends Control
 
 
 # --- Enemy entity registry ---
-# Maps encounter_id strings (from MapBuilder) to their entity scripts.
-# Add new enemies here as more are created in scripts/entities/enemies/.
+# Keys must match each enemy class's ENCOUNTER_ID constant.
+# To add a new enemy:
+#   1. Create a script extending BaseEnemy with a const ENCOUNTER_ID: String
+#   2. Add one entry here: "your_id": preload("res://path/to/enemy.gd")
+#   3. Use that same ID string in MapBuilder encounters
 const ENEMY_REGISTRY := {
 	"goblin":   preload("res://scripts/entities/enemies/goblin.gd"),
 	"skeleton": preload("res://scripts/entities/enemies/skeleton.gd"),
@@ -57,7 +60,7 @@ var rng := RandomNumberGenerator.new()
 @onready var enemy_name: Label = $EnemyPanel/EnemyName
 @onready var enemy_hp_label: Label = $EnemyPanel/EnemyHP
 @onready var enemy_hp_bar: ProgressBar = $EnemyPanel/EnemyHPBar
-@onready var goblin_sprite: AnimatedSprite2D = $EnemyPanel/GoblinSprite
+@onready var enemy_sprite: AnimatedSprite2D = $EnemyPanel/EnemySprite
 
 @onready var player_name: Label = $PlayerPanel/PlayerName
 @onready var player_hp_label: Label = $PlayerPanel/PlayerHP
@@ -126,23 +129,24 @@ func _start_battle() -> void:
 		max_sentences  = enemy.max_sentences
 		defeat_message = enemy.defeat_message
 
-		# Load enemy's SpriteFrames and play idle animation
+		# Clear any previously loaded sprite before loading the new enemy's frames.
+		# Without this, the old sprite can persist if load() fails or the node
+		# doesn't refresh when sprite_frames is reassigned while playing.
+		enemy_sprite.stop()
+		enemy_sprite.sprite_frames = null
+
 		if enemy.sprite_frames_path != "":
 			var frames: SpriteFrames = load(enemy.sprite_frames_path) as SpriteFrames
 			if frames != null:
-				goblin_sprite.sprite_frames = frames
-				if enemy.sprite_animation_name != "" \
-						and frames.has_animation(enemy.sprite_animation_name):
-					goblin_sprite.play(enemy.sprite_animation_name)
-				else:
-					goblin_sprite.stop()
+				enemy_sprite.sprite_frames = frames
+				var anim := enemy.sprite_animation_name
+				if anim != "" and frames.has_animation(anim):
+					enemy_sprite.play(anim)
 			else:
-				goblin_sprite.stop()
-		else:
-			goblin_sprite.stop()
+				push_error("BattleV1: Failed to load SpriteFrames from '%s'" % enemy.sprite_frames_path)
 
-		if not goblin_sprite.animation_finished.is_connected(_on_enemy_animation_finished):
-			goblin_sprite.animation_finished.connect(_on_enemy_animation_finished)
+		if not enemy_sprite.animation_finished.is_connected(_on_enemy_animation_finished):
+			enemy_sprite.animation_finished.connect(_on_enemy_animation_finished)
 
 		enemy.free()
 
@@ -326,17 +330,17 @@ func _player_attack(freq_scaling: float, letter_bonus_mult: float) -> Dictionary
 
 
 func _on_enemy_animation_finished() -> void:
-	if goblin_sprite.animation == "Attack":
-		var frames := goblin_sprite.sprite_frames
+	if enemy_sprite.animation == "Attack":
+		var frames := enemy_sprite.sprite_frames
 		if frames != null and frames.has_animation("Idle"):
-			goblin_sprite.play("Idle")
+			enemy_sprite.play("Idle")
 
 
 func _apply_invalid_input(message: String) -> void:
 	# Play enemy attack animation on wrong word
-	var frames := goblin_sprite.sprite_frames
+	var frames := enemy_sprite.sprite_frames
 	if frames != null and frames.has_animation("Attack"):
-		goblin_sprite.play("Attack")
+		enemy_sprite.play("Attack")
 
 	var outcome := CombatEngine.compute_attack(enemy_stats, player_stats, enemy_move, rng)
 	player_hp = CombatEngine.apply_damage(player_hp, int(outcome.damage))
