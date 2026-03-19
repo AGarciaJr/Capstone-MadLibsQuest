@@ -1,0 +1,195 @@
+[gd_scene format=3 uid="uid://cwtitldoo8dvx"]
+
+[ext_resource type="Script" uid="uid://cwh0iyo32lve3" path="res://scripts/room/Room3D.gd" id="1_528hv"]
+[ext_resource type="PackedScene" uid="uid://ds5oef4l1w2u6" path="res://Scenes/Rooms/Scene/DoorInteractable.tscn" id="2_bv8rd"]
+[ext_resource type="Script" uid="uid://by0l5vrov16w2" path="res://scripts/room/Map.gd" id="3_odja0"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_swdye"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_swdye"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_swdye"]
+content_margin_left = 30.0
+content_margin_top = 30.0
+content_margin_right = 25.0
+content_margin_bottom = 25.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[node name="Room3D" type="Node3D" unique_id=504167618]
+script = ExtResource("1_528hv")
+door_scene = ExtResource("2_bv8rd")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1467096609]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.214, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1151688545]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.21978512, 0.48564696)
+
+[node name="Floor" type="MeshInstance3D" parent="." unique_id=2102723202]
+mesh = SubResource("PlaneMesh_swdye")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=206816732]
+
+[node name="UIRoot" type="Control" parent="CanvasLayer" unique_id=250386047]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BottomCenter" type="CenterContainer" parent="CanvasLayer/UIRoot" unique_id=545550981]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -80.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="HintLabel" type="Label" parent="CanvasLayer/UIRoot/BottomCenter" unique_id=1709727509]
+layout_mode = 2
+text = "placeholder"
+label_settings = SubResource("LabelSettings_swdye")
+
+[node name="CompletionCenter" type="CenterContainer" parent="CanvasLayer/UIRoot" unique_id=1668682626]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1, 1.0058824)
+
+[node name="CompletionPanel" type="PanelContainer" parent="CanvasLayer/UIRoot/CompletionCenter" unique_id=1171028379]
+custom_minimum_size = Vector2(520, 240)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_swdye")
+
+[node name="CompletionVBox" type="VBoxContainer" parent="CanvasLayer/UIRoot/CompletionCenter/CompletionPanel" unique_id=636884829]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="CanvasLayer/UIRoot/CompletionCenter/CompletionPanel/CompletionVBox" unique_id=104409022]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Tutorial Complete"
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="CanvasLayer/UIRoot/CompletionCenter/CompletionPanel/CompletionVBox" unique_id=271775394]
+layout_mode = 2
+text = "You defeated the Goblin King and finished the tutorial!"
+horizontal_alignment = 1
+
+[node name="RestartButton" type="Button" parent="CanvasLayer/UIRoot/CompletionCenter/CompletionPanel/CompletionVBox" unique_id=1972448444]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Restart Tutorial"
+
+[node name="Fade" type="ColorRect" parent="CanvasLayer/UIRoot" unique_id=251611659]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Crosshair" type="Control" parent="CanvasLayer/UIRoot" unique_id=991697914]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Top" type="ColorRect" parent="CanvasLayer/UIRoot/Crosshair" unique_id=1980028962]
+custom_minimum_size = Vector2(2, 6)
+layout_mode = 0
+offset_left = 9.0
+offset_right = 11.0
+offset_bottom = 6.0
+
+[node name="Right" type="ColorRect" parent="CanvasLayer/UIRoot/Crosshair" unique_id=1905826988]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 9.0
+offset_right = 20.0
+offset_bottom = 11.0
+
+[node name="Left" type="ColorRect" parent="CanvasLayer/UIRoot/Crosshair" unique_id=579156632]
+layout_mode = 0
+offset_top = 9.0
+offset_right = 6.0
+offset_bottom = 11.0
+
+[node name="Bottom" type="ColorRect" parent="CanvasLayer/UIRoot/Crosshair" unique_id=1852881213]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 14.0
+offset_right = 11.0
+offset_bottom = 20.0
+
+[node name="MapOverlay" type="Control" parent="CanvasLayer/UIRoot" unique_id=1624146263]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="CanvasLayer/UIRoot/MapOverlay" unique_id=1906745929]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -125.0
+offset_right = 250.0
+offset_bottom = 125.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MapView" type="Control" parent="CanvasLayer/UIRoot/MapOverlay/Panel" unique_id=1797678023]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_odja0")
+
+[node name="Background" type="ColorRect" parent="CanvasLayer/UIRoot/MapOverlay" unique_id=1667946388]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.49803922)
+
+[node name="DoorsRoot" type="Node3D" parent="." unique_id=1457464861]

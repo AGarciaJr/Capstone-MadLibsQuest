@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://covfo82jjaeye"]
+
+[ext_resource type="Theme" uid="uid://cd024qap737m8" path="res://assets/Themes/Default_UI_Theme.tres" id="1_ixufq"]
+[ext_resource type="FontFile" uid="uid://c6ty4nsegylvr" path="res://assets/Fonts/Montserrat Fonts/Montserrat-SemiBold.otf" id="2_ux6d3"]
+[ext_resource type="Script" uid="uid://d3w5iy4nioeul" path="res://scripts/combat/BackEnd/EnemySystems/PreBattleModifier.gd" id="3_script"]
+
+[node name="PreBattleModifier" type="Control" unique_id=2100343089]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_ixufq")
+script = ExtResource("3_script")
+
+[node name="ModifierPrompt" type="Label" parent="." unique_id=716817881]
+layout_mode = 0
+offset_left = 96.0
+offset_top = 16.0
+offset_right = 544.0
+offset_bottom = 128.0
+text = "Sample text that goes before the adjective modifier."
+horizontal_alignment = 1
+vertical_alignment = 2
+autowrap_mode = 3
+
+[node name="UserInput" type="LineEdit" parent="." unique_id=242386027]
+layout_mode = 0
+offset_left = 128.0
+offset_top = 144.0
+offset_right = 512.0
+offset_bottom = 184.0
+placeholder_text = "Enter an Adjective..."
+
+[node name="Button" type="Button" parent="." unique_id=1889589075]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.412
+anchor_top = 0.5773334
+anchor_right = 0.5870001
+anchor_bottom = 0.6885556
+offset_left = 0.32000732
+offset_top = 0.15997314
+offset_right = 0.3199768
+offset_bottom = 0.11999512
+text = "Submit"
+metadata/_edit_use_anchors_ = true
+
+[node name="EffectDescriptionLabel" type="Label" parent="." unique_id=928809858]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.025
+anchor_top = 0.8
+anchor_right = 0.512
+anchor_bottom = 0.97800004
+offset_right = 0.3199768
+offset_bottom = -0.08001709
+theme_override_fonts/font = ExtResource("2_ux6d3")
+theme_override_font_sizes/font_size = 13
+text = "Description of what the modifier does."
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ContinueToBattle" type="Button" parent="." unique_id=2108184756]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.7745
+anchor_top = 0.8217779
+anchor_right = 0.9620001
+anchor_bottom = 0.95522225
+offset_left = 0.32000732
+offset_top = 0.15997314
+offset_right = 0.3199768
+offset_bottom = 0.11999512
+text = "Continue"
+metadata/_edit_use_anchors_ = true

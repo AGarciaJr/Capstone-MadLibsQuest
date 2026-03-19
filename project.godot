@@ -21,13 +21,17 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-EncounterSceneTransition="*res://EncounterSceneTransition.gd"
-Progress="*res://ProgressManager.gd"
-Run="*res://RunManager.gd"
+EncounterSceneTransition="*res://scripts/room/EncounterSceneTransition.gd"
+Progress="*res://scripts/autoloads/ProgressManager.gd"
+Run="*res://scripts/RunManager.gd"
 GameData="*res://scripts/GameData.gd"
 WordNet="*res://scripts/nlp/WordNetBridge.cs"
 WordFreq="*uid://d2b46q28jxqrr"
 Elements="*uid://bvgm7byk5q4hw"
+PlayerState="*uid://dcb4rux2nw6vi"
+ItemSystem="*uid://orag13re17qh"
+MapBuilder="*res://scripts/autoloads/MapBuilder.gd"
+EnemyModifierDB="*uid://dgarlludqnkf7"
 
 [display]
 

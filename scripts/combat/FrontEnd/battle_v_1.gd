@@ -294,6 +294,11 @@ func _submit_word(raw: String) -> void:
 	if enemy_hp <= 0:
 		_finish_battle()
 		return
+	if player_hp <= 0:
+		result_label.text = "You were defeated. Restarting..."
+		await get_tree().create_timer(0.75).timeout
+		_start_battle()
+		return
 
 	if player_hp <= 0:
 		_trigger_game_over()
