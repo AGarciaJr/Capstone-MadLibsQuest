@@ -1,7 +1,7 @@
 extends StaticBody3D
 class_name DoorInteractable
 
-@export var door_index: int = 0
+@export var next_node_id: int = -1
 @export var mesh_path: NodePath
 
 var _mesh: MeshInstance3D
@@ -28,10 +28,13 @@ func _ready() -> void:
 		var std := _highlight_material as StandardMaterial3D
 		std.albedo_color = std.albedo_color * Color(1.25, 1.25, 1.25, 1.0)
 	else:
-		push_warning("Can't highlight")
+		push_warning("Can't highlight %s" % name)
 	
 func interact():
-	get_tree().current_scene._on_door_clicked(door_index)
+	if next_node_id == -1:
+		return
+		
+	get_tree().current_scene._on_door_clicked(next_node_id)
 
 func set_highlight(enabled: bool):
 	if _mesh == null:

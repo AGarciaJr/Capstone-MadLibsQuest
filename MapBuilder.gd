@@ -14,12 +14,17 @@ func build_tutorial_run() -> Dictionary:
 			0: {"type": "start", "next": [1]},
 			1: {"type": "fight", "next": [2], "encounter_id": "Goblin 2"},
 			2: {"type": "boss", "next": [], "encounter_id": "Boss Rat"},
-		}
+		},
+		"layers": [
+			[0],
+			[1],
+			[2]
+		],
 	}
 
 func build_generated_run(
 	num_layers: int = 3,
-	min_nodes_per_leyer: int = 1,
+	min_nodes_per_layer: int = 1,
 	max_nodes_per_layer: int = 3,
 	encounters: Array = ["Goblin", "Skeleton", "Mushroom"],
 	boss_encounter_id: String = "Goblin King",
@@ -45,7 +50,7 @@ func build_generated_run(
 	
 	# Create normal encounter layers
 	for i in range(num_layers):
-		var layer_size := _rng.randi_range(min_nodes_per_leyer, max_nodes_per_layer)
+		var layer_size := _rng.randi_range(min_nodes_per_layer, max_nodes_per_layer)
 		var layer : Array = []
 		
 		for j in range(layer_size):
@@ -66,7 +71,8 @@ func build_generated_run(
 	return {
 		"seed": _seed,
 		"start_id": start_id,
-		"nodes": _nodes
+		"nodes": _nodes,
+		"layers": layers,
 	}
 	
 func _make_node(node_type: String, attributes: Dictionary = {}) -> int:
@@ -118,5 +124,5 @@ func _connect_layers(layers: Array) -> void:
 			
 			if not reachable:
 				var node_id = curr_layer[_rng.randi_range(0, curr_layer.size() - 1)]
-				_nodes[node_id]["next"].append(target_node)
+				_nodes[node_id]["next"].append(next_id)
 		
