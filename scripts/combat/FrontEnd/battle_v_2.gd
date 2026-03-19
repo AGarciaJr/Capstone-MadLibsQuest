@@ -1,6 +1,6 @@
 extends Control
 
-const TurnResolver = preload("res://scripts/combat/BackEnd/TurnResolver.gd")
+const _TurnResolverScript = preload("res://scripts/combat/BackEnd/TurnResolver.gd")
 
 # Config (pulled mostly from BattleConfigFactory and PlayerState at runtime)
 @export var use_element_system: bool = true
@@ -34,8 +34,10 @@ var enemy_move := {
 var rng := RandomNumberGenerator.new()
 var pending_item_choices: Array[Dictionary] = []
 var _encounter_modifier: EncounterModifier = null
-var _turn_resolver: TurnResolver = TurnResolver.new()
+var _turn_resolver = _TurnResolverScript.new()
 var _active_status_effects_on_turn_start: Array = []
+## When > 0, player must enter another word for the next strike (big modifier, etc.).
+var _bonus_strikes_remaining: int = 0
 
 @export var use_standalone_postbattle_rewards: bool = true
 
@@ -122,6 +124,7 @@ func _start_battle() -> void:
 	enemy_hp = enemy_max_hp
 	blank_index = 0
 	collected_words.clear()
+	_bonus_strikes_remaining = 0
 
 	goblin_sprite.play("Goblin 2")
 
@@ -196,6 +199,11 @@ func _submit_word(raw: String) -> void:
 	var word := raw.strip_edges()
 	if word == "":
 		return
+
+	if _bonus_strikes_remaining > 0:
+		await _submit_bonus_strike_word(word)
+		return
+
 	if blank_index >= blanks.size():
 		return
 
@@ -224,7 +232,11 @@ func _submit_word(raw: String) -> void:
 
 
 func _resolve_turn(word: String, freq_scaling: float) -> void:
-	var ctx := _build_turn_context(freq_scaling, _compute_letter_bonus_multiplier(word))
+	if player_attacks_per_turn > 1:
+		await _resolve_multi_strike_turn_first_word(word, freq_scaling)
+		return
+
+	var ctx := _build_turn_context(freq_scaling, _compute_letter_bonus_multiplier(word), word)
 	var result: Dictionary = _turn_resolver.resolve_valid_turn(ctx)
 
 	enemy_hp = int(result["enemy_hp"])
@@ -251,8 +263,104 @@ func _resolve_turn(word: String, freq_scaling: float) -> void:
 	_update_prompt_ui()
 
 
-func _build_turn_context(freq_scaling: float, letter_bonus_mult: float) -> Dictionary:
-	return {
+## First word after madlib when player gets multiple strikes per round.
+func _resolve_multi_strike_turn_first_word(word: String, freq_scaling: float) -> void:
+	var ctx := _build_turn_context(freq_scaling, _compute_letter_bonus_multiplier(word), word)
+	var result: Dictionary = _turn_resolver.resolve_single_player_attack(ctx)
+
+	enemy_hp = int(result["enemy_hp"])
+	PlayerState.current_hp = int(result["player_hp"])
+	_update_hp_ui()
+
+	for msg in result["damage_messages"]:
+		result_label.text = msg
+		await get_tree().create_timer(1.0).timeout
+
+	if result["enemy_defeated"]:
+		_finish_battle()
+		return
+
+	_bonus_strikes_remaining = player_attacks_per_turn - 1
+	if _bonus_strikes_remaining > 0:
+		prompt_label.text = "Another strike! Enter a word!"
+		result_label.text = "Bonus strike — use a new word!"
+		word_input.text = ""
+		word_input.grab_focus()
+		return
+
+	await _finish_player_round_after_strikes()
+
+
+func _submit_bonus_strike_word(word: String) -> void:
+	var expected_pos := "noun"
+	if not _validate_pos_if_possible(word, expected_pos):
+		var hint := _get_pos_hint_if_possible(word, expected_pos)
+		var msg := hint if hint != "" else ("That doesn't look like %s %s." % [_get_article(expected_pos), expected_pos])
+		await _apply_invalid_turn(msg)
+		return
+
+	var S: float = _get_word_freq_scaling(word)
+	if use_element_system:
+		var element_res := ElementClassifier.classify(word, expected_pos)
+		print("---- Bonus strike element ---- ", word, " ", element_res.get("element", ""))
+
+	var ctx := _build_turn_context(S, _compute_letter_bonus_multiplier(word), word)
+	var result: Dictionary = _turn_resolver.resolve_single_player_attack(ctx)
+
+	enemy_hp = int(result["enemy_hp"])
+	PlayerState.current_hp = int(result["player_hp"])
+	_update_hp_ui()
+
+	for msg in result["damage_messages"]:
+		result_label.text = msg
+		await get_tree().create_timer(1.0).timeout
+
+	if result["enemy_defeated"]:
+		_bonus_strikes_remaining = 0
+		_finish_battle()
+		return
+
+	_bonus_strikes_remaining -= 1
+	if _bonus_strikes_remaining > 0:
+		prompt_label.text = "Another strike! Enter a word!"
+		result_label.text = "Bonus strike — use a new word!"
+		word_input.text = ""
+		word_input.grab_focus()
+		return
+
+	await _finish_player_round_after_strikes()
+
+
+func _finish_player_round_after_strikes() -> void:
+	_bonus_strikes_remaining = 0
+	var ctx := _build_turn_context(0.0, 1.0)
+	var result: Dictionary = _turn_resolver.resolve_enemy_and_status(ctx)
+
+	enemy_hp = int(result["enemy_hp"])
+	PlayerState.current_hp = int(result["player_hp"])
+	_update_hp_ui()
+
+	for msg in result["damage_messages"]:
+		result_label.text = msg
+		await get_tree().create_timer(1.0).timeout
+
+	if result["enemy_defeated"]:
+		_finish_battle()
+		return
+	if result["player_defeated"]:
+		result_label.text = "You were defeated."
+		await get_tree().create_timer(0.75).timeout
+		_start_battle()
+		return
+
+	result_label.text = "Round complete!"
+	word_input.text = ""
+	word_input.grab_focus()
+	_update_prompt_ui()
+
+
+func _build_turn_context(freq_scaling: float, letter_bonus_mult: float, strike_word: String = "") -> Dictionary:
+	var ctx := {
 		"enemy_hp": enemy_hp,
 		"enemy_max_hp": enemy_max_hp,
 		"player_hp": PlayerState.current_hp,
@@ -266,9 +374,24 @@ func _build_turn_context(freq_scaling: float, letter_bonus_mult: float) -> Dicti
 		"letter_bonus_mult": letter_bonus_mult,
 		"rng": rng,
 	}
+	if strike_word != "":
+		ctx["uses_bonus_letters"] = _word_uses_any_bonus_letter(strike_word)
+	return ctx
+
+
+## True if the word contains at least one bonus letter (or there are no bonus letters — strike always counts).
+func _word_uses_any_bonus_letter(word: String) -> bool:
+	if bonus_letters.is_empty():
+		return true
+	var w := word.to_upper()
+	for letter in bonus_letters:
+		if w.contains(letter):
+			return true
+	return false
 
 
 func _apply_invalid_turn(message: String) -> void:
+	_bonus_strikes_remaining = 0
 	var ctx := _build_turn_context(0.0, 1.0)
 	var result: Dictionary = _turn_resolver.resolve_invalid_turn(ctx)
 
