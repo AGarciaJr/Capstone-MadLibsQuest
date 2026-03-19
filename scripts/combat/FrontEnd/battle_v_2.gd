@@ -1,5 +1,7 @@
 extends Control
 
+const TurnResolver = preload("res://scripts/combat/BackEnd/TurnResolver.gd")
+
 # Config (pulled mostly from BattleConfigFactory and PlayerState at runtime)
 @export var use_element_system: bool = true
 @export var player_attacks_per_turn: int = 1
@@ -31,6 +33,9 @@ var enemy_move := {
 
 var rng := RandomNumberGenerator.new()
 var pending_item_choices: Array[Dictionary] = []
+var _encounter_modifier: EncounterModifier = null
+var _turn_resolver: TurnResolver = TurnResolver.new()
+var _active_status_effects_on_turn_start: Array = []
 
 @export var use_standalone_postbattle_rewards: bool = true
 
@@ -45,6 +50,7 @@ var pending_item_choices: Array[Dictionary] = []
 @onready var player_hp_label: Label = $PlayerPanel/PlayerHP
 @onready var player_hp_bar: ProgressBar = $PlayerPanel/PlayerHPBar
 @onready var letters_label: Label = $PlayerPanel/LettersLabel
+@onready var letter_limit_label: Label = $PlayerPanel/LetterLimit
 
 @onready var prompt_label: Label = $BottomPanel/PromptLabel
 @onready var line_preview: Label = $BottomPanel/LinePreview
@@ -104,9 +110,14 @@ func _start_battle() -> void:
 	enemy_name.text = str(cfg.get("enemy_name", enemy_name.text))
 
 	var modifier_id: String = EncounterSceneTransition.current_encounter_modifier_id
-	var encounter_modifier: EncounterModifier = EnemyModifierDB.get_modifier(modifier_id)
-	if encounter_modifier != null:
-		enemy_max_hp = encounter_modifier.apply_to_enemy(enemy_max_hp, enemy_stats, enemy_move)
+	_encounter_modifier = EnemyModifierDB.get_modifier(modifier_id)
+	if _encounter_modifier != null:
+		enemy_max_hp = _encounter_modifier.apply_to_enemy(enemy_max_hp, enemy_stats, enemy_move)
+		player_attacks_per_turn += int(_encounter_modifier.flat_modifiers.get("player_turns_gained", 0))
+		enemy_attacks_per_turn += int(_encounter_modifier.flat_modifiers.get("enemy_turns_gained", 0))
+		_active_status_effects_on_turn_start = _encounter_modifier.get_turn_start_effects()
+	else:
+		_active_status_effects_on_turn_start.clear()
 
 	enemy_hp = enemy_max_hp
 	blank_index = 0
@@ -119,7 +130,9 @@ func _start_battle() -> void:
 	word_input.editable = true
 
 	line_preview.text = template_line
-	letters_label.text = "Letters (bonus): %s" % ", ".join(bonus_letters)
+	letters_label.text = "Bonus letters: %s" % ", ".join(bonus_letters)
+	word_input.max_length = PlayerState.letter_limit
+	letter_limit_label.text = "Letter limit: %d" % PlayerState.letter_limit
 
 	_update_hp_ui()
 	_update_prompt_ui()
@@ -211,75 +224,76 @@ func _submit_word(raw: String) -> void:
 
 
 func _resolve_turn(word: String, freq_scaling: float) -> void:
-	# Player attacks multiple times
-	var bonus_mult := _compute_letter_bonus_multiplier(word)
-	var player_debug := ""
+	var ctx := _build_turn_context(freq_scaling, _compute_letter_bonus_multiplier(word))
+	var result: Dictionary = _turn_resolver.resolve_valid_turn(ctx)
 
-	for i in player_attacks_per_turn:
-		var outcome := _player_attack(freq_scaling, bonus_mult)
-		enemy_hp = CombatEngine.apply_damage(enemy_hp, int(outcome.damage))
-		_update_hp_ui()
-		player_debug = str(outcome.debug)
-		if enemy_hp <= 0:
-			break
+	enemy_hp = int(result["enemy_hp"])
+	PlayerState.current_hp = int(result["player_hp"])
+	_update_hp_ui()
 
-	if enemy_hp <= 0:
-		var bonus_msg := _format_letter_bonus_msg(word, bonus_mult)
-		result_label.text = "Accepted '%s'%s  (%s)" % [word, bonus_msg, player_debug]
+	var damage_messages: Array = result["damage_messages"]
+	for msg in damage_messages:
+		result_label.text = msg
+		await get_tree().create_timer(1.0).timeout
+
+	if result["enemy_defeated"]:
 		_finish_battle()
 		return
-
-	# Enemy attacks multiple times
-	var enemy_debug := ""
-	for j in enemy_attacks_per_turn:
-		var outcome_enemy := CombatEngine.compute_attack(enemy_stats, PlayerState.stats, enemy_move, rng)
-		PlayerState.apply_damage(int(outcome_enemy.damage))
-		_update_hp_ui()
-		enemy_debug = str(outcome_enemy.debug)
-		if PlayerState.current_hp <= 0:
-			break
-
-	if PlayerState.current_hp <= 0:
-		result_label.text = "You were defeated. (%s)" % enemy_debug
+	if result["player_defeated"]:
+		result_label.text = "You were defeated."
 		await get_tree().create_timer(0.75).timeout
 		_start_battle()
 		return
 
-	var bonus_msg2 := _format_letter_bonus_msg(word, bonus_mult)
-	result_label.text = "Accepted '%s'%s  (Player: %s | Enemy: %s)" % [word, bonus_msg2, player_debug, enemy_debug]
-
+	result_label.text = "Accepted '%s'!" % word
 	word_input.text = ""
 	word_input.grab_focus()
 	_update_prompt_ui()
 
 
-func _player_attack(freq_scaling: float, letter_bonus_mult: float) -> Dictionary:
-	var move := {
-		"base_damage": 5,
-		"scaling": freq_scaling,
-		"coefficient": 1.2 * letter_bonus_mult,
-		"accuracy": 1.0,
+func _build_turn_context(freq_scaling: float, letter_bonus_mult: float) -> Dictionary:
+	return {
+		"enemy_hp": enemy_hp,
+		"enemy_max_hp": enemy_max_hp,
+		"player_hp": PlayerState.current_hp,
+		"player_stats": PlayerState.stats,
+		"enemy_stats": enemy_stats,
+		"enemy_move": enemy_move,
+		"player_attacks_per_turn": player_attacks_per_turn,
+		"enemy_attacks_per_turn": enemy_attacks_per_turn,
+		"active_status_effects": _active_status_effects_on_turn_start,
+		"freq_scaling": freq_scaling,
+		"letter_bonus_mult": letter_bonus_mult,
+		"rng": rng,
 	}
-	return CombatEngine.compute_attack(PlayerState.stats, enemy_stats, move, rng)
 
 
 func _apply_invalid_turn(message: String) -> void:
-	# Enemy still gets their attacks on invalid input.
-	var enemy_debug := ""
-	for i in enemy_attacks_per_turn:
-		var outcome := CombatEngine.compute_attack(enemy_stats, PlayerState.stats, enemy_move, rng)
-		PlayerState.apply_damage(int(outcome.damage))
-		_update_hp_ui()
-		enemy_debug = str(outcome.debug)
-		if PlayerState.current_hp <= 0:
-			break
+	var ctx := _build_turn_context(0.0, 1.0)
+	var result: Dictionary = _turn_resolver.resolve_invalid_turn(ctx)
 
-	result_label.text = "%s  (Enemy: %s)" % [message, enemy_debug]
+	enemy_hp = int(result["enemy_hp"])
+	PlayerState.current_hp = int(result["player_hp"])
+	_update_hp_ui()
+
+	var damage_messages: Array = result["damage_messages"]
+	if result["enemy_defeated"]:
+		for msg in damage_messages:
+			result_label.text = msg
+			await get_tree().create_timer(1.0).timeout
+		_finish_battle()
+		return
+
+	result_label.text = message
+	await get_tree().create_timer(1.0).timeout
+	for msg in damage_messages:
+		result_label.text = msg
+		await get_tree().create_timer(1.0).timeout
 
 	word_input.text = ""
 	word_input.grab_focus()
 
-	if PlayerState.current_hp <= 0:
+	if result["player_defeated"]:
 		result_label.text = "You were defeated. Restarting..."
 		await get_tree().create_timer(0.75).timeout
 		_start_battle()
@@ -343,7 +357,7 @@ func _compute_letter_bonus_multiplier(word: String) -> float:
 	return 1.0 + bonus
 
 
-func _format_letter_bonus_msg(word: String, mult: float) -> String:
+func _format_letter_bonus_msg(mult: float) -> String:
 	var bonus := mult - 1.0
 	if bonus <= 0.00001:
 		return ""

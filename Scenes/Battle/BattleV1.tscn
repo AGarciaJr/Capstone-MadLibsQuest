@@ -59,7 +59,7 @@ anchors_preset = 0
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 140.0
-offset_bottom = 80.0
+offset_bottom = 96.0
 
 [node name="PlayerName" type="Label" parent="PlayerPanel" unique_id=1696940253]
 layout_mode = 0
@@ -88,7 +88,15 @@ offset_top = 52.0
 offset_right = 132.0
 offset_bottom = 68.0
 theme_override_font_sizes/font_size = 10
-text = "Letters: A, E, S, T"
+text = "Bonus letters: A, E, S, T"
+
+[node name="LetterLimit" type="Label" parent="PlayerPanel" unique_id=1811216814]
+layout_mode = 0
+offset_top = 64.0
+offset_right = 132.0
+offset_bottom = 80.0
+theme_override_font_sizes/font_size = 10
+text = "Letter limit: 4"
 
 [node name="BottomPanel" type="Control" parent="." unique_id=1099714150]
 anchors_preset = 0
@@ -191,6 +199,7 @@ offset_bottom = 168.0
 text = "Cancel"
 
 [node name="VictoryPanel" type="Control" parent="." unique_id=911848340]
+visible = false
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -267,3 +276,4 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0)
+metadata/_edit_lock_ = true

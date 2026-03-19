@@ -21,7 +21,7 @@ var difficulty: int = 0
 var stackable: bool = false
 var rarity_weight: int = 0
 
-## Words that map to this modifier (e.g. "big", "cursed"). Used for adjective lookup.
+## Words that map to this modifier (e.g. "big", "cursed")
 var forced_words: PackedStringArray = PackedStringArray()
 var semantic_hints: PackedStringArray = PackedStringArray()
 
@@ -71,12 +71,17 @@ static func _to_array(v: Variant) -> Array:
 	return []
 
 
+## Keys in flat_modifiers that are modifier config (turn counts), not enemy stats.
+const _NON_STAT_KEYS: PackedStringArray = ["player_turns_gained", "enemy_turns_gained"]
+
 ## Apply this modifier to enemy config. Mutates enemy_max_hp and enemy_stats in place.
 ## Add handling for new modifier keys here (e.g. accuracy on enemy_move) as you extend.
 func apply_to_enemy(enemy_max_hp_ref: int, enemy_stats_ref: Dictionary, enemy_move_ref: Dictionary) -> int:
 	var new_max_hp: int = enemy_max_hp_ref
 
 	for key in flat_modifiers.keys():
+		if key in _NON_STAT_KEYS:
+			continue
 		var val = flat_modifiers[key]
 		if key == "hp":
 			new_max_hp += int(val)
@@ -106,3 +111,19 @@ func get_description_for_ui() -> String:
 	if definition != "":
 		return definition
 	return display_name + " modifier applied."
+
+
+## Returns status_effects_on_turn_start as Array of { "id": String, "params": Dictionary }.
+## Supports Option B format (dicts) and legacy format (strings → params: {}).
+func get_turn_start_effects() -> Array:
+	var out: Array = []
+	for x in status_effects_on_turn_start:
+		if typeof(x) == TYPE_STRING:
+			out.append({"id": str(x), "params": {}})
+		elif typeof(x) == TYPE_DICTIONARY:
+			var d: Dictionary = x as Dictionary
+			out.append({
+				"id": str(d.get("id", "")),
+				"params": d.get("params", {}) as Dictionary
+			})
+	return out

@@ -50,8 +50,18 @@ var items: Array[Dictionary] = [
 			"amount": 20
 		}
 	},
+	{
+		"id": "increase_letter_limit",
+		"name": "Scroll of Eloquence",
+		"description": "Increases the maximum letters you can use per word by 1.",
+		"effect_type": "increase_letter_limit",
+		"params": {
+			"amount": 1
+		}
+	},
 ]
 
+# TODO: merge this with the get one random letter item
 func get_random_choices(n: int = 3) -> Array[Dictionary]:
 	var non_letter_pool: Array[Dictionary] = items.duplicate()
 	non_letter_pool.shuffle()
@@ -103,6 +113,9 @@ func apply_item(item: Dictionary) -> void:
 
 		"heal":
 			PlayerState.heal(int(p.get("amount", 0)))
+
+		"increase_letter_limit":
+			PlayerState.add_letter_limit(int(p.get("amount", 1)))
 
 		_:
 			pass

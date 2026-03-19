@@ -3,26 +3,30 @@
 	{
 		"id": "cursed",
 		"display_name": "Cursed",
-		"definition": "Hexed, haunted, doomed; spooky/ominous affix.",
+		"definition": "The foe is cursed and takes 10% of their max HP as damage each turn, but has a higher chance to land critical hits.",
 		"semantic_hints": [
 			"cursed",
 			"hexed",
 			"haunted", 
 			"doomed", 
 			"unholy", 
-            "blighted"
+			"blighted",
+			"evil",
+			"demonic",
+			"greedy",
+			"selfish"
 		],
 		"forced_words": [
 			"cursed", 
             "hexed"
 		],
-		"flat_modifiers": { 
-			"hp": -10 
-		},
+		"flat_modifiers": {},
 		"mult_modifiers": { 
-			"crit_chance": 1.5
+			"crit_chance": 2.0
 		},
-		"status_effects_on_turn_start": ["self_damage"],
+		"status_effects_on_turn_start": [
+			{ "id": "self_damage", "params": { "percent": 0.10, "source": "curse" } }
+		],
 		"difficulty": 1,
 		"post_fight_modifiers": [],
 		"element_override": "spooky",
@@ -33,7 +37,7 @@
 	{
 		"id": "big",
 		"display_name": "Big",
-		"definition": "A larger-than-normal foe: tougher and harder to bring down, but clumsier and less accurate.",
+		"definition": "A larger-than-normal foe: tougher and harder to bring down, but you get an extra turn each round.",
 		"semantic_hints": [
 			"big",
 			"large",
@@ -58,11 +62,11 @@
 		],
 
 		"flat_modifiers": {
-			"hp": 10
+			"hp": 10,
+			"player_turns_gained": 1
 		},
 		"mult_modifiers": {
-			"hp": 1.35,
-			"accuracy": 0.95
+			"hp": 1.35
 		},
 		"status_effects_on_hit": [],
 		"status_effects_on_turn_start": [],
@@ -76,7 +80,7 @@
 	{
 		"id": "small",
 		"display_name": "Small",
-		"definition": "A smaller-than-normal foe: fragile, but quick and more accurate.",
+		"definition": "A smaller-than-normal foe: fragile, but the enemy gets an extra turn each round.",
 		"semantic_hints": [
 			"small",
 			"tiny",
@@ -100,11 +104,11 @@
 		],
 
 		"flat_modifiers": {
-			"hp": -15
+			"hp": 0,
+			"enemy_turns_gained": 1
 		},
 		"mult_modifiers": {
-			"hp": 0.85,
-			"accuracy": 1.15
+			"hp": 0.85
 		},
 		"status_effects_on_hit": [],
 		"status_effects_on_turn_start": [],

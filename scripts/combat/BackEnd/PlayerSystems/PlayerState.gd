@@ -12,6 +12,7 @@ var stats: Dictionary = {
 }
 
 var bonus_letters: PackedStringArray = PackedStringArray(["A", "E", "S", "T"])
+var letter_limit: int = 6
 var letter_bonus_per_match: float = 0.05
 var letter_bonus_all_letters_extra: float = 0.15
 var letter_bonus_cap: float = 0.50
@@ -29,6 +30,7 @@ func reset_to_defaults() -> void:
 		"armor": 0,
 	}
 	bonus_letters = PackedStringArray(["A", "E", "S", "T"])
+	letter_limit = 4
 	letter_bonus_per_match = 0.05
 	letter_bonus_all_letters_extra = 0.15
 	letter_bonus_cap = 0.50
@@ -71,3 +73,6 @@ func add_random_bonus_letters(count: int, rng: RandomNumberGenerator = null) -> 
 
 func modify_bonus_letter_power(extra_per_match: float) -> void:
 	letter_bonus_per_match += extra_per_match
+
+func add_letter_limit(amount: int) -> void:
+	letter_limit = max(1, letter_limit + amount)
