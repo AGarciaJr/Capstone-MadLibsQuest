@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://cwtitldoo8dvx"]
 
-[ext_resource type="Script" uid="uid://cwh0iyo32lve3" path="res://Room3D.gd" id="1_swdye"]
-[ext_resource type="PackedScene" uid="uid://ds5oef4l1w2u6" path="res://Scenes/Rooms/DoorInteractable.tscn" id="2_yg70w"]
-[ext_resource type="Script" uid="uid://by0l5vrov16w2" path="res://Map.gd" id="3_7pfex"]
+[ext_resource type="Script" uid="uid://cwh0iyo32lve3" path="res://scripts/room/Room3D.gd" id="1_528hv"]
+[ext_resource type="PackedScene" uid="uid://ds5oef4l1w2u6" path="res://Scenes/Rooms/Scene/DoorInteractable.tscn" id="2_bv8rd"]
+[ext_resource type="Script" uid="uid://by0l5vrov16w2" path="res://scripts/room/Map.gd" id="3_odja0"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_swdye"]
 
@@ -21,8 +21,8 @@ corner_radius_bottom_left = 3
 corner_detail = 5
 
 [node name="Room3D" type="Node3D" unique_id=504167618]
-script = ExtResource("1_swdye")
-door_scene = ExtResource("2_yg70w")
+script = ExtResource("1_528hv")
+door_scene = ExtResource("2_bv8rd")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1467096609]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.214, 0)
@@ -181,7 +181,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("3_7pfex")
+script = ExtResource("3_odja0")
 
 [node name="Background" type="ColorRect" parent="CanvasLayer/UIRoot/MapOverlay" unique_id=1667946388]
 layout_mode = 1
