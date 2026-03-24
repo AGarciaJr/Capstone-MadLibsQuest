@@ -9,7 +9,6 @@ const _TurnResolverScript = preload("res://scripts/combat/BackEnd/TurnResolver.g
 
 var enemy_max_hp: int = 30
 
-var bonus_letters: PackedStringArray = []
 var letter_bonus_per_match: float = 0.05
 var letter_bonus_all_letters_extra: float = 0.15
 var letter_bonus_cap: float = 0.50
@@ -45,6 +44,8 @@ var _bonus_strikes_remaining: int = 0
 
 @export var use_standalone_postbattle_rewards: bool = true
 
+## When false: no max word length (LineEdit unlimited) and LetterLimit label is hidden. Set in Inspector for testing.
+@export var enforce_letter_limit: bool = false
 @onready var fade: ColorRect = $Fade
 
 @onready var enemy_name: Label = $EnemyPanel/EnemyName
@@ -84,9 +85,36 @@ func _ready() -> void:
 	battle_log_button.pressed.connect(func(): battle_log_panel.visible = true)
 	$BattleLogPanel/CloseButton.pressed.connect(func(): battle_log_panel.visible = false)
 
+	if not PlayerState.player_letters_changed.is_connected(_update_letters_label):
+		PlayerState.player_letters_changed.connect(_update_letters_label)
+
 	_start_battle()
 	var tween := create_tween()
 	tween.tween_property(fade, "color", Color(0, 0, 0, 0), 0.35)
+
+
+func _exit_tree() -> void:
+	if PlayerState.player_letters_changed.is_connected(_update_letters_label):
+		PlayerState.player_letters_changed.disconnect(_update_letters_label)
+
+
+func _update_letters_label(_letters: PackedStringArray = PackedStringArray()) -> void:
+	if letters_label == null:
+		return
+	letters_label.text = "Player letters: %s" % ", ".join(PlayerState.player_letters)
+
+
+func _apply_letter_limit_ui() -> void:
+	if enforce_letter_limit:
+		word_input.max_length = PlayerState.letter_limit
+		if letter_limit_label:
+			letter_limit_label.visible = true
+			letter_limit_label.text = "Letter limit: %d" % PlayerState.letter_limit
+	else:
+		# Godot: max_length 0 = no limit on LineEdit
+		word_input.max_length = 0
+		if letter_limit_label:
+			letter_limit_label.visible = false
 
 
 func _start_battle() -> void:
@@ -107,8 +135,10 @@ func _start_battle() -> void:
 	template_line = str(cfg.get("template_line", template_line))
 	blanks = cfg.get("blanks", blanks)
 
-	bonus_letters = cfg.get("bonus_letters", PlayerState.bonus_letters)
-	PlayerState.bonus_letters = bonus_letters
+	if cfg.has("player_letters"):
+		PlayerState.set_player_letters(cfg["player_letters"])
+	elif cfg.has("bonus_letters"):
+		PlayerState.set_player_letters(cfg["bonus_letters"])
 	letter_bonus_per_match = float(cfg.get("letter_bonus_per_match", PlayerState.letter_bonus_per_match))
 	letter_bonus_all_letters_extra = float(cfg.get("letter_bonus_all_letters_extra", PlayerState.letter_bonus_all_letters_extra))
 	letter_bonus_cap = float(cfg.get("letter_bonus_cap", PlayerState.letter_bonus_cap))
@@ -163,9 +193,8 @@ func _start_battle() -> void:
 	word_input.editable = true
 
 	line_preview.text = template_line
-	letters_label.text = "Bonus letters: %s" % ", ".join(bonus_letters)
-	word_input.max_length = PlayerState.letter_limit
-	letter_limit_label.text = "Letter limit: %d" % PlayerState.letter_limit
+	_update_letters_label()
+	_apply_letter_limit_ui()
 
 	_update_hp_ui()
 	_update_prompt_ui()
@@ -435,16 +464,16 @@ func _build_turn_context(freq_scaling: float, letter_bonus_mult: float, strike_w
 		"rng": rng,
 	}
 	if strike_word != "":
-		ctx["uses_bonus_letters"] = _word_uses_any_bonus_letter(strike_word)
+		ctx["uses_player_letters"] = _word_uses_any_player_letter(strike_word)
 	return ctx
 
 
-## True if the word contains at least one bonus letter (or there are no bonus letters — strike always counts).
-func _word_uses_any_bonus_letter(word: String) -> bool:
-	if bonus_letters.is_empty():
+## True if the word contains at least one player letter (or there are none — strike always counts).
+func _word_uses_any_player_letter(word: String) -> bool:
+	if PlayerState.player_letters.is_empty():
 		return true
 	var w := word.to_upper()
-	for letter in bonus_letters:
+	for letter in PlayerState.player_letters:
 		if w.contains(letter):
 			return true
 	return false
@@ -549,17 +578,17 @@ func _append_log(msg: String) -> void:
 
 
 func _compute_letter_bonus_multiplier(word: String) -> float:
-	if bonus_letters.is_empty():
+	if PlayerState.player_letters.is_empty():
 		return 1.0
 
 	var w := word.to_upper()
 	var match_count := 0
-	for letter in bonus_letters:
+	for letter in PlayerState.player_letters:
 		if w.contains(letter):
 			match_count += 1
 
 	var bonus := float(match_count) * letter_bonus_per_match
-	if match_count == bonus_letters.size():
+	if match_count == PlayerState.player_letters.size():
 		bonus += letter_bonus_all_letters_extra
 
 	bonus = clampf(bonus, 0.0, letter_bonus_cap)

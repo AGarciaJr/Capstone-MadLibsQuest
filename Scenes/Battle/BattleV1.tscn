@@ -85,7 +85,7 @@ offset_top = 52.0
 offset_right = 132.0
 offset_bottom = 68.0
 theme_override_font_sizes/font_size = 10
-text = "Bonus letters: A, E, S, T"
+text = "Player letters: A, E, S, T"
 
 [node name="LetterLimit" type="Label" parent="PlayerPanel" unique_id=1811216814]
 layout_mode = 0
