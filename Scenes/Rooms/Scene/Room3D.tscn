@@ -34,6 +34,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.21978512, 0.48564696)
 mesh = SubResource("PlaneMesh_swdye")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=206816732]
+layer = -1
 
 [node name="UIRoot" type="Control" parent="CanvasLayer" unique_id=250386047]
 layout_mode = 3
@@ -97,17 +98,6 @@ custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Restart Tutorial"
-
-[node name="Fade" type="ColorRect" parent="CanvasLayer/UIRoot" unique_id=251611659]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0, 0, 0, 1)
 
 [node name="Crosshair" type="Control" parent="CanvasLayer/UIRoot" unique_id=991697914]
 custom_minimum_size = Vector2(20, 20)
@@ -191,5 +181,15 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.49803922)
+
+[node name="Fade" type="ColorRect" parent="CanvasLayer/UIRoot" unique_id=251611659]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
 
 [node name="DoorsRoot" type="Node3D" parent="." unique_id=1457464861]

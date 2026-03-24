@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://cwtitldoo8dvx"]
+[gd_scene format=3 uid="uid://7hyqa27rndaa"]
 
 [ext_resource type="Script" uid="uid://cwh0iyo32lve3" path="res://Room3D.gd" id="1_swdye"]
 [ext_resource type="Script" uid="uid://b2rnibk3oeqpl" path="res://scripts/Interactables/DoorInteractable.gd" id="2_yg70w"]

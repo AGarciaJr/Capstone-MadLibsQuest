@@ -27,6 +27,7 @@ func _ready() -> void:
 	completion_center.visible = false
 	map_overlay.visible = false
 	fade.color = Color( 0, 0, 0, 0)
+	fade.visible = true
 	
 	_update_map_overlay()
 	_rebuild_doors()
@@ -107,13 +108,10 @@ func _place_door(door: DoorInteractable, index: int, total: int) -> void:
 	door.look_at(center, Vector3.UP)
 
 func _on_door_clicked(next_node_id: int):
-	
 	if _is_transitioning or not Run.can_advance_to(next_node_id):
 		return
 	
 	Run.advance_to(next_node_id)
-	_rebuild_doors()
-	_refresh_ui()
 	
 	var curr := Run.node()
 	var type = curr.get("type", "?")
@@ -136,6 +134,11 @@ func _on_door_clicked(next_node_id: int):
 			scene_file_path,
 			{"node_id": Run.current_id}
 		)
+		return
+	
+	# does nothing for now, when using non-combat scenes this will refresh the room
+	_rebuild_doors()
+	_refresh_ui()
 	
 func _get_targeted_door() -> DoorInteractable:
 	var center = get_viewport().get_visible_rect().size * 0.5

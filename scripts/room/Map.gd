@@ -5,7 +5,7 @@ class_name MapView
 @export var layer_spacing: float = 100.0
 @export var row_spacing: float = 80.0
 @export var padding: float = 30.0
-@export var edge_width: float = 5.0
+@export var edge_width: float = 3.0
 
 var _map_data: Dictionary = {}
 var _current_id: int = -1
@@ -16,7 +16,7 @@ func set_map_data(map_data: Dictionary, current_id: int) -> void:
 	queue_redraw()
 	
 func _draw() -> void:
-	if _map_data.is_empty() or not _map_data.has("nodes") or not _map_data.has("start_id"):
+	if _map_data.is_empty() or not _map_data.has("nodes") or not _map_data.has("start_id") or not _map_data.has("layers"):
 		return
 	
 	var positions := {}
@@ -44,7 +44,7 @@ func _draw() -> void:
 		
 		for next_id in node.get("next", []):
 			if positions.has(next_id):
-				draw_line(positions[node_id], positions[next_id], Color(1, 1, 1, 1), edge_width)
+				draw_line(positions[node_id], positions[next_id], Color(1, 1, 1, 0.4), edge_width)
 
 	# Draw nodes
 	for node_id in nodes.keys():
@@ -65,7 +65,7 @@ func _draw() -> void:
 				color = Color(1, 0, .2, 1.0)
 		
 		if node_id == _current_id:
-			draw_circle(pos, node_radius + 2.0, Color(1, 1, 1, 0.9))
+			draw_circle(pos, node_radius + 5.0, Color(1, 1, 1, 0.95))
 		
 		draw_circle(pos, node_radius, color)
 				

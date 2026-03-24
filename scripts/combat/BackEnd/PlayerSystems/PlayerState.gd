@@ -12,7 +12,7 @@ var stats: Dictionary = {
 }
 
 var bonus_letters: PackedStringArray = PackedStringArray(["A", "E", "S", "T"])
-var letter_limit: int = 6
+var letter_limit: int = 12
 var letter_bonus_per_match: float = 0.05
 var letter_bonus_all_letters_extra: float = 0.15
 var letter_bonus_cap: float = 0.50
