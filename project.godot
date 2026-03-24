@@ -15,9 +15,54 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="madlibsquest"
-config/features=PackedStringArray("4.6", "Forward Plus")
+run/main_scene="uid://by6ivvrwnhxn5"
+config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+EncounterSceneTransition="*res://scripts/room/EncounterSceneTransition.gd"
+Progress="*res://scripts/autoloads/ProgressManager.gd"
+Run="*res://scripts/RunManager.gd"
+GameData="*res://scripts/GameData.gd"
+WordNet="*res://scripts/nlp/WordNetBridge.cs"
+WordFreq="*uid://d2b46q28jxqrr"
+Elements="*uid://bvgm7byk5q4hw"
+PlayerState="*uid://dcb4rux2nw6vi"
+ItemSystem="*uid://orag13re17qh"
+EnemyModifierDB="*uid://dgarlludqnkf7"
+MapBuilder="*uid://028lbysuding"
+
+[display]
+
+window/size/viewport_width=640
+window/size/viewport_height=360
+window/size/borderless=true
+window/size/window_width_override=1720
+window/size/window_height_override=980
+window/stretch/mode="canvas_items"
 
 [dotnet]
 
 project/assembly_name="madlibsquest"
+
+[input]
+
+attack={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":88,"key_label":0,"unicode":120,"location":0,"echo":false,"script":null)
+, Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":1,"canceled":false,"pressed":false,"double_click":false,"script":null)
+]
+}
+
+[layer_names]
+
+2d_physics/layer_1="Player"
+2d_physics/layer_2="PlayerHurt"
+2d_physics/layer_9="Enemy"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+textures/size/viewport_height=270
+textures/size/viewport_width=480

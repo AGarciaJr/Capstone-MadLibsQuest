@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://ds5oef4l1w2u6"]
+
+[ext_resource type="Script" uid="uid://b2rnibk3oeqpl" path="res://scripts/Interactables/DoorInteractable.gd" id="1_prhx8"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_wr36d"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_swdye"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yg70w"]
+albedo_color = Color(0.21155822, 0.41320184, 0.31195164, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wr36d"]
+size = Vector3(0.23, 0.33, 0.01)
+
+[node name="Door1" type="StaticBody3D" unique_id=185082829]
+physics_material_override = SubResource("PhysicsMaterial_wr36d")
+script = ExtResource("1_prhx8")
+mesh_path = NodePath("MeshInstance3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=2076735563]
+transform = Transform3D(0.23277678, 0, 0, 0, 0.32955495, 0, 0, 0, 0.008609951, 0, 0, 0)
+mesh = SubResource("BoxMesh_swdye")
+surface_material_override/0 = SubResource("StandardMaterial3D_yg70w")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=105516289]
+shape = SubResource("BoxShape3D_wr36d")
