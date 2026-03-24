@@ -1,5 +1,7 @@
 extends Control
 
+const _EXPECTED_POS := "adjective"
+
 ## When running standalone, we store the chosen modifier and transition to battle on Continue.
 var _last_modifier: EncounterModifier = null
 
@@ -39,9 +41,46 @@ func _submit() -> void:
 	var adj: String = user_input.text.strip_edges()
 	if adj.is_empty():
 		return
+
+	if adj.contains(" ") or adj.contains("\t"):
+		_reject_input("Please enter a single adjective (one word).")
+		return
+
+	if not _validate_pos_if_possible(adj, _EXPECTED_POS):
+		var hint := _get_pos_hint_if_possible(adj, _EXPECTED_POS)
+		var msg: String = hint if hint != "" else "That doesn't look like an adjective — try another word!"
+		_reject_input(msg)
+		return
+
 	_last_modifier = EnemyModifierDB.classify_adjective(adj)
 	effect_description_label.text = _last_modifier.get_description_for_ui()
 	continue_button.disabled = false
+
+
+func _reject_input(message: String) -> void:
+	_last_modifier = null
+	continue_button.disabled = true
+	effect_description_label.text = message
+
+
+func _validate_pos_if_possible(word: String, expected_pos: String) -> bool:
+	if not _has_wordnet():
+		return true
+	if not WordNet.IsReady:
+		return true
+	return WordNet.ValidatePos(word, expected_pos)
+
+
+func _get_pos_hint_if_possible(word: String, expected_pos: String) -> String:
+	if not _has_wordnet():
+		return ""
+	if not WordNet.IsReady:
+		return ""
+	return WordNet.GetPosHint(word, expected_pos)
+
+
+func _has_wordnet() -> bool:
+	return get_tree() != null and get_tree().root.has_node("WordNet")
 
 
 func _on_continue_pressed() -> void:

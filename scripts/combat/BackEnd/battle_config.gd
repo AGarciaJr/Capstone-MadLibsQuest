@@ -23,7 +23,6 @@ static func build(encounter: Dictionary) -> Dictionary:
 			{"type": "verb", "hint": "an action", "display": "VERB"},
 			{"type": "adjective", "hint": "a describing word", "display": "ADJECTIVE"},
 		],
-		"bonus_letters": PackedStringArray(["A", "E", "S", "T"]),
 		"letter_bonus_per_match": 0.05,
 		"letter_bonus_all_letters_extra": 0.15,
 		"letter_bonus_cap": 0.50,

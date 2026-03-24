@@ -36,10 +36,10 @@ func _resolve(ctx: Dictionary, include_player_attacks: bool) -> Dictionary:
 
 	# One player attack per resolve call (one word). Extra strikes = extra resolve_single_player_attack calls from UI.
 	if include_player_attacks:
-		var uses_bonus_letters: bool = bool(ctx.get("uses_bonus_letters", true))
-		if not uses_bonus_letters:
+		var uses_player_letters: bool = bool(ctx.get("uses_player_letters", ctx.get("uses_bonus_letters", true)))
+		if not uses_player_letters:
 			damage_messages.append(
-				"Oh no — you missed! You didn't use any of your bonus letters."
+				"Oh no — you missed! You didn't use any of your player letters."
 			)
 		elif current_enemy_hp > 0:
 			var player_move := {
@@ -98,10 +98,10 @@ func resolve_single_player_attack(ctx: Dictionary) -> Dictionary:
 		rng = RandomNumberGenerator.new()
 		rng.randomize()
 
-	var uses_bonus_letters: bool = bool(ctx.get("uses_bonus_letters", true))
-	if not uses_bonus_letters:
+	var uses_player_letters: bool = bool(ctx.get("uses_player_letters", ctx.get("uses_bonus_letters", true)))
+	if not uses_player_letters:
 		damage_messages.append(
-			"Oh no — you missed! You didn't use any of your bonus letters."
+			"Oh no — you missed! You didn't use any of your player letters."
 		)
 	elif current_enemy_hp > 0:
 		var player_move := {

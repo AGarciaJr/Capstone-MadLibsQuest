@@ -17,8 +17,8 @@ var items: Array[Dictionary] = [
 	{
 		"id": "add_bonus_letter",
 		"name": "Glyph of Letters",
-		"description": "Adds 1 random bonus letter.",
-		"effect_type": "add_random_bonus_letters",
+		"description": "Adds 1 random player letter.",
+		"effect_type": "add_random_player_letters",
 		"params": {
 			"count": 1
 		}
@@ -26,8 +26,8 @@ var items: Array[Dictionary] = [
 	{
 		"id": "add_bonus_letters_2",
 		"name": "Glyph of Many Letters",
-		"description": "Adds 2 random bonus letters.",
-		"effect_type": "add_random_bonus_letters",
+		"description": "Adds 2 random player letters.",
+		"effect_type": "add_random_player_letters",
 		"params": {
 			"count": 2
 		}
@@ -36,7 +36,7 @@ var items: Array[Dictionary] = [
 		"id": "improve_bonus_letter",
 		"name": "Alphabet Amplification",
 		"description": "Increases letter bonus damage.",
-		"effect_type": "improve_bonus_letter",
+		"effect_type": "improve_letter_bonus",
 		"params": {
 			"extra_per_match": 0.12
 		}
@@ -71,8 +71,8 @@ func get_random_choices(n: int = 3) -> Array[Dictionary]:
 		letter_pool.append({
 			"id": "letter_%s" % letter,
 			"name": "Letter %s" % letter,
-			"description": "Adds '%s' as a bonus letter. If you already have it, doubles the damage bonus for that letter!" % letter,
-			"effect_type": "add_bonus_letter",
+			"description": "Adds '%s' as a player letter. If you already have it, doubles the damage bonus for that letter!" % letter,
+			"effect_type": "add_player_letter",
 			"params": {"letter": letter}
 		})
 	letter_pool.shuffle()
@@ -90,6 +90,14 @@ func apply_item(item: Dictionary) -> void:
 	var p: Dictionary = item.get("params", {}) as Dictionary
 
 	match t:
+		"add_player_letter":
+			PlayerState.add_player_letter(String(p.get("letter", "A")))
+		"add_random_player_letters":
+			var count_new: int = int(p.get("count", 1))
+			PlayerState.add_random_player_letters(count_new)
+		"improve_letter_bonus":
+			PlayerState.modify_letter_bonus_power(float(p.get("extra_per_match", 0.01)))
+
 		"boost_stats":
 			var flat: Dictionary = {}
 			if p.has("atk_flat"):
@@ -102,14 +110,14 @@ func apply_item(item: Dictionary) -> void:
 			PlayerState.apply_stat_mod(flat, {})
 
 		"add_bonus_letter":
-			PlayerState.add_bonus_letter(String(p.get("letter", "A")))
+			PlayerState.add_player_letter(String(p.get("letter", "A")))
 
 		"add_random_bonus_letters":
 			var count: int = int(p.get("count", 1))
-			PlayerState.add_random_bonus_letters(count)
+			PlayerState.add_random_player_letters(count)
 
 		"improve_bonus_letter":
-			PlayerState.modify_bonus_letter_power(float(p.get("extra_per_match", 0.01)))
+			PlayerState.modify_letter_bonus_power(float(p.get("extra_per_match", 0.01)))
 
 		"heal":
 			PlayerState.heal(int(p.get("amount", 0)))
