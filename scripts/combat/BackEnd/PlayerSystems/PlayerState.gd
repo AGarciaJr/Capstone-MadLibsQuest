@@ -14,9 +14,9 @@ var stats: Dictionary = {
 }
 
 var player_letters: PackedStringArray = PackedStringArray(["A", "E", "S", "T"])
-var letter_bonus_per_match: float = 0.50
+var letter_bonus_per_match: float = 0.05
 var letter_bonus_all_letters_extra: float = 2.0
-var letter_bonus_cap: float = 0.50
+var letter_bonus_cap: float = 99.0
 
 # feature on hold for now
 var letter_limit: int = 6
@@ -83,6 +83,24 @@ func add_random_player_letters(count: int, rng: RandomNumberGenerator = null) ->
 
 func modify_letter_bonus_power(extra_per_match: float) -> void:
 	letter_bonus_per_match += extra_per_match
+
+
+## Damage coefficient from featured letters (same math as battle → TurnResolver `letter_bonus_mult`).
+## Uses `letter_bonus_per_match` per distinct featured letter present in `word`, plus `letter_bonus_all_letters_extra` when all are used, clamped by `letter_bonus_cap`.
+func letter_bonus_multiplier_for_word(word: String) -> float:
+	if player_letters.is_empty():
+		return 1.0
+	var w := word.to_upper()
+	var match_count := 0
+	for letter in player_letters:
+		if w.contains(letter):
+			match_count += 1
+	var bonus := float(match_count) * letter_bonus_per_match
+	if match_count == player_letters.size():
+		bonus += letter_bonus_all_letters_extra
+	bonus = clampf(bonus, 0.0, letter_bonus_cap)
+	return 1.0 + bonus
+
 
 func add_letter_limit(amount: int) -> void:
 	letter_limit = max(1, letter_limit + amount)

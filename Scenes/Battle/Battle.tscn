@@ -56,7 +56,7 @@ anchors_preset = 0
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 140.0
-offset_bottom = 96.0
+offset_bottom = 108.0
 
 [node name="PlayerName" type="Label" parent="PlayerPanel" unique_id=1696940253]
 layout_mode = 0
@@ -94,6 +94,15 @@ offset_right = 132.0
 offset_bottom = 80.0
 theme_override_font_sizes/font_size = 10
 text = "Letter limit: 4"
+
+[node name="LetterBonusNumber" type="Label" parent="PlayerPanel" unique_id=2100456123]
+layout_mode = 0
+offset_top = 80.0
+offset_right = 132.0
+offset_bottom = 100.0
+theme_override_font_sizes/font_size = 10
+text = "Letter bonus per match: 0.50"
+autowrap_mode = 3
 
 [node name="BottomPanel" type="Control" parent="." unique_id=1099714150]
 anchors_preset = 0
