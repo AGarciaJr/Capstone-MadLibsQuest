@@ -26,7 +26,6 @@ static func build(encounter: Dictionary) -> Dictionary:
 		"letter_bonus_per_match": 0.05,
 		"letter_bonus_all_letters_extra": 0.15,
 		"letter_bonus_cap": 0.50,
-		"player_stats": {"atk": 10, "crit_chance": 0.10, "crit_mult": 1.5, "def": 0, "armor": 0},
 		"enemy_stats": {"atk": 6, "crit_chance": 0.05, "crit_mult": 1.4, "def": 2, "armor": 10},
 		"enemy_move": {
 			"base_damage": 4,

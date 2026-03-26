@@ -9,9 +9,7 @@ const _TurnResolverScript = preload("res://scripts/combat/BackEnd/TurnResolver.g
 
 var enemy_max_hp: int = 30
 
-var letter_bonus_per_match: float = 0.05
-var letter_bonus_all_letters_extra: float = 0.15
-var letter_bonus_cap: float = 0.50
+## Letter bonus tuning for this battle lives on PlayerState (set from encounter cfg in _start_battle).
 var battle_title: String = "~ The Bard's Tale ~"
 var template_line: String = "The hero faced a fearsome ___, chose to ___, and won with ___ force!"
 var blanks: Array = []
@@ -25,7 +23,8 @@ var current_sentence_index: int = 0
 var _sprite_idle_animation: String = ""
 var _battle_log: Array[String] = []
 
-var enemy_stats := {"atk": 6, "crit_chance": 0.05, "crit_mult": 1.4, "def": 2, "armor": 10}
+## Filled from BattleConfigFactory / encounter each battle; mutated by encounter modifiers.
+var enemy_stats: Dictionary = {}
 
 var enemy_move := {
 	"base_damage": 4,
@@ -41,11 +40,20 @@ var _turn_resolver = _TurnResolverScript.new()
 var _active_status_effects_on_turn_start: Array = []
 ## When > 0, player must enter another word for the next strike (big modifier, etc.).
 var _bonus_strikes_remaining: int = 0
+## Part of speech for bonus strikes — same blank type as the word played before enemy phase.
+var _strike_round_expected_pos: String = "noun"
+var _strike_round_pos_display: String = "noun"
 
 @export var use_standalone_postbattle_rewards: bool = true
 
 ## When false: no max word length (LineEdit unlimited) and LetterLimit label is hidden. Set in Inspector for testing.
 @export var enforce_letter_limit: bool = false
+
+## When true: player damage = Scrabble sum(word) × multiplier from player letters; no stats/armor/freq/elements. Enemy uses flat damage only.
+@export var use_scrabble_test_damage: bool = false
+@export var test_enemy_damage_per_strike: int = 5
+## How long the full Scrabble breakdown stays on ResultLabel before the next step (seconds).
+@export var scrabble_result_hold_seconds: float = 2.5
 @onready var fade: ColorRect = $Fade
 
 @onready var enemy_name: Label = $EnemyPanel/EnemyName
@@ -104,6 +112,28 @@ func _update_letters_label(_letters: PackedStringArray = PackedStringArray()) ->
 	letters_label.text = "Player letters: %s" % ", ".join(PlayerState.player_letters)
 
 
+## Shows TurnResolver damage lines on ResultLabel. Scrabble mode: all lines at once (multiline). Normal: one line per second.
+func _present_damage_messages(damage_messages: Array) -> void:
+	if damage_messages.is_empty():
+		return
+	var lines: PackedStringArray = PackedStringArray()
+	for msg in damage_messages:
+		var s := str(msg)
+		if s.is_empty():
+			continue
+		_append_log(s)
+		lines.append(s)
+	if lines.is_empty():
+		return
+	if use_scrabble_test_damage:
+		result_label.text = "\n".join(lines)
+		await get_tree().create_timer(maxf(0.1, scrabble_result_hold_seconds)).timeout
+	else:
+		for s in lines:
+			result_label.text = s
+			await get_tree().create_timer(1.0).timeout
+
+
 func _apply_letter_limit_ui() -> void:
 	if enforce_letter_limit:
 		word_input.max_length = PlayerState.letter_limit
@@ -126,8 +156,7 @@ func _start_battle() -> void:
 	if PlayerState.current_hp <= 0:
 		PlayerState.current_hp = PlayerState.max_hp
 
-	PlayerState.stats = cfg.get("player_stats", PlayerState.stats)
-	enemy_stats = cfg.get("enemy_stats", enemy_stats)
+	enemy_stats = cfg["enemy_stats"]
 	enemy_move = cfg.get("enemy_move", enemy_move)
 
 	templates = cfg.get("templates", [])
@@ -139,13 +168,9 @@ func _start_battle() -> void:
 		PlayerState.set_player_letters(cfg["player_letters"])
 	elif cfg.has("bonus_letters"):
 		PlayerState.set_player_letters(cfg["bonus_letters"])
-	letter_bonus_per_match = float(cfg.get("letter_bonus_per_match", PlayerState.letter_bonus_per_match))
-	letter_bonus_all_letters_extra = float(cfg.get("letter_bonus_all_letters_extra", PlayerState.letter_bonus_all_letters_extra))
-	letter_bonus_cap = float(cfg.get("letter_bonus_cap", PlayerState.letter_bonus_cap))
-
-	PlayerState.letter_bonus_per_match = letter_bonus_per_match
-	PlayerState.letter_bonus_all_letters_extra = letter_bonus_all_letters_extra
-	PlayerState.letter_bonus_cap = letter_bonus_cap
+	PlayerState.letter_bonus_per_match = float(cfg.get("letter_bonus_per_match", PlayerState.letter_bonus_per_match))
+	PlayerState.letter_bonus_all_letters_extra = float(cfg.get("letter_bonus_all_letters_extra", PlayerState.letter_bonus_all_letters_extra))
+	PlayerState.letter_bonus_cap = float(cfg.get("letter_bonus_cap", PlayerState.letter_bonus_cap))
 
 	use_element_system = bool(cfg.get("use_element_system", use_element_system))
 	player_attacks_per_turn = int(cfg.get("player_attacks_per_turn", player_attacks_per_turn))
@@ -167,6 +192,8 @@ func _start_battle() -> void:
 	blank_index = 0
 	collected_words.clear()
 	_bonus_strikes_remaining = 0
+	_strike_round_expected_pos = "noun"
+	_strike_round_pos_display = "NOUN"
 
 	_battle_log.clear()
 	battle_log_content.text = ""
@@ -225,7 +252,11 @@ func _update_prompt_ui() -> void:
 
 	var b: Dictionary = blanks[blank_index]
 	var display: String = str(b.get("display", "WORD"))
-	prompt_label.text = "The Bard needs a %s!" % display
+	var hint: String = str(b.get("hint", "")).strip_edges()
+	if hint != "":
+		prompt_label.text = "The Bard needs a %s — %s." % [display, hint]
+	else:
+		prompt_label.text = "The Bard needs a %s!" % display
 	line_preview.text = _render_preview_line()
 
 
@@ -284,7 +315,8 @@ func _submit_word(raw: String) -> void:
 	if blank_index >= blanks.size():
 		return
 
-	var expected_pos: String = str(blanks[blank_index].get("type", "noun"))
+	var blank_entry: Dictionary = blanks[blank_index]
+	var expected_pos: String = str(blank_entry.get("type", "noun"))
 	if not _validate_pos_if_possible(word, expected_pos):
 		var hint := _get_pos_hint_if_possible(word, expected_pos)
 		var msg := hint if hint != "" else ("That doesn't look like %s %s." % [_get_article(expected_pos), expected_pos])
@@ -292,11 +324,13 @@ func _submit_word(raw: String) -> void:
 		return
 
 	collected_words.append(word)
+	_strike_round_expected_pos = expected_pos
+	_strike_round_pos_display = str(blank_entry.get("display", expected_pos.to_upper()))
 	blank_index += 1
 
 	var S: float = _get_word_freq_scaling(word)
 
-	if use_element_system:
+	if use_element_system and not use_scrabble_test_damage:
 		var element_res := ElementClassifier.classify(word, expected_pos)
 		print("---- Element Scores ----")
 		print("Player Word Choice: ", word)
@@ -324,11 +358,7 @@ func _resolve_turn(word: String, freq_scaling: float) -> void:
 	if PlayerState.current_hp < hp_before:
 		_play_enemy_attack()
 
-	var damage_messages: Array = result["damage_messages"]
-	for msg in damage_messages:
-		_append_log(msg)
-		result_label.text = msg
-		await get_tree().create_timer(1.0).timeout
+	await _present_damage_messages(result["damage_messages"])
 
 	if result["enemy_defeated"]:
 		_finish_battle()
@@ -354,10 +384,7 @@ func _resolve_multi_strike_turn_first_word(word: String, freq_scaling: float) ->
 	PlayerState.current_hp = int(result["player_hp"])
 	_update_hp_ui()
 
-	for msg in result["damage_messages"]:
-		_append_log(msg)
-		result_label.text = msg
-		await get_tree().create_timer(1.0).timeout
+	await _present_damage_messages(result["damage_messages"])
 
 	if result["enemy_defeated"]:
 		_finish_battle()
@@ -365,8 +392,8 @@ func _resolve_multi_strike_turn_first_word(word: String, freq_scaling: float) ->
 
 	_bonus_strikes_remaining = player_attacks_per_turn - 1
 	if _bonus_strikes_remaining > 0:
-		prompt_label.text = "Another strike! Enter a word!"
-		result_label.text = "Bonus strike — use a new word!"
+		prompt_label.text = "Bonus strike — another %s!" % _strike_round_pos_display
+		result_label.text = "Enter a %s (same part of speech as before the enemy acts)." % _strike_round_pos_display
 		word_input.text = ""
 		word_input.grab_focus()
 		return
@@ -375,7 +402,7 @@ func _resolve_multi_strike_turn_first_word(word: String, freq_scaling: float) ->
 
 
 func _submit_bonus_strike_word(word: String) -> void:
-	var expected_pos := "noun"
+	var expected_pos := _strike_round_expected_pos
 	if not _validate_pos_if_possible(word, expected_pos):
 		var hint := _get_pos_hint_if_possible(word, expected_pos)
 		var msg := hint if hint != "" else ("That doesn't look like %s %s." % [_get_article(expected_pos), expected_pos])
@@ -383,7 +410,7 @@ func _submit_bonus_strike_word(word: String) -> void:
 		return
 
 	var S: float = _get_word_freq_scaling(word)
-	if use_element_system:
+	if use_element_system and not use_scrabble_test_damage:
 		var element_res := ElementClassifier.classify(word, expected_pos)
 		print("---- Bonus strike element ---- ", word, " ", element_res.get("element", ""))
 
@@ -394,10 +421,7 @@ func _submit_bonus_strike_word(word: String) -> void:
 	PlayerState.current_hp = int(result["player_hp"])
 	_update_hp_ui()
 
-	for msg in result["damage_messages"]:
-		_append_log(msg)
-		result_label.text = msg
-		await get_tree().create_timer(1.0).timeout
+	await _present_damage_messages(result["damage_messages"])
 
 	if result["enemy_defeated"]:
 		_bonus_strikes_remaining = 0
@@ -406,8 +430,8 @@ func _submit_bonus_strike_word(word: String) -> void:
 
 	_bonus_strikes_remaining -= 1
 	if _bonus_strikes_remaining > 0:
-		prompt_label.text = "Another strike! Enter a word!"
-		result_label.text = "Bonus strike — use a new word!"
+		prompt_label.text = "Bonus strike — another %s!" % _strike_round_pos_display
+		result_label.text = "Enter a %s (same part of speech as before the enemy acts)." % _strike_round_pos_display
 		word_input.text = ""
 		word_input.grab_focus()
 		return
@@ -428,10 +452,7 @@ func _finish_player_round_after_strikes() -> void:
 	if PlayerState.current_hp < hp_before:
 		_play_enemy_attack()
 
-	for msg in result["damage_messages"]:
-		_append_log(msg)
-		result_label.text = msg
-		await get_tree().create_timer(1.0).timeout
+	await _present_damage_messages(result["damage_messages"])
 
 	if result["enemy_defeated"]:
 		_finish_battle()
@@ -462,8 +483,12 @@ func _build_turn_context(freq_scaling: float, letter_bonus_mult: float, strike_w
 		"freq_scaling": freq_scaling,
 		"letter_bonus_mult": letter_bonus_mult,
 		"rng": rng,
+		"use_scrabble_test_damage": use_scrabble_test_damage,
+		"player_letters": PlayerState.player_letters,
+		"test_enemy_damage_per_strike": test_enemy_damage_per_strike,
 	}
 	if strike_word != "":
+		ctx["strike_word"] = strike_word
 		ctx["uses_player_letters"] = _word_uses_any_player_letter(strike_word)
 	return ctx
 
@@ -494,20 +519,14 @@ func _apply_invalid_turn(message: String) -> void:
 
 	var damage_messages: Array = result["damage_messages"]
 	if result["enemy_defeated"]:
-		for msg in damage_messages:
-			_append_log(msg)
-			result_label.text = msg
-			await get_tree().create_timer(1.0).timeout
+		await _present_damage_messages(damage_messages)
 		_finish_battle()
 		return
 
 	_append_log(message)
 	result_label.text = message
 	await get_tree().create_timer(1.0).timeout
-	for msg in damage_messages:
-		_append_log(msg)
-		result_label.text = msg
-		await get_tree().create_timer(1.0).timeout
+	await _present_damage_messages(damage_messages)
 
 	word_input.text = ""
 	word_input.grab_focus()
@@ -587,11 +606,11 @@ func _compute_letter_bonus_multiplier(word: String) -> float:
 		if w.contains(letter):
 			match_count += 1
 
-	var bonus := float(match_count) * letter_bonus_per_match
+	var bonus := float(match_count) * PlayerState.letter_bonus_per_match
 	if match_count == PlayerState.player_letters.size():
-		bonus += letter_bonus_all_letters_extra
+		bonus += PlayerState.letter_bonus_all_letters_extra
 
-	bonus = clampf(bonus, 0.0, letter_bonus_cap)
+	bonus = clampf(bonus, 0.0, PlayerState.letter_bonus_cap)
 	return 1.0 + bonus
 
 
