@@ -1,0 +1,78 @@
+[gd_scene format=3 uid="uid://wdlitqgfnt17"]
+
+[ext_resource type="Script" uid="uid://ct383nd1nnkh" path="res://you_died_screen.gd" id="1_npmjl"]
+[ext_resource type="FontFile" uid="uid://eow6v13por76" path="res://PlayfairDisplay-Black.ttf" id="2_cwbie"]
+[ext_resource type="FontFile" uid="uid://bba1n3g6jd3nf" path="res://PlayfairDisplay-Italic-VariableFont_wght.ttf" id="3_u6nxt"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t0agq"]
+bg_color = Color(0.18039216, 0.039215688, 0.039215688, 1)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.47843137, 0.06666667, 0.06666667, 1)
+
+[node name="YouDiedScreen" type="CanvasLayer"]
+script = ExtResource("1_npmjl")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.74509805)
+
+[node name="PanelContainer" type="PanelContainer" parent="ColorRect"]
+custom_minimum_size = Vector2(250, 315)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -125.0
+offset_top = -157.5
+offset_right = 125.0
+offset_bottom = 157.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_t0agq")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="YouDied" type="Label" parent="ColorRect/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
+theme_override_fonts/font = ExtResource("2_cwbie")
+theme_override_font_sizes/font_size = 42
+text = "You Died"
+horizontal_alignment = 1
+
+[node name="Restart" type="Button" parent="ColorRect/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(200, 44)
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_u6nxt")
+theme_override_font_sizes/font_size = 21
+text = "Restart Level"
+
+[node name="ReturnBase" type="Button" parent="ColorRect/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(200, 44)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.26666668, 0.26666668, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_u6nxt")
+theme_override_font_sizes/font_size = 21
+text = "Return to Base"
+
+[node name="MainMenu" type="Button" parent="ColorRect/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(200, 44)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.26666668, 0.26666668, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_u6nxt")
+theme_override_font_sizes/font_size = 21
+text = "Main Menu"
