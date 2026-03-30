@@ -38,6 +38,7 @@ func change_scene(scene_path: String, fade_duration: float = 1.0) -> void:
 	
 	# Change the scene
 	get_tree().change_scene_to_file(scene_path)
+	print("scene changed")
 	
 	# Wait a frame for the new scene to load
 	await get_tree().process_frame

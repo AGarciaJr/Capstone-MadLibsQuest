@@ -15,22 +15,24 @@ theme = ExtResource("1_ixufq")
 script = ExtResource("3_script")
 
 [node name="ModifierPrompt" type="Label" parent="." unique_id=716817881]
-layout_mode = 0
-offset_left = 96.0
-offset_top = 16.0
-offset_right = 544.0
-offset_bottom = 128.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.25
+anchor_top = 0.1
+anchor_right = 0.75
+anchor_bottom = 0.25
 text = "Sample text that goes before the adjective modifier."
 horizontal_alignment = 1
 vertical_alignment = 2
 autowrap_mode = 3
 
 [node name="UserInput" type="LineEdit" parent="." unique_id=242386027]
-layout_mode = 0
-offset_left = 128.0
-offset_top = 144.0
-offset_right = 512.0
-offset_bottom = 184.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.25
+anchor_top = 0.35
+anchor_right = 0.75
+anchor_bottom = 0.45
 placeholder_text = "Enter an Adjective..."
 
 [node name="Button" type="Button" parent="." unique_id=1889589075]
@@ -57,7 +59,7 @@ anchor_bottom = 0.97800004
 offset_right = 0.3199768
 offset_bottom = -0.08001709
 theme_override_fonts/font = ExtResource("2_ux6d3")
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 24
 text = "Description of what the modifier does."
 vertical_alignment = 1
 autowrap_mode = 3

@@ -4,14 +4,14 @@ extends Control
 signal intro_completed
 
 # UI References
-@onready var title_label: Label = $CenterContainer/VBoxContainer/TitleLabel
-@onready var narrative_label: RichTextLabel = $CenterContainer/VBoxContainer/NarrativeLabel
-@onready var bard_speech_label: RichTextLabel = $CenterContainer/VBoxContainer/BardSpeechLabel
-@onready var input_container: HBoxContainer = $CenterContainer/VBoxContainer/InputContainer
-@onready var prompt_label: Label = $CenterContainer/VBoxContainer/InputContainer/PromptLabel
-@onready var word_input: LineEdit = $CenterContainer/VBoxContainer/InputContainer/WordInput
-@onready var hint_label: Label = $CenterContainer/VBoxContainer/HintLabel
-@onready var continue_label: Label = $CenterContainer/VBoxContainer/ContinueLabel
+@onready var title_label: Label = $VBoxContainer/TitleLabel
+@onready var narrative_label: RichTextLabel = $VBoxContainer/NarrativeLabel
+@onready var bard_speech_label: RichTextLabel = $VBoxContainer/BardSpeechLabel
+@onready var input_container: HBoxContainer = $VBoxContainer/InputContainer
+@onready var prompt_label: Label = $VBoxContainer/InputContainer/PromptLabel
+@onready var word_input: LineEdit = $VBoxContainer/InputContainer/WordInput
+@onready var hint_label: Label = $VBoxContainer/HintLabel
+@onready var continue_label: Label = $VBoxContainer/ContinueLabel
 @onready var typewriter_timer: Timer = $TypewriterTimer
 
 # The Bard instance (created in code since this is text-only)
@@ -158,7 +158,7 @@ func _on_word_submitted(word: String) -> void:
 		return
 	
 	var cleaned_word := word.strip_edges()
-	var blank := current_blanks[current_blank_index]
+	var blank : Dictionary = current_blanks[current_blank_index]
 	var expected_pos: String = blank.get("type", "noun")
 	
 	# Validate the word using the Bard (which uses WordNet if available)
@@ -237,7 +237,7 @@ func _complete_intro() -> void:
 	intro_completed.emit()
 	
 	# Transition to the tutorial area
-	SceneTransition.change_scene("res://scenes/tutorial_area.tscn", 1.5)
+	SceneTransition.change_scene("res://Scenes/Rooms/Scene/Room3D.tscn", 1.5)
 
 
 # Typewriter effect system

@@ -16,6 +16,7 @@ func _ready() -> void:
 	restart_button.pressed.connect(_on_restart_pressed)
 	completion_center.visible = false
 	fade.color = Color( 0, 0, 0, 0)
+	fade.visible = true
 	
 	_refresh_ui()
 	_apply_3d_assets()

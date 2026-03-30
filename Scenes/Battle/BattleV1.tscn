@@ -5,9 +5,8 @@
 [ext_resource type="FontFile" uid="uid://c1n3r6n1s0e1w" path="res://assets/Fonts/BLKCHCRY.TTF" id="3_47d8v"]
 [ext_resource type="FontFile" uid="uid://xrdaqecbc33" path="res://assets/Fonts/MorrisRomanAlternate-Black.ttf" id="4_g8wve"]
 [ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://Scenes/canvas_layer.tscn" id="5_vn0yc"]
-[ext_resource type="Script" uid="uid://xb78otiariil" path="res://scripts/canvas_layer.gd" id="6_aixvs"]
-[ext_resource type="PackedScene" path="res://Scenes/you_died_screen.tscn" id="7_8ftua"]
-[ext_resource type="Script" uid="uid://cdlqv1xm7aln8" path="res://scripts/you_died_screen.gd" id="8_eqbkg"]
+[ext_resource type="PackedScene" uid="uid://wdlitqgfnt17" path="res://Scenes/you_died_screen.tscn" id="7_8ftua"]
+[ext_resource type="Script" path="res://scripts/you_died_screen.gd" id="8_eqbkg"]
 
 [node name="control" type="Control" unique_id=495714525]
 layout_mode = 3
@@ -342,7 +341,8 @@ color = Color(0, 0, 0, 0)
 metadata/_edit_lock_ = true
 
 [node name="PauseScreen" parent="." unique_id=1720459869 instance=ExtResource("5_vn0yc")]
-script = ExtResource("6_aixvs")
+visible = false
 
 [node name="YouDiedScreen" parent="." unique_id=156634254 instance=ExtResource("7_8ftua")]
+visible = false
 script = ExtResource("8_eqbkg")

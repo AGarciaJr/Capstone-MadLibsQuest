@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://7hyqa27rndaa"]
 
-[ext_resource type="Script" uid="uid://cwh0iyo32lve3" path="res://Room3D.gd" id="1_swdye"]
+[ext_resource type="Script" uid="uid://cwh0iyo32lve3" path="res://scripts/room/Room3D.gd" id="1_swdye"]
 [ext_resource type="Script" uid="uid://b2rnibk3oeqpl" path="res://scripts/Interactables/DoorInteractable.gd" id="2_yg70w"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_swdye"]
@@ -154,6 +154,7 @@ size_flags_horizontal = 4
 text = "Restart Tutorial"
 
 [node name="Fade" type="ColorRect" parent="CanvasLayer/UIRoot" unique_id=818899921]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

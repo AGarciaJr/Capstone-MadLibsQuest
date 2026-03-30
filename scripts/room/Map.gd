@@ -1,11 +1,11 @@
 extends Control
 class_name MapView
 
-@export var node_radius: float = 10.0
-@export var layer_spacing: float = 100.0
-@export var row_spacing: float = 80.0
-@export var padding: float = 30.0
-@export var edge_width: float = 3.0
+@export var node_radius: float = 25.0
+@export var layer_spacing: float = 200.0
+@export var row_spacing: float = 150.0
+@export var padding: float = 50.0
+@export var edge_width: float = 8.0
 
 var _map_data: Dictionary = {}
 var _current_id: int = -1
