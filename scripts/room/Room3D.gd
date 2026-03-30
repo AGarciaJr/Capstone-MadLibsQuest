@@ -11,7 +11,7 @@ extends Node3D
 @onready var map_view: MapView = $CanvasLayer/UIRoot/MapOverlay/Panel/MapView
 
 @export var door_scene: PackedScene
-@export var door_radius: float = .5
+@export var door_radius: float = .75
 
 var sensitivity := 0.003
 var _hovered_door: DoorInteractable = null
@@ -21,7 +21,7 @@ var _active_doors: Array[DoorInteractable] = []
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
-	if not restart_button.pressed.is_connected(_on_restart_pressed):
+	if not restart_button.pressed.is_connected(_on_restart_pressed):	
 		restart_button.pressed.connect(_on_restart_pressed)
 	
 	completion_center.visible = false
@@ -75,9 +75,10 @@ func _rebuild_doors() -> void:
 		doors_root.add_child(door)
 		door.next_node_id = next_node_id
 		door.name = "Door_%s" % i
-		
-		_place_door(door, i, nexts.size())
 		_active_doors.append(door)
+	
+	for door in _active_doors:
+		_place_door(door)
 
 func _clear_spawned_doors() -> void:
 	_set_hovered_door(null)
@@ -88,24 +89,44 @@ func _clear_spawned_doors() -> void:
 	
 	_active_doors.clear()
 
-func _place_door(door: DoorInteractable, index: int, total: int) -> void:
-	var angle_offset_degrees: float
+func _place_door(door: DoorInteractable) -> void:
+	var map: Dictionary = Run.map
+	var current_id: int = Run.current_id
+	var next_id: int = door.next_node_id
 	
-	if total == 1:
-		angle_offset_degrees = 0.0
-	elif total <= 5:
-		var spread := 120
-		var start_angle := -spread * 0.5
-		angle_offset_degrees = start_angle + (spread / float(total - 1)) * index
-	else:
-		angle_offset_degrees = (360 / float(total)) * index
+	var current_pos := _find_node_position(current_id, map)
+	var next_pos := _find_node_position(next_id, map)
 	
-	var angle_radians := deg_to_rad(angle_offset_degrees)
-	var pos := Vector3(sin(angle_radians) * door_radius, .2, -cos(angle_radians) * door_radius)
-	door.position = pos
+	var angle_deg: float = 0.0
 	
-	var center := Vector3(0.0, door.position.y, 0.0)
-	door.look_at(center, Vector3.UP)
+	if current_pos.layer >= 0 and next_pos.layer >= 0:
+		# convert the position to a value between 0-1 to represent the real position,
+		# i.e. a node with index 0 in a layer of 1 node is technically centered and in the same
+		# position as a node with index 1 in a layer with 3 nodes, so they should have the same
+		# normalized position
+		var current_normalized_pos := 0.0
+		var next_normalized_pos := 0.0
+		 
+		if current_pos.layer_size <= 1:
+			current_normalized_pos = 0.5
+		else:
+			current_normalized_pos = float(current_pos.row) / float(current_pos.layer_size - 1)
+			
+		if next_pos.layer_size <= 1:
+			next_normalized_pos = 0.5
+		else:
+			next_normalized_pos = float(next_pos.row) / float(next_pos.layer_size - 1)
+		
+		# Find the angle to place the door in front of the player so the room doors align with the map
+		var difference = next_normalized_pos - current_normalized_pos
+		angle_deg = difference * 75.0
+		
+		# Position doors in a circular arc
+		var angle_rads = deg_to_rad(angle_deg)
+		var pos := Vector3(sin(angle_rads) * door_radius, 0.2, -cos(angle_rads) * door_radius)
+		door.position = pos
+		var center := Vector3(0.0, door.position.y, 0.0)
+		door.look_at(center, Vector3.UP)
 
 func _on_door_clicked(next_node_id: int):
 	if _is_transitioning or not Run.can_advance_to(next_node_id):
@@ -237,3 +258,15 @@ func _toggle_map_overlay() ->void:
 	else:
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		crosshair.visible = true
+
+func _find_node_position(node_id: int, map: Dictionary) -> Dictionary:
+	var not_found := {"layer": -1, "row": -1, "layer_size": -1}
+	if not map.has("layers"):
+		return not_found
+	var layers: Array = map["layers"]
+	for layer_index in range(layers.size()):
+		var layer: Array = layers[layer_index]
+		for row_index in range(layer.size()):
+			if layer[row_index] == node_id:
+				return {"layer": layer_index, "row": row_index, "layer_size": layer.size()}
+	return not_found

@@ -27,9 +27,6 @@ door_scene = ExtResource("2_bv8rd")
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1467096609]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.214, 0)
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1151688545]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.21978512, 0.48564696)
-
 [node name="Floor" type="MeshInstance3D" parent="." unique_id=2102723202]
 mesh = SubResource("PlaneMesh_swdye")
 
@@ -193,3 +190,5 @@ mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
 [node name="DoorsRoot" type="Node3D" parent="." unique_id=1457464861]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1343598014]

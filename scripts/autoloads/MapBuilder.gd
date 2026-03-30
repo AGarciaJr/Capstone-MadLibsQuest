@@ -13,12 +13,14 @@ func build_tutorial_run() -> Dictionary:
 		"nodes": {
 			0: {"type": "start",  "next": [1]},
 			1: {"type": "fight",  "next": [2], "encounter_id": Goblin.ENCOUNTER_ID},
-			2: {"type": "boss",   "next": [],  "encounter_id": Mushroom.ENCOUNTER_ID},
+			2: {"type": "fight",  "next": [3], "encounter_id": Skeleton.ENCOUNTER_ID},
+			3: {"type": "boss",   "next": [],  "encounter_id": Mushroom.ENCOUNTER_ID},
 		},
 		"layers": [
 			[0],
 			[1],
-			[2]
+			[2],
+			[3]
 		],
 	}
 

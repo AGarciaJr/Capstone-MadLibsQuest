@@ -8,7 +8,7 @@ enum RunMode {
 
 var map := {}
 var current_id := 0
-var run_mode : RunMode = RunMode.GENERATED
+var run_mode : RunMode = RunMode.TUTORIAL
 
 func _ready() -> void:
 	if map.is_empty():
