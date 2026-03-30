@@ -8,11 +8,12 @@ func _ready():
 	hide()
 
 func _input(event):
-	if event.is_action_pressed("ui_cancel"):
+	if event.is_action_pressed("pause_game"):
 		if visible:
 			resume_game()
 		else:
 			pause_game()
+		get_viewport().set_input_as_handled()
 
 func pause_game():
 	show()

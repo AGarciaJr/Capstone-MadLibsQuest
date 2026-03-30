@@ -56,28 +56,28 @@ var _strike_round_pos_display: String = "noun"
 @export var scrabble_result_hold_seconds: float = 2.5
 @onready var fade: ColorRect = $Fade
 
-@onready var enemy_name: Label = $EnemyPanel/EnemyName
-@onready var enemy_hp_label: Label = $EnemyPanel/EnemyHP
-@onready var enemy_hp_bar: ProgressBar = $EnemyPanel/EnemyHPBar
-@onready var enemy_sprite: AnimatedSprite2D = $EnemyPanel/EnemySprite
+@onready var enemy_name: Label = $EnemyPanel/VBoxContainer/EnemyName
+@onready var enemy_hp_label: Label = $EnemyPanel/VBoxContainer/EnemyHP
+@onready var enemy_hp_bar: ProgressBar = $EnemyPanel/VBoxContainer/EnemyHPBar
+@onready var enemy_sprite: AnimatedSprite2D = $CenterContainer/EnemySprite
 
-@onready var player_name: Label = $PlayerPanel/PlayerName
-@onready var player_hp_label: Label = $PlayerPanel/PlayerHP
-@onready var player_hp_bar: ProgressBar = $PlayerPanel/PlayerHPBar
-@onready var letters_label: Label = $PlayerPanel/LettersLabel
-@onready var letter_limit_label: Label = $PlayerPanel/LetterLimit
-@onready var letter_bonus_number_label: Label = $PlayerPanel/LetterBonusNumber
+@onready var player_name: Label = $PlayerPanel/VBoxContainer/PlayerName
+@onready var player_hp_label: Label = $PlayerPanel/VBoxContainer/PlayerHP
+@onready var player_hp_bar: ProgressBar = $PlayerPanel/VBoxContainer/PlayerHPBar
+@onready var letters_label: Label = $PlayerPanel/VBoxContainer/LettersLabel
+@onready var letter_limit_label: Label = $PlayerPanel/VBoxContainer/LetterLimit
+@onready var letter_bonus_number_label: Label = $PlayerPanel/VBoxContainer/LetterBonusNumber
 
-@onready var prompt_label: Label = $BottomPanel/PromptLabel
-@onready var line_preview: Label = $BottomPanel/LinePreview
-@onready var word_input: LineEdit = $BottomPanel/WordInput
-@onready var submit_button: Button = $BottomPanel/SubmitButton
-@onready var result_label: Label = $BottomPanel/ResultLabel
+@onready var prompt_label: Label = $BottomPanel/VBoxContainer/PromptLabel
+@onready var line_preview: Label = $BottomPanel/VBoxContainer/LinePreview
+@onready var word_input: LineEdit = $BottomPanel/VBoxContainer/HBoxContainer/WordInput
+@onready var submit_button: Button = $BottomPanel/VBoxContainer/HBoxContainer/SubmitButton
+@onready var result_label: Label = $BottomPanel/VBoxContainer/ResultLabel
 
 @onready var victory_panel: Control = $VictoryPanel
 @onready var victory_continue_button: Button = $VictoryPanel/ContinueButton
 
-@onready var battle_log_button: Button = $BattleLogButton
+@onready var battle_log_button: Button = $BottomPanel/VBoxContainer/HBoxContainer/BattleLogButton
 @onready var battle_log_panel: Control = $BattleLogPanel
 @onready var battle_log_content: Label = $BattleLogPanel/ScrollContainer/LogContent
 
@@ -92,7 +92,11 @@ func _ready() -> void:
 	word_input.text_submitted.connect(_on_text_submitted)
 	victory_continue_button.pressed.connect(_on_continue_pressed)
 	battle_log_button.pressed.connect(func(): battle_log_panel.visible = true)
-	$BattleLogPanel/CloseButton.pressed.connect(func(): battle_log_panel.visible = false)
+	$BattleLogPanel/CloseButton.pressed.connect(func(): 
+		battle_log_panel.visible = false
+		word_input.grab_focus()
+		word_input.select_all()
+	)
 
 	if not PlayerState.player_letters_changed.is_connected(_update_letters_label):
 		PlayerState.player_letters_changed.connect(_update_letters_label)
@@ -250,6 +254,7 @@ func _start_battle() -> void:
 	result_label.text = "Type a word and press Enter!"
 	word_input.text = ""
 	word_input.grab_focus()
+	word_input.select_all()
 	_update_letter_bonus_number_label()
 
 
@@ -297,6 +302,7 @@ func _advance_sentence() -> void:
 	line_preview.text = template_line
 	word_input.text   = ""
 	word_input.grab_focus()
+	word_input.select_all()
 	_update_prompt_ui()
 
 
@@ -388,6 +394,7 @@ func _resolve_turn(word: String, freq_scaling: float) -> void:
 		result_label.text = "Accepted '%s'!" % word
 		word_input.text = ""
 		word_input.grab_focus()
+		word_input.select_all()
 		_update_prompt_ui()
 		return
 
@@ -416,6 +423,7 @@ func _resolve_turn(word: String, freq_scaling: float) -> void:
 	result_label.text = "Accepted '%s'!" % word
 	word_input.text = ""
 	word_input.grab_focus()
+	word_input.select_all()
 	_update_prompt_ui()
 
 
@@ -440,6 +448,7 @@ func _resolve_multi_strike_turn_first_word(word: String, freq_scaling: float) ->
 		result_label.text = "Enter a %s (same part of speech as before the enemy acts)." % _strike_round_pos_display
 		word_input.text = ""
 		word_input.grab_focus()
+		word_input.select_all()
 		return
 
 	await _finish_player_round_after_strikes()
@@ -478,6 +487,7 @@ func _submit_bonus_strike_word(word: String) -> void:
 		result_label.text = "Enter a %s (same part of speech as before the enemy acts)." % _strike_round_pos_display
 		word_input.text = ""
 		word_input.grab_focus()
+		word_input.select_all()
 		return
 
 	await _finish_player_round_after_strikes()
@@ -510,6 +520,7 @@ func _finish_player_round_after_strikes() -> void:
 	result_label.text = "Round complete!"
 	word_input.text = ""
 	word_input.grab_focus()
+	word_input.select_all()
 	_update_prompt_ui()
 
 
@@ -574,6 +585,7 @@ func _apply_invalid_turn(message: String) -> void:
 
 	word_input.text = ""
 	word_input.grab_focus()
+	word_input.select_all()
 
 	if result["player_defeated"]:
 		result_label.text = "You were defeated. Restarting..."

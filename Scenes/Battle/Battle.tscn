@@ -6,7 +6,7 @@
 [ext_resource type="FontFile" uid="uid://xrdaqecbc33" path="res://assets/Fonts/MorrisRomanAlternate-Black.ttf" id="4_g8wve"]
 [ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://Scenes/canvas_layer.tscn" id="5_vn0yc"]
 [ext_resource type="PackedScene" uid="uid://wdlitqgfnt17" path="res://Scenes/you_died_screen.tscn" id="7_8ftua"]
-[ext_resource type="Script" path="res://scripts/you_died_screen.gd" id="8_eqbkg"]
+[ext_resource type="Script" uid="uid://cdlqv1xm7aln8" path="res://scripts/you_died_screen.gd" id="8_eqbkg"]
 
 [node name="control" type="Control" unique_id=495714525]
 layout_mode = 3
@@ -20,154 +20,92 @@ grow_vertical = 2
 script = ExtResource("1_2msnx")
 
 [node name="EnemyPanel" type="Control" parent="." unique_id=718284901]
-anchors_preset = 0
-offset_left = 504.0
+layout_mode = 1
+anchor_left = 0.4
+anchor_right = 0.42
+offset_left = 504.00003
 offset_top = 8.0
-offset_right = 636.0
-offset_bottom = 100.0
+offset_right = 742.44
+offset_bottom = 192.0
 
-[node name="EnemyName" type="Label" parent="EnemyPanel" unique_id=1038074097]
-layout_mode = 0
-offset_right = 132.0
-offset_bottom = 18.0
-text = "Enemy
-"
+[node name="VBoxContainer" type="VBoxContainer" parent="EnemyPanel" unique_id=536163441]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="EnemyName" type="Label" parent="EnemyPanel/VBoxContainer" unique_id=1038074097]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Enemy"
 horizontal_alignment = 2
 
-[node name="EnemyHP" type="Label" parent="EnemyPanel" unique_id=404579806]
-layout_mode = 0
-offset_top = 18.0
-offset_right = 132.0
-offset_bottom = 34.0
+[node name="EnemyHP" type="Label" parent="EnemyPanel/VBoxContainer" unique_id=404579806]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "HP: 30/30"
 horizontal_alignment = 2
 
-[node name="EnemyHPBar" type="ProgressBar" parent="EnemyPanel" unique_id=1600683976]
-layout_mode = 0
-offset_top = 39.0
-offset_right = 132.0
-offset_bottom = 51.0
+[node name="EnemyHPBar" type="ProgressBar" parent="EnemyPanel/VBoxContainer" unique_id=1600683976]
+custom_minimum_size = Vector2(264, 24)
+layout_mode = 2
 value = 100.0
 show_percentage = false
-
-[node name="EnemySprite" type="AnimatedSprite2D" parent="EnemyPanel" unique_id=1897032973]
-position = Vector2(-205, 96.00001)
-scale = Vector2(1.0531915, 0.96666664)
 
 [node name="PlayerPanel" type="Control" parent="." unique_id=98662082]
 anchors_preset = 0
 offset_left = 8.0
 offset_top = 8.0
-offset_right = 140.0
-offset_bottom = 108.0
+offset_right = 272.0
+offset_bottom = 208.0
 
-[node name="PlayerName" type="Label" parent="PlayerPanel" unique_id=1696940253]
+[node name="VBoxContainer" type="VBoxContainer" parent="PlayerPanel" unique_id=1729662496]
 layout_mode = 0
-offset_right = 132.0
-offset_bottom = 18.0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PlayerName" type="Label" parent="PlayerPanel/VBoxContainer" unique_id=1696940253]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "Hero"
 
-[node name="PlayerHP" type="Label" parent="PlayerPanel" unique_id=236812317]
-layout_mode = 0
-offset_top = 18.0
-offset_right = 132.0
-offset_bottom = 34.0
+[node name="PlayerHP" type="Label" parent="PlayerPanel/VBoxContainer" unique_id=236812317]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "HP: 100/100"
 
-[node name="PlayerHPBar" type="ProgressBar" parent="PlayerPanel" unique_id=1654011952]
-layout_mode = 0
-offset_top = 40.0
-offset_right = 132.0
-offset_bottom = 52.0
+[node name="PlayerHPBar" type="ProgressBar" parent="PlayerPanel/VBoxContainer" unique_id=1654011952]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
 value = 100.0
 show_percentage = false
 
-[node name="LettersLabel" type="Label" parent="PlayerPanel" unique_id=370220454]
-layout_mode = 0
-offset_top = 52.0
-offset_right = 132.0
-offset_bottom = 68.0
-theme_override_font_sizes/font_size = 10
+[node name="LettersLabel" type="Label" parent="PlayerPanel/VBoxContainer" unique_id=370220454]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
 text = "Player letters: A, E, S, T"
 
-[node name="LetterLimit" type="Label" parent="PlayerPanel" unique_id=1811216814]
-layout_mode = 0
-offset_top = 64.0
-offset_right = 132.0
-offset_bottom = 80.0
-theme_override_font_sizes/font_size = 10
+[node name="LetterLimit" type="Label" parent="PlayerPanel/VBoxContainer" unique_id=1811216814]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
 text = "Letter limit: 4"
 
-[node name="LetterBonusNumber" type="Label" parent="PlayerPanel" unique_id=2100456123]
-layout_mode = 0
-offset_top = 80.0
-offset_right = 132.0
-offset_bottom = 100.0
-theme_override_font_sizes/font_size = 10
+[node name="LetterBonusNumber" type="Label" parent="PlayerPanel/VBoxContainer" unique_id=2100456123]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
 text = "Letter bonus per match: 0.50"
 autowrap_mode = 3
 
 [node name="BottomPanel" type="Control" parent="." unique_id=1099714150]
-anchors_preset = 0
-offset_left = 8.0
-offset_top = 178.0
-offset_right = 472.0
-offset_bottom = 262.0
-
-[node name="PromptLabel" type="Label" parent="BottomPanel" unique_id=1623631982]
-layout_mode = 0
-offset_left = 60.0
-offset_top = 21.0
-offset_right = 516.0
-offset_bottom = 41.0
-theme_override_fonts/font = ExtResource("3_2msnx")
-theme_override_font_sizes/font_size = 15
-text = "The Bard needs a NOUN!"
-horizontal_alignment = 1
-
-[node name="LinePreview" type="Label" parent="BottomPanel" unique_id=1785196963]
-layout_mode = 0
-offset_left = 60.0
-offset_top = 3.0
-offset_right = 521.0
-offset_bottom = 19.0
-theme_override_colors/font_color = Color(0.7, 0.7, 0.5, 1)
-theme_override_fonts/font = ExtResource("4_g8wve")
-theme_override_font_sizes/font_size = 10
-text = "The hero faced a fearsome ___!"
-horizontal_alignment = 1
-
-[node name="WordInput" type="LineEdit" parent="BottomPanel" unique_id=1693271094]
-layout_mode = 0
-offset_left = 33.0
-offset_top = 72.0
-offset_right = 225.0
-offset_bottom = 103.0
-placeholder_text = "Enter a word..."
-alignment = 1
-max_length = 30
-
-[node name="SubmitButton" type="Button" parent="BottomPanel" unique_id=2135709036]
-layout_mode = 0
-offset_left = 497.0
-offset_top = 68.0
-offset_right = 581.0
-offset_bottom = 99.0
-theme_override_fonts/font = ExtResource("3_47d8v")
-text = "Submit"
-
-[node name="ResultLabel" type="Label" parent="BottomPanel" unique_id=1234699025]
-layout_mode = 0
-offset_left = 32.0
-offset_top = -112.0
-offset_right = 556.0
-offset_bottom = -8.0
-theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
-theme_override_font_sizes/font_size = 10
-text = "Type a word and press Enter!"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 3
+layout_mode = 1
+anchor_left = 0.25
+anchor_top = 0.7
+anchor_right = 0.75
+anchor_bottom = 0.9
+grow_horizontal = 2
+grow_vertical = 0
 
 [node name="AttackButton" type="Button" parent="BottomPanel" unique_id=1914066688]
 visible = false
@@ -207,43 +145,60 @@ offset_right = 617.0
 offset_bottom = 168.0
 text = "Cancel"
 
-[node name="VictoryPanel" type="Control" parent="." unique_id=911848340]
-visible = false
+[node name="VBoxContainer" type="VBoxContainer" parent="BottomPanel" unique_id=242000575]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -80.0
-offset_top = -35.0
-offset_right = 80.0
-offset_bottom = 35.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="PanelBg" type="ColorRect" parent="VictoryPanel" unique_id=1500870292]
-layout_mode = 0
-offset_right = 160.0
-offset_bottom = 70.0
-color = Color(0.1, 0.2, 0.1, 1)
+[node name="ResultLabel" type="Label" parent="BottomPanel/VBoxContainer" unique_id=1234699025]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
+theme_override_font_sizes/font_size = 20
+text = "Type a word and press Enter!"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
 
-[node name="Label" type="Label" parent="VictoryPanel" unique_id=2073411731]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 8.0
-offset_right = 156.0
-offset_bottom = 28.0
-text = "VICTORY!"
+[node name="LinePreview" type="Label" parent="BottomPanel/VBoxContainer" unique_id=1785196963]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.5, 1)
+theme_override_fonts/font = ExtResource("4_g8wve")
+theme_override_font_sizes/font_size = 20
+text = "The hero faced a fearsome ___!"
 horizontal_alignment = 1
 
-[node name="ContinueButton" type="Button" parent="VictoryPanel" unique_id=552772643]
-layout_mode = 0
-offset_left = 40.0
-offset_top = 36.0
-offset_right = 120.0
-offset_bottom = 60.0
-text = "Continue"
+[node name="PromptLabel" type="Label" parent="BottomPanel/VBoxContainer" unique_id=1623631982]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_2msnx")
+theme_override_font_sizes/font_size = 30
+text = "The Bard needs a NOUN!"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="BottomPanel/VBoxContainer" unique_id=1426726009]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="WordInput" type="LineEdit" parent="BottomPanel/VBoxContainer/HBoxContainer" unique_id=1693271094]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter a word..."
+alignment = 1
+max_length = 30
+
+[node name="SubmitButton" type="Button" parent="BottomPanel/VBoxContainer/HBoxContainer" unique_id=2135709036]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_47d8v")
+text = "Submit"
+
+[node name="BattleLogButton" type="Button" parent="BottomPanel/VBoxContainer/HBoxContainer" unique_id=927040926]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Battle Log"
 
 [node name="DefeatPanel" type="Control" parent="." unique_id=355079481]
 visible = false
@@ -286,14 +241,6 @@ offset_top = 140.0
 offset_right = 250.0
 offset_bottom = 168.0
 text = "Try Again"
-
-[node name="BattleLogButton" type="Button" parent="." unique_id=927040926]
-layout_mode = 0
-offset_left = 504.0
-offset_top = 283.0
-offset_right = 590.0
-offset_bottom = 314.0
-text = "Battle Log"
 
 [node name="BattleLogPanel" type="Control" parent="." unique_id=881644895]
 visible = false
@@ -355,3 +302,54 @@ visible = false
 [node name="YouDiedScreen" parent="." unique_id=156634254 instance=ExtResource("7_8ftua")]
 visible = false
 script = ExtResource("8_eqbkg")
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1141814085]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="EnemySprite" type="AnimatedSprite2D" parent="CenterContainer" unique_id=1897032973]
+position = Vector2(640, 360)
+scale = Vector2(2, 2)
+
+[node name="VictoryPanel" type="Control" parent="." unique_id=911848340]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -80.0
+offset_top = -35.0
+offset_right = 80.0
+offset_bottom = 35.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelBg" type="ColorRect" parent="VictoryPanel" unique_id=1500870292]
+layout_mode = 0
+offset_right = 160.0
+offset_bottom = 70.0
+color = Color(0.1, 0.2, 0.1, 1)
+
+[node name="Label" type="Label" parent="VictoryPanel" unique_id=2073411731]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 8.0
+offset_right = 156.0
+offset_bottom = 28.0
+text = "VICTORY!"
+horizontal_alignment = 1
+
+[node name="ContinueButton" type="Button" parent="VictoryPanel" unique_id=552772643]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 36.0
+offset_right = 120.0
+offset_bottom = 60.0
+text = "Continue"

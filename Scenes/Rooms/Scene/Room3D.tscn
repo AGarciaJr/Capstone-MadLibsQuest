@@ -56,11 +56,11 @@ mouse_filter = 2
 
 [node name="HintLabel" type="Label" parent="CanvasLayer/UIRoot/BottomCenter" unique_id=1709727509]
 layout_mode = 2
+theme_override_font_sizes/font_size = 32
 text = "placeholder"
 label_settings = SubResource("LabelSettings_swdye")
 
 [node name="CompletionCenter" type="CenterContainer" parent="CanvasLayer/UIRoot" unique_id=1668682626]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -87,7 +87,7 @@ horizontal_alignment = 1
 
 [node name="SubtitleLabel" type="Label" parent="CanvasLayer/UIRoot/CompletionCenter/CompletionPanel/CompletionVBox" unique_id=271775394]
 layout_mode = 2
-text = "You defeated the Goblin King and finished the tutorial!"
+text = "You defeated the Mushroom and finished the tutorial!"
 horizontal_alignment = 1
 
 [node name="RestartButton" type="Button" parent="CanvasLayer/UIRoot/CompletionCenter/CompletionPanel/CompletionVBox" unique_id=1972448444]
