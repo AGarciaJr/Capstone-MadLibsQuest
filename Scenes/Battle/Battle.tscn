@@ -60,7 +60,7 @@ anchors_preset = 0
 offset_left = 8.0
 offset_top = 8.0
 offset_right = 140.0
-offset_bottom = 96.0
+offset_bottom = 108.0
 
 [node name="PlayerName" type="Label" parent="PlayerPanel" unique_id=1696940253]
 layout_mode = 0
@@ -98,6 +98,15 @@ offset_right = 132.0
 offset_bottom = 80.0
 theme_override_font_sizes/font_size = 10
 text = "Letter limit: 4"
+
+[node name="LetterBonusNumber" type="Label" parent="PlayerPanel" unique_id=2100456123]
+layout_mode = 0
+offset_top = 80.0
+offset_right = 132.0
+offset_bottom = 100.0
+theme_override_font_sizes/font_size = 10
+text = "Letter bonus per match: 0.50"
+autowrap_mode = 3
 
 [node name="BottomPanel" type="Control" parent="." unique_id=1099714150]
 anchors_preset = 0
@@ -150,12 +159,12 @@ text = "Submit"
 
 [node name="ResultLabel" type="Label" parent="BottomPanel" unique_id=1234699025]
 layout_mode = 0
-offset_left = 139.0
-offset_top = -43.0
-offset_right = 450.0
-offset_bottom = -13.0
+offset_left = 32.0
+offset_top = -112.0
+offset_right = 556.0
+offset_bottom = -8.0
 theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 10
 text = "Type a word and press Enter!"
 horizontal_alignment = 1
 vertical_alignment = 1

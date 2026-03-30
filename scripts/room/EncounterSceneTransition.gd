@@ -1,6 +1,7 @@
 extends Node
 
-const BATTLE_SCENE := preload("res://Scenes/Battle/BattleV1.tscn")
+## Battle scene file is still named BattleV1.tscn; it uses battle_v_2.gd.
+const BATTLE_SCENE := preload("res://Scenes/Battle/Battle.tscn")
 const PREBATTLE_SCENE := preload("res://Scenes/PreBattle/PreBattleModifier.tscn")
 const POSTBATTLE_SCENE := preload("res://Scenes/PostBattle/PlayerItemChoice.tscn")
 
