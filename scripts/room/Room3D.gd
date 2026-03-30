@@ -21,7 +21,7 @@ var _active_doors: Array[DoorInteractable] = []
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
-	if not restart_button.pressed.is_connected(_on_restart_pressed):
+	if not restart_button.pressed.is_connected(_on_restart_pressed):	
 		restart_button.pressed.connect(_on_restart_pressed)
 	
 	completion_center.visible = false
