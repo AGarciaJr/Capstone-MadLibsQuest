@@ -37,7 +37,7 @@
 	{
 		"id": "big",
 		"display_name": "Big",
-		"definition": "A larger-than-normal foe: tougher and harder to bring down, but you get an extra turn each round.",
+		"definition": "A larger-than-normal foe: tougher and harder to bring down.",
 		"semantic_hints": [
 			"big",
 			"large",
@@ -62,8 +62,7 @@
 		],
 
 		"flat_modifiers": {
-			"hp": 10,
-			"player_turns_gained": 1
+			"hp": 10
 		},
 		"mult_modifiers": {
 			"hp": 1.35
@@ -80,7 +79,7 @@
 	{
 		"id": "small",
 		"display_name": "Small",
-		"definition": "A smaller-than-normal foe: fragile, but the enemy gets an extra turn each round.",
+		"definition": "A smaller-than-normal foe: fragile, but quicker to fell.",
 		"semantic_hints": [
 			"small",
 			"tiny",
@@ -103,10 +102,7 @@
             "minuscule"
 		],
 
-		"flat_modifiers": {
-			"hp": 0,
-			"enemy_turns_gained": 1
-		},
+		"flat_modifiers": {},
 		"mult_modifiers": {
 			"hp": 0.85
 		},

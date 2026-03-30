@@ -24,9 +24,9 @@ func _set_prompt_from_encounter() -> void:
 	var enc: Dictionary = EncounterSceneTransition.current_encounter
 	var enemy_id: String = str(enc.get("encounter_id", ""))
 	if enemy_id != "":
-		modifier_prompt.text = "Describe the %s with an adjective (e.g. big, small, cursed, plain)." % enemy_id
+		modifier_prompt.text = "Describe the %s with an adjective." % enemy_id
 	else:
-		modifier_prompt.text = "Describe your foe with an adjective (e.g. big, small, cursed, plain)."
+		modifier_prompt.text = "Describe your foe with an adjective."
 
 
 func _on_submit_pressed() -> void:
@@ -55,12 +55,16 @@ func _submit() -> void:
 	_last_modifier = EnemyModifierDB.classify_adjective(adj)
 	effect_description_label.text = _last_modifier.get_description_for_ui()
 	continue_button.disabled = false
+	submit_button.visible = false
+	user_input.editable = false
 
 
 func _reject_input(message: String) -> void:
 	_last_modifier = null
 	continue_button.disabled = true
 	effect_description_label.text = message
+	submit_button.visible = true
+	user_input.editable = true
 
 
 func _validate_pos_if_possible(word: String, expected_pos: String) -> bool:
