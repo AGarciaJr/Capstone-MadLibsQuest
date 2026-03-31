@@ -18,7 +18,7 @@ func _init() -> void:
 	sprite_animation_name = "Idle"
 
 	max_sentences  = 5
-	defeat_message = "The skeleton's blade found its mark. You collapse in the dusty corridor, never to rise again."
+	defeat_message = "The skeleton's blade found its mark. You collapse in the dusty corridor, your unfinished story echoing off the ancient walls."
 
 	base_move = {
 		"base_damage": 5,
@@ -29,43 +29,43 @@ func _init() -> void:
 
 	templates = [
 		{
-			"line": "The hero shattered the ___ bones, made the skeleton ___, and crushed it with ___ might!",
+			"line": "The hero ___ through the chamber and shattered the skeleton's ___ bones with a ___ blow!",
 			"blanks": [
-				{"type": "adjective", "hint": "describe the skeleton's bones", "display": "ADJECTIVE"},
-				{"type": "verb",      "hint": "an action",                     "display": "VERB"},
-				{"type": "adjective", "hint": "a powerful describing word",    "display": "ADJECTIVE"},
+				{"type": "verb",      "hint": "how did the hero move? (charge? dash? cartwheel?)",                   "display": "VERB"},
+				{"type": "adjective", "hint": "describe those bones (brittle? ancient? suspiciously sturdy?)",        "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "what kind of finishing blow? (devastating? lucky? accidental?)",       "display": "ADJECTIVE"},
 			]
 		},
 		{
-			"line": "The skeleton's ___ eye sockets glowed as it tried to ___ the hero with ___ precision!",
+			"line": "The skeleton's ___ eye sockets blazed as it raised a ___ blade and swung with ___ fury!",
 			"blanks": [
-				{"type": "adjective", "hint": "describe the glow",       "display": "ADJECTIVE"},
-				{"type": "verb",      "hint": "an action",               "display": "VERB"},
-				{"type": "adjective", "hint": "describe the precision",  "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe the glowing eyes (eerie? neon? disappointingly dim?)",        "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe the blade (rusted? enchanted? borrowed?)",                    "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "what kind of fury? (bone-rattling? cold? surprisingly polite?)",       "display": "ADJECTIVE"},
 			]
 		},
 		{
-			"line": "A ___ clatter echoed as the skeleton raised its ___ blade and unleashed a ___ slash!",
+			"line": "A ___ clatter rang out as the skeleton swung its ___ sword in a ___ arc overhead!",
 			"blanks": [
-				{"type": "adjective", "hint": "describe the clatter", "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "describe the blade",   "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "describe the slash",   "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe that awful noise (deafening? hollow? strangely musical?)",    "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe the sword (cracked? enchanted? way too oversized?)",          "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "what kind of arc? (sweeping? awkward? surprisingly graceful?)",        "display": "ADJECTIVE"},
 			]
 		},
 		{
-			"line": "The hero had to ___ quickly as the skeleton conjured a ___ wave of ___ dark energy!",
+			"line": "The hero had to ___ fast as the skeleton summoned a ___ wave of ___ dark magic!",
 			"blanks": [
-				{"type": "verb",      "hint": "how the hero moved",           "display": "VERB"},
-				{"type": "adjective", "hint": "describe the wave",            "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "describe the dark energy",     "display": "ADJECTIVE"},
+				{"type": "verb",      "hint": "how did the hero react? (dodge? roll? reconsider everything?)",        "display": "VERB"},
+				{"type": "adjective", "hint": "describe the wave (crackling? ominous? disturbingly colorful?)",       "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "what flavor of dark magic? (ancient? freezing? oddly familiar?)",      "display": "ADJECTIVE"},
 			]
 		},
 		{
-			"line": "In the ___ dungeon the skeleton made one final ___ strike with a ___ shriek!",
+			"line": "With a ___ shriek the skeleton made one final ___ strike in the ___ dungeon corridor!",
 			"blanks": [
-				{"type": "adjective", "hint": "describe the dungeon", "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "describe the strike",  "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "describe the shriek",  "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe that final shriek (unearthly? rattling? almost musical?)",    "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe the last strike (desperate? powerful? catastrophically wide?)", "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "what kind of dungeon is this? (crumbling? ancient? suspiciously clean?)", "display": "ADJECTIVE"},
 			]
 		},
 	]

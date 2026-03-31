@@ -19,13 +19,17 @@ var bard: Bard
 
 # Intro narrative texts
 var intro_texts := [
-	"The world... is broken.",
-	"Words have lost their meaning...",
-	"Reality itself has become... incomplete.",
-	"But you have arrived.",
-	"Perhaps you can help restore what was lost.",
+	"Long ago, words gave shape to all things.",
+	"Every mountain had a name. Every hero, a tale.",
+	"But then came the Great Forgetting.",
+	"Stories were left with blank spaces where words used to be.",
+	"Heroes were described only as '___ adventurers'...",
+	"...and monsters lurked as '___ creatures' in '___ dungeons'.",
 	"",
-	"A figure emerges from the mist..."
+	"But you have arrived.",
+	"And perhaps... you can fill in what was lost.",
+	"",
+	"From the mist, a figure emerges — quill in hand, ink still wet..."
 ]
 
 # State machine
@@ -98,13 +102,15 @@ func _start_bard_greeting() -> void:
 	
 	# Show bard introduction
 	var bard_intro = "[center][color=#d4a574][b]~ The Bard ~[/b][/color][/center]\n\n"
-	bard_intro += "[color=#88aa88]\"Ah! At last, someone who can hear me![/color]\n\n"
-	bard_intro += "[color=#88aa88]I am the Bard, keeper of stories in this fractured realm.[/color]\n\n"
-	bard_intro += "[color=#88aa88]The world has lost its words, friend. Everything is... incomplete.[/color]\n\n"
-	bard_intro += "[color=#88aa88]But together, we can restore it. Will you help me fill in the blanks?\"[/color]"
-	
+	bard_intro += "[color=#88aa88]\"Ah! A soul who can still speak in complete sentences! Remarkable![/color]\n\n"
+	bard_intro += "[color=#88aa88]I am the Bard — keeper of the world's unfinished tales.[/color]\n\n"
+	bard_intro += "[color=#88aa88]The Great Forgetting stole the words right out of our stories. Watch — I'll try to describe your arrival properly...[/color]\n\n"
+	bard_intro += "[color=#c8a060][i]'A ___ hero arrived at the ___ tower, wielding a ___...'[/i][/color]\n\n"
+	bard_intro += "[color=#88aa88]You see? Blanks. Everywhere. Dreadful.[/color]\n\n"
+	bard_intro += "[color=#88aa88]But if YOU speak the words, I can write them in. Together we'll restore the story — and perhaps... the world.\"[/color]"
+
 	_typewrite_to_label(bard_speech_label, bard_intro)
-	continue_label.text = "[Press SPACE to begin]"
+	continue_label.text = "[Press SPACE to fill in the blanks]"
 
 
 func _start_mad_lib() -> void:
@@ -151,9 +157,15 @@ func _show_next_blank_prompt() -> void:
 	word_input.text = ""
 	_refocus_input()
 	
-	# Update bard speech
-	var remaining = current_blanks.size() - current_blank_index
-	bard_speech_label.text = "[color=#88aa88]\"" + str(remaining) + " word(s) remaining...\"[/color]"
+	# Update bard speech with a type-appropriate quip
+	var bard_quips := {
+		"adjective": ["\"A describing word, if you please!\"", "\"How shall we paint this picture?\"", "\"What does it look like?\""],
+		"noun":      ["\"Name a thing — any thing!\"", "\"A person, place, or object!\"", "\"What fills this blank?\""],
+		"verb":      ["\"Show me some action!\"", "\"What does the hero DO here?\"", "\"An action word!\""],
+		"adverb":    ["\"And HOW does it happen?\"", "\"How, precisely?\"", "\"Describe the manner of it!\""],
+	}
+	var quips_for_type: Array = bard_quips.get(word_type, ["\"Your word, please!\""])
+	bard_speech_label.text = "[color=#88aa88]" + quips_for_type[randi() % quips_for_type.size()] + "[/color]"
 
 
 func _on_word_submitted(word: String) -> void:
@@ -229,9 +241,9 @@ func _complete_intro() -> void:
 	bard_speech_label.text = ""
 	narrative_label.text = ""
 	
-	var final_text = "[center][color=#d4a574][b]And so your journey begins...[/b][/color][/center]\n\n"
-	final_text += "[center][color=#88aa88]The Bard smiles and gestures toward the misty path ahead.[/color][/center]\n\n"
-	final_text += "[center][color=#aaaaaa][i]The world awaits your words.[/i][/color][/center]"
+	var final_text = "[center][color=#d4a574][b]And so your story begins...[/b][/color][/center]\n\n"
+	final_text += "[center][color=#88aa88]The Bard closes the book with a satisfied smile.[/color][/center]\n\n"
+	final_text += "[center][color=#aaaaaa][i]\"Now — choose your letters. They will be your weapons against the Forgetting.\"[/i][/color][/center]"
 	
 	_typewrite_to_label(narrative_label, final_text)
 	continue_label.text = ""

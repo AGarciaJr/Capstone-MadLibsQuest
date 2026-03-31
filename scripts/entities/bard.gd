@@ -11,15 +11,15 @@ signal mad_lib_completed(result: String)
 # Dialogue templates - each has a title, template text with {0}, {1} placeholders, and blank definitions
 var dialogue_templates := {
 	"intro_greeting": {
-		"title": "A Hero's Welcome",
-		"template": "Greetings, {0} traveler! I see you carry a {1} and wear a look of {2} determination. Perhaps you've come seeking {3}? Many {4} adventurers have passed through here, but none quite as {5} as you!",
+		"title": "A Hero's Arrival",
+		"template": "A {0} hero arrived at the Bard's {1}, gripping their {2} tightly. 'I will restore the world's lost words!' they announced with {3} determination. The Bard studied them with {4} eyes and declared: 'You are exactly the {5} champion this story needs!'",
 		"blanks": [
-			{"type": "adjective", "hint": "Describe yourself - brave? weary? curious?"},
-			{"type": "noun", "hint": "What item might a traveler carry?"},
-			{"type": "adjective", "hint": "How determined are you?"},
-			{"type": "noun", "hint": "What do heroes seek? Glory? Treasure? Knowledge?"},
-			{"type": "adjective", "hint": "What kind of adventurers?"},
-			{"type": "adjective", "hint": "What makes you unique?"}
+			{"type": "adjective", "hint": "What kind of hero are you? Bold? Nervous? Surprisingly well-rested?"},
+			{"type": "noun", "hint": "Where does the Bard live? A tower? A cave? A very fancy hat?"},
+			{"type": "noun", "hint": "What does the hero carry on their journey?"},
+			{"type": "adjective", "hint": "How determined does this hero seem?"},
+			{"type": "adjective", "hint": "How does the Bard look at the new hero?"},
+			{"type": "adjective", "hint": "What kind of champion does the world need right now?"}
 		]
 	},
 	"tutorial_story": {
@@ -53,22 +53,24 @@ var dialogue_templates := {
 
 # Bard's responses when player enters wrong word type
 var wrong_word_responses := [
-	"Hmm, that doesn't quite fit the story, friend...",
-	"Woah there! That's not quite right!",
-	"My quill hesitates... try a different type of word!",
-	"The magic words resist! Perhaps another choice?",
-	"Ah, the story rejects that word. What else have you got?",
-	"That word's magic doesn't match. Try again!",
+	"Hmm, the blank rejects that word, friend...",
+	"Woah there! That's not quite the right kind of word!",
+	"My quill hesitates... try a different type!",
+	"The Great Forgetting left a very specific blank here. Try again!",
+	"Ah — the story needs something else in this spot.",
+	"The ink won't flow with that one. What else have you got?",
+	"Not quite! The blank is picky today.",
 ]
 
 # Bard's responses when word is valid
 var correct_word_responses := [
-	"Splendid!",
-	"Ah, perfect!",
+	"Splendid! The story breathes!",
+	"Ah, perfect — one less blank in the world!",
 	"The words sing!",
-	"Marvelous choice!",
-	"Yes, yes!",
-	"The story approves!",
+	"Marvelous! The Forgetting retreats!",
+	"Yes, yes! It fits beautifully!",
+	"The story approves! Next!",
+	"Wonderful word!",
 ]
 
 # State
@@ -165,10 +167,12 @@ func complete_mad_lib(dialogue_key: String, words: Array) -> String:
 ## Get a random Bard quip for various situations
 func get_waiting_quip() -> String:
 	var quips := [
-		"Take your time, the story will wait...",
-		"Words have power, choose wisely!",
-		"What wonders will you weave?",
-		"The blank page yearns for your creativity!",
+		"Take your time... the blank will wait.",
+		"Words have power — choose one worthy of the story!",
+		"What wonders will you weave into the tale?",
+		"The blank yearns for your word!",
+		"Every word you speak pushes back the Great Forgetting.",
+		"Speak, hero — the story is listening.",
 	]
 	return quips[randi() % quips.size()]
 
