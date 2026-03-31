@@ -14,6 +14,7 @@ var stats: Dictionary = {
 }
 
 var player_letters: PackedStringArray = PackedStringArray(["A", "E", "S", "T" , "O"])
+var initial_player_letters: PackedStringArray = PackedStringArray()
 var letter_bonus_per_match: float = 0.05
 var letter_bonus_all_letters_extra: float = 2.0
 var letter_bonus_cap: float = 99.0
@@ -34,7 +35,7 @@ func reset_to_defaults() -> void:
 		"def": 5,
 		"armor": 5,
 	}
-	player_letters = PackedStringArray(["A", "E", "S", "T", "0"])
+	player_letters = initial_player_letters.duplicate()
 	letter_limit = 6
 	letter_bonus_per_match = 0.50
 	letter_bonus_all_letters_extra = 2.0
@@ -59,6 +60,11 @@ func apply_stat_mod(flat: Dictionary, mult: Dictionary) -> void:
 
 func set_player_letters(letters: PackedStringArray) -> void:
 	player_letters = letters
+	player_letters_changed.emit(player_letters)
+	
+func set_initial_player_letters(letters: PackedStringArray) -> void:
+	initial_player_letters = letters.duplicate()
+	player_letters = letters.duplicate()
 	player_letters_changed.emit(player_letters)
 
 func add_player_letter(letter: String) -> void:
