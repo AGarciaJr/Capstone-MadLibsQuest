@@ -237,7 +237,7 @@ func _complete_intro() -> void:
 	intro_completed.emit()
 	
 	# Transition to the tutorial area
-	SceneTransition.change_scene("res://Scenes/Rooms/Scene/Room3D.tscn", 1.5)
+	SceneTransition.change_scene("res://Scenes/StoryIntro.tscn", 1.5)
 
 
 # Typewriter effect system

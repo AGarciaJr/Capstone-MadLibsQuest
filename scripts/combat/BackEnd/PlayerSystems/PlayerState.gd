@@ -13,10 +13,11 @@ var stats: Dictionary = {
 	"armor": 5,
 }
 
-var player_letters: PackedStringArray = PackedStringArray(["A", "E", "S", "T"])
+var player_letters: PackedStringArray = PackedStringArray(["A", "E", "S", "T" , "O"])
 var letter_bonus_per_match: float = 0.05
 var letter_bonus_all_letters_extra: float = 2.0
 var letter_bonus_cap: float = 99.0
+var player_name: String = ""
 
 # feature on hold for now
 var letter_limit: int = 6
@@ -33,11 +34,12 @@ func reset_to_defaults() -> void:
 		"def": 5,
 		"armor": 5,
 	}
-	player_letters = PackedStringArray(["A", "E", "S", "T"])
+	player_letters = PackedStringArray(["A", "E", "S", "T", "0"])
 	letter_limit = 6
 	letter_bonus_per_match = 0.50
 	letter_bonus_all_letters_extra = 2.0
 	letter_bonus_cap = 99.0
+	player_name = ""
 	inventory.clear()
 	player_letters_changed.emit(player_letters)
 

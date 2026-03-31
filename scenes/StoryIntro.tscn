@@ -14,8 +14,37 @@ var selected_letters: Array[String] = []
 const BARD_DIALOGUES = {
 	State.GREETING: \"Ah, a new adventurer! Welcome, welcome! I am the Bard, keeper of tales and singer of songs. Your legend shall be written in verse!\",
 	State.ASK_NAME: \"But first, I must know... what name shall echo through the ages? What do they call you, brave soul?\",
-	State.ASK_LETTERS: \"Splendid! Now, every hero begins their journey with trusted companions. Choose up to 5 letters to be your starting characters. These letters will power your words in battle!\",
+	State.ASK_LETTERS: \"Splendid! Now, every hero begins their journey with trusted companions. Choose 5 letters to be your starting characters. These letters will power your words in battle!\",
 	State.CONFIRM: \"\"
+}
+
+const LETTER_DIALOGUES = {
+	\"A\": \"A! The first of all letters! Bold and ready to lead.\",
+	\"B\": \"B! Bold and brave, built for battle!\",
+	\"C\": \"C! Confident and cunning, always one step ahead.\",
+	\"D\": \"D! Determined and daring, never backing down.\",
+	\"E\": \"E! Eager and elegant, never ordinary.\",
+	\"F\": \"F! Fast and fierce, striking fear into their foes\",
+	\"G\": \"G! Genuine and grounded, steady in all storms.\",
+	\"H\": \"H! Humble, but heroic, dependable when it counts.\",
+	\"I\": \"I! Inventive and illustrious, one of a kind.\",
+	\"J\": \"J! Joyful and jesting, a wildcard in any situation.\",
+	\"K\": \"K! Kind and knowledgeable, sharp when it matters.\",
+	\"L\": \"L! Lazy, but likeable, never underestimate a slow starter.\",
+	\"M\": \"M! Mighty and mindful, full of purpose.\",
+	\"N\": \"N! Noble and nurturing, steadfast in their objective.\",
+	\"O\": \"O! Optimistic and orderly, the glue that holds words together.\",
+	\"P\": \"P! Powerful and precise, hits hard and true.\",
+	\"Q\": \"Q! Quirky, yet quiet, says little, but has deep meaning.\",
+	\"R\": \"R! Relentless and rowdy, never stops fighting.\",
+	\"S\": \"S! Swift and strong, the backbone of many words.\",
+	\"T\": \"T! Tenacious and thorough, trusted in battle.\",
+	\"U\": \"U! Unstoppable and unique, shows up when needed.\",
+	\"V\": \"V! Valiant and versatile, fights without fear.\",
+	\"W\": \"W! Wise and witty, always knows what to say.\",
+	\"X\": \"X! One of the most exotic and exceptional.\",
+	\"Y\": \"Y! Youthful and yielding, adaptable in many ways.\",
+	\"Z\": \"Z! Zealous and zippy, the last letter, but definitely not least.\",
 }
 
 func _ready() -> void:
@@ -53,18 +82,19 @@ func _on_continue_button_pressed() -> void:
 			$VBoxContainer/LetterInput.grab_focus()
 			$VBoxContainer/ContinueButton.text = \"Begin Adventure\"
 		State.ASK_LETTERS:
-			if selected_letters.is_empty():
-				$VBoxContainer/DialogueLabel.text = \"You must choose at least one letter companion! Type a letter and press Enter.\"
+			# Player must choose 5 starting letters
+			if selected_letters.size() < 5:
+				$VBoxContainer/DialogueLabel.text = \"Choose all 5 letter companions before continuing! You have %d so far.\" % selected_letters.size()
 				return
 			current_state = State.CONFIRM
 			$VBoxContainer/LetterInput.visible = false
 			$VBoxContainer/ContinueButton.text = \"Start Quest!\"
 		State.CONFIRM:
 			intro_complete.emit(player_name, selected_letters)
-			# Save data and go to battle
-			GameData.player_name = player_name
-			GameData.player_letters = selected_letters
-			get_tree().change_scene_to_file(\"res://scenes/IntroBattle.tscn\")
+			# Save data and go to the room
+			PlayerState.player_name = player_name
+			PlayerState.set_player_letters(PackedStringArray(selected_letters))
+			get_tree().change_scene_to_file(\"res://Scenes/Rooms/Scene/Room3D.tscn\")
 	
 	_update_ui()
 
@@ -80,12 +110,13 @@ func _add_letter(text: String) -> void:
 		$VBoxContainer/DialogueLabel.text = \"You've already chosen '%s'! Pick a different letter.\" % letter
 		return
 	if selected_letters.size() >= 5:
-		$VBoxContainer/DialogueLabel.text = \"You can only have 5 letter companions! Remove one first or continue.\"
+		$VBoxContainer/DialogueLabel.text = \"You can only have 5 letter companions!\"
 		return
 	
 	selected_letters.append(letter)
 	_update_ui()
-	$VBoxContainer/DialogueLabel.text = \"'%s' joins your party! %s\" % [letter, BARD_DIALOGUES[State.ASK_LETTERS] if selected_letters.size() < 5 else \"You've assembled a full party!\"]
+	var line = LETTER_DIALOGUES.get(letter, \"A fine choice of companion!\")
+	$VBoxContainer/DialogueLabel.text = \"%s '%s' joins your party!\" % [line, letter]
 
 func _on_letter_input_text_changed(new_text: String) -> void:
 	# Auto-submit single letters
@@ -94,7 +125,7 @@ func _on_letter_input_text_changed(new_text: String) -> void:
 		$VBoxContainer/LetterInput.clear()
 "
 
-[node name="StoryIntro" type="Control"]
+[node name="StoryIntro" type="Control" unique_id=1507070943]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -103,7 +134,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = SubResource("GDScript_story_intro")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1720104694]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -112,7 +143,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.1, 0.1, 0.15, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1664153670]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -127,36 +158,36 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 12
 
-[node name="BardLabel" type="Label" parent="VBoxContainer"]
+[node name="BardLabel" type="Label" parent="VBoxContainer" unique_id=1337714991]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 text = "~ The Bard ~"
 horizontal_alignment = 1
 
-[node name="DialogueLabel" type="Label" parent="VBoxContainer"]
+[node name="DialogueLabel" type="Label" parent="VBoxContainer" unique_id=571166042]
 layout_mode = 2
 text = "Welcome, adventurer!"
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="NameInput" type="LineEdit" parent="VBoxContainer"]
+[node name="NameInput" type="LineEdit" parent="VBoxContainer" unique_id=1448126863]
 layout_mode = 2
 placeholder_text = "Enter your name..."
 alignment = 1
 max_length = 20
 
-[node name="LetterInput" type="LineEdit" parent="VBoxContainer"]
+[node name="LetterInput" type="LineEdit" parent="VBoxContainer" unique_id=5729551]
 layout_mode = 2
 placeholder_text = "Type a letter (A-Z)..."
 alignment = 1
 max_length = 1
 
-[node name="SelectedLetters" type="Label" parent="VBoxContainer"]
+[node name="SelectedLetters" type="Label" parent="VBoxContainer" unique_id=1987687360]
 layout_mode = 2
 text = "Selected Letters: (0/5)"
 horizontal_alignment = 1
 
-[node name="ContinueButton" type="Button" parent="VBoxContainer"]
+[node name="ContinueButton" type="Button" parent="VBoxContainer" unique_id=167863984]
 layout_mode = 2
 text = "Continue"
 
