@@ -5,6 +5,7 @@ const ALPHABET := "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 var items: Array[Dictionary] = [
 	{
 		"id": "hp_and_stats_boost",
+		"category": "Base Stats",
 		"name": "Hanma's Charm",
 		"description": "Increase max HP and core stats.",
 		"effect_type": "boost_stats",
@@ -15,16 +16,8 @@ var items: Array[Dictionary] = [
 		}
 	},
 	{
-		"id": "add_bonus_letter",
-		"name": "Glyph of Letters",
-		"description": "Adds 1 random player letter.",
-		"effect_type": "add_random_player_letters",
-		"params": {
-			"count": 1
-		}
-	},
-	{
 		"id": "add_bonus_letters_2",
+		"category": "Power Boost",
 		"name": "Glyph of Many Letters",
 		"description": "Adds 2 random player letters.",
 		"effect_type": "add_random_player_letters",
@@ -34,6 +27,7 @@ var items: Array[Dictionary] = [
 	},
 	{
 		"id": "improve_bonus_letter",
+		"category": "Power Boost",
 		"name": "Alphabet Amplification",
 		"description": "Increases letter bonus damage.",
 		"effect_type": "improve_letter_bonus",
@@ -43,20 +37,12 @@ var items: Array[Dictionary] = [
 	},
 	{
 		"id": "heal_player",
+		"category": "Base Stats",
 		"name": "Apple",
 		"description": "Restores HP after battle.",
 		"effect_type": "heal",
 		"params": {
 			"amount": 20
-		}
-	},
-	{
-		"id": "increase_letter_limit",
-		"name": "Scroll of Eloquence",
-		"description": "Increases the maximum letters you can use per word by 1.",
-		"effect_type": "increase_letter_limit",
-		"params": {
-			"amount": 1
 		}
 	},
 ]
@@ -70,6 +56,7 @@ func get_random_choices(n: int = 3) -> Array[Dictionary]:
 		var letter: String = ALPHABET.substr(i, 1)
 		letter_pool.append({
 			"id": "letter_%s" % letter,
+			"category": "Letters recruitment",
 			"name": "Letter %s" % letter,
 			"description": "Adds '%s' as a player letter. If you already have it, doubles the damage bonus for that letter!" % letter,
 			"effect_type": "add_player_letter",
