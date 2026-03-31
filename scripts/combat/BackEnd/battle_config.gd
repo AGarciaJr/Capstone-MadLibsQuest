@@ -23,7 +23,7 @@ static func build(encounter: Dictionary) -> Dictionary:
 			{"type": "verb", "hint": "an action", "display": "VERB"},
 			{"type": "adjective", "hint": "a describing word", "display": "ADJECTIVE"},
 		],
-		"enemy_stats": {"atk": 6, "crit_chance": 0.05, "crit_mult": 1.4, "def": 2, "armor": 10},
+		"enemy_stats": {"atk": 6, "crit_chance": 0.1, "crit_mult": 1.98, "def": 10, "armor": 10},
 		"enemy_move": {
 			"base_damage": 4,
 			"scaling": 0.4,

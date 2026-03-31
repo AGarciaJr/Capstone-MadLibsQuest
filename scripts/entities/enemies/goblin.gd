@@ -21,7 +21,7 @@ func _init() -> void:
 	defeat_message = "The goblin cackled and emptied your coin pouch. You lost all your gold!"
 
 	base_move = {
-		"base_damage": 4,
+		"base_damage": 15,
 		"scaling":     0.4,
 		"coefficient": 1.0,
 		"accuracy":    1.0,

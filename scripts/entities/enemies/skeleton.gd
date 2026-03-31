@@ -21,7 +21,7 @@ func _init() -> void:
 	defeat_message = "The skeleton's blade found its mark. You collapse in the dusty corridor, never to rise again."
 
 	base_move = {
-		"base_damage": 5,
+		"base_damage": 22,
 		"scaling":     0.35,
 		"coefficient": 0.9,
 		"accuracy":    0.95,

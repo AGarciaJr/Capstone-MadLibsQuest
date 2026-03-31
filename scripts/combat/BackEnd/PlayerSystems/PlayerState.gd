@@ -9,8 +9,8 @@ var stats: Dictionary = {
 	"atk": 7,
 	"crit_chance": 0.10,
 	"crit_mult": 1.5,
-	"def": 5,
-	"armor": 5,
+	"def": 2,
+	"armor": 2,
 }
 
 var player_letters: PackedStringArray = PackedStringArray(["A", "E", "S", "T" , "O"])
@@ -31,8 +31,8 @@ func reset_to_defaults() -> void:
 		"atk": 10,
 		"crit_chance": 0.10,
 		"crit_mult": 1.5,
-		"def": 5,
-		"armor": 5,
+		"def": 2,
+		"armor": 2,
 	}
 	player_letters = initial_player_letters.duplicate()
 	letter_limit = 6

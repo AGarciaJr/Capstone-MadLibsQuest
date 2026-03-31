@@ -21,7 +21,7 @@ func _init() -> void:
 	defeat_message = "The fungal spores in the room infected you and you became a mushroom."
 
 	base_move = {
-		"base_damage": 6,
+		"base_damage": 20,
 		"scaling":     0.45,
 		"coefficient": 1.1,
 		"accuracy":    1.0,
