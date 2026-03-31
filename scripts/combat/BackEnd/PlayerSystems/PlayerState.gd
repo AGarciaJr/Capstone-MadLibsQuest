@@ -37,7 +37,7 @@ func reset_to_defaults() -> void:
 	}
 	player_letters = initial_player_letters.duplicate()
 	letter_limit = 6
-	letter_bonus_per_match = 0.50
+	letter_bonus_per_match = 0.05
 	letter_bonus_all_letters_extra = 2.0
 	letter_bonus_cap = 99.0
 	player_name = ""
