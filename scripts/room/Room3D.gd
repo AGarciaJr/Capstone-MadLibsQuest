@@ -230,6 +230,13 @@ func _refresh_ui() -> void:
 	_update_map_overlay()
 
 func _on_restart_pressed():
+	var saved_letters := PlayerState.player_letters.duplicate()
+	var saved_name := PlayerState.player_name
+	
+	PlayerState.reset_to_defaults()
+	
+	PlayerState.set_player_letters(saved_letters)
+	PlayerState.player_name = saved_name
 	# Reset tutorial run state
 	Run.new_tutorial_run()
 	

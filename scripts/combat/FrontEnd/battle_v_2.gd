@@ -117,7 +117,10 @@ func _exit_tree() -> void:
 func _update_letters_label(_letters: PackedStringArray = PackedStringArray()) -> void:
 	if letters_label == null:
 		return
-	letters_label.text = "Player letters: %s" % ", ".join(PlayerState.player_letters)
+	var sorted = Array(PlayerState.player_letters)
+	sorted.sort()
+	
+	letters_label.text = "Player letters: %s" % ", ".join(sorted)
 	_update_letter_bonus_number_label()
 
 
