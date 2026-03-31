@@ -6,7 +6,7 @@ var max_hp: int = 100
 var current_hp: int = 100
 
 var stats: Dictionary = {
-	"atk": 10,
+	"atk": 7,
 	"crit_chance": 0.10,
 	"crit_mult": 1.5,
 	"def": 5,
@@ -20,7 +20,6 @@ var letter_bonus_all_letters_extra: float = 2.0
 var letter_bonus_cap: float = 99.0
 var player_name: String = ""
 
-# feature on hold for now
 var letter_limit: int = 6
 
 var inventory: Array[Dictionary] = []

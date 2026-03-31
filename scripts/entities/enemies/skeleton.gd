@@ -9,7 +9,7 @@ const ENCOUNTER_ID: String = "skeleton"
 func _init() -> void:
 	entity_name   = "Skeleton"
 	max_hp        = 35
-	atk           = 5
+	atk           = 14
 	def           = 3
 	armor         = 5  # Bony frame soaks up hits
 	crit_chance   = 0.10

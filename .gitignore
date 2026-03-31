@@ -12,3 +12,4 @@ obj/
 # WordNet database (large, download separately)
 assets/wordnet/dict/
 .vscode/settings.json
+export_presets.cfg

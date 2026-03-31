@@ -9,7 +9,7 @@ const ENCOUNTER_ID: String = "goblin"
 func _init() -> void:
 	entity_name   = "Goblin"
 	max_hp        = 45
-	atk           = 7
+	atk           = 10
 	def           = 5
 	armor         = 2
 	crit_chance   = 0.15
