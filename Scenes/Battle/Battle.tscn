@@ -14,7 +14,7 @@ border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-border_color = Color(0.72, 0.52, 0.18, 1.0)
+border_color = Color(0.72, 0.52, 0.18, 1)
 corner_radius_top_left = 3
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
@@ -124,16 +124,16 @@ text = "Letter bonus per match: 0.50"
 autowrap_mode = 3
 
 [node name="BottomPanel" type="Control" parent="." unique_id=1099714150]
+clip_contents = true
 layout_mode = 1
 anchor_left = 0.05
-anchor_top = 0.62
+anchor_top = 0.55
 anchor_right = 0.95
-anchor_bottom = 0.97
+anchor_bottom = 0.98
 grow_horizontal = 2
 grow_vertical = 0
-clip_contents = true
 
-[node name="TextBoxBg" type="Panel" parent="BottomPanel" unique_id=3141592653]
+[node name="TextBoxBg" type="Panel" parent="BottomPanel" unique_id=-1153374643]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -182,10 +182,10 @@ text = "Cancel"
 
 [node name="ResultLabel" type="Label" parent="BottomPanel" unique_id=1234699025]
 layout_mode = 0
-offset_left = 15.0
-offset_top = 8.0
-offset_right = 1137.0
-offset_bottom = 56.0
+offset_left = 18.099998
+offset_top = 18.549988
+offset_right = 1140.1
+offset_bottom = 49.549988
 theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
 theme_override_font_sizes/font_size = 22
 text = "Type a word and press Enter!"
@@ -195,25 +195,25 @@ autowrap_mode = 3
 
 [node name="LinePreview" type="Label" parent="BottomPanel" unique_id=1785196963]
 layout_mode = 0
-offset_left = 15.0
-offset_top = 62.0
-offset_right = 1137.0
-offset_bottom = 130.0
+offset_left = 15.099998
+offset_top = 73.54999
+offset_right = 1137.1
+offset_bottom = 141.54999
 theme_override_colors/font_color = Color(0.82, 0.78, 0.58, 1)
 theme_override_fonts/font = ExtResource("4_g8wve")
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 47
 text = "The hero faced a fearsome ___!"
 horizontal_alignment = 1
 autowrap_mode = 3
 
 [node name="PromptLabel" type="Label" parent="BottomPanel" unique_id=1623631982]
 layout_mode = 0
-offset_left = 15.0
-offset_top = 136.0
-offset_right = 1137.0
-offset_bottom = 191.0
+offset_left = 17.099998
+offset_top = 152.54999
+offset_right = 1139.1
+offset_bottom = 207.54999
 theme_override_fonts/font = ExtResource("3_2msnx")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 29
 text = "The Bard needs a NOUN!"
 horizontal_alignment = 1
 autowrap_mode = 3
@@ -229,6 +229,7 @@ theme_override_constants/separation = 20
 [node name="WordInput" type="LineEdit" parent="BottomPanel/HBoxContainer" unique_id=1693271094]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 21
 placeholder_text = "Enter a word..."
 alignment = 1
 max_length = 30
@@ -237,11 +238,13 @@ max_length = 30
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_47d8v")
+theme_override_font_sizes/font_size = 20
 text = "Submit"
 
 [node name="BattleLogButton" type="Button" parent="BottomPanel/HBoxContainer" unique_id=927040926]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 21
 text = "Battle Log"
 
 [node name="DefeatPanel" type="Control" parent="." unique_id=355079481]
