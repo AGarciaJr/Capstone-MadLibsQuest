@@ -52,7 +52,8 @@ func _ready() -> void:
 	$VBoxContainer/NameInput.visible = false
 	$VBoxContainer/LetterInput.visible = false
 	$VBoxContainer/SelectedLetters.visible = false
-	$VBoxContainer/ContinueButton.grab_focus()
+	$VBoxContainer/HBoxContainer/RemoveButton.visible = false
+	$VBoxContainer/HBoxContainer/ContinueButton.grab_focus()
 
 func _update_ui() -> void:
 	if current_state == State.CONFIRM:
@@ -62,13 +63,22 @@ func _update_ui() -> void:
 	
 	$VBoxContainer/SelectedLetters.text = \"Selected Letters: \" + \", \".join(selected_letters) + \" (%d/5)\" % selected_letters.size()
 
+func _on_remove_button_pressed() -> void:
+	if selected_letters.is_empty():
+		$VBoxContainer/DialogueLabel.text = \"You haven't chosen any letters yet!\"
+		return
+	var removed = selected_letters.pop_back()
+	_update_ui()
+	$VBoxContainer/DialogueLabel.text = \"'%s' has left the party.\" % removed
+	$VBoxContainer/LetterInput.grab_focus()
+
 func _on_continue_button_pressed() -> void:
 	match current_state:
 		State.GREETING:
 			current_state = State.ASK_NAME
 			$VBoxContainer/NameInput.visible = true
 			$VBoxContainer/NameInput.grab_focus()
-			$VBoxContainer/ContinueButton.text = \"Confirm Name\"
+			$VBoxContainer/HBoxContainer/ContinueButton.text = \"Confirm Name\"
 		State.ASK_NAME:
 			var input_name = $VBoxContainer/NameInput.text.strip_edges()
 			if input_name.is_empty():
@@ -79,8 +89,9 @@ func _on_continue_button_pressed() -> void:
 			current_state = State.ASK_LETTERS
 			$VBoxContainer/LetterInput.visible = true
 			$VBoxContainer/SelectedLetters.visible = true
+			$VBoxContainer/HBoxContainer/RemoveButton.visible = true
 			$VBoxContainer/LetterInput.grab_focus()
-			$VBoxContainer/ContinueButton.text = \"Begin Adventure\"
+			$VBoxContainer/HBoxContainer/ContinueButton.text = \"Begin Adventure\"
 		State.ASK_LETTERS:
 			# Player must choose 5 starting letters
 			if selected_letters.size() < 5:
@@ -88,7 +99,7 @@ func _on_continue_button_pressed() -> void:
 				return
 			current_state = State.CONFIRM
 			$VBoxContainer/LetterInput.visible = false
-			$VBoxContainer/ContinueButton.text = \"Start Quest!\"
+			$VBoxContainer/HBoxContainer/ContinueButton.text = \"Start Quest!\"
 		State.CONFIRM:
 			intro_complete.emit(player_name, selected_letters)
 			# Save data and go to the room
@@ -187,10 +198,24 @@ layout_mode = 2
 text = "Selected Letters: (0/5)"
 horizontal_alignment = 1
 
-[node name="ContinueButton" type="Button" parent="VBoxContainer" unique_id=167863984]
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=2079007097]
+layout_mode = 2
+
+[node name="RemoveButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=969095015]
+custom_minimum_size = Vector2(175, 0)
+layout_mode = 2
+text = "Remove Last Letter"
+
+[node name="Spacer" type="Control" parent="VBoxContainer/HBoxContainer" unique_id=2047355552]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ContinueButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=167863984]
+custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
 text = "Continue"
 
 [connection signal="text_changed" from="VBoxContainer/LetterInput" to="." method="_on_letter_input_text_changed"]
 [connection signal="text_submitted" from="VBoxContainer/LetterInput" to="." method="_on_letter_input_text_submitted"]
-[connection signal="pressed" from="VBoxContainer/ContinueButton" to="." method="_on_continue_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/RemoveButton" to="." method="_on_remove_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/ContinueButton" to="." method="_on_continue_button_pressed"]

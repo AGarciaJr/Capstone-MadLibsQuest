@@ -1,14 +1,14 @@
 [gd_scene format=3 uid="uid://dnrim6tbs70o"]
 
-[ext_resource type="Script" uid="uid://xb78otiariil" path="res://scripts/canvas_layer.gd" id="1_c4rma"]
-[ext_resource type="FontFile" uid="uid://dl2x675iiclpr" path="res://assets/Fonts/PlayfairDisplay-Black.ttf" id="2_ek3oe"]
-[ext_resource type="FontFile" uid="uid://bqm5yq0e5w8cx" path="res://assets/Fonts/PlayfairDisplay-Italic.ttf" id="3_mg525"]
+[ext_resource type="Script" uid="uid://xb78otiariil" path="res://scripts/CanvasLayer.gd" id="1_4ylis"]
+[ext_resource type="FontFile" uid="uid://dl2x675iiclpr" path="res://assets/Fonts/PlayfairDisplay-Black.ttf" id="2_l7vou"]
+[ext_resource type="FontFile" uid="uid://bqm5yq0e5w8cx" path="res://assets/Fonts/PlayfairDisplay-Italic.ttf" id="3_ydkpc"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p1mel"]
 
 [node name="PauseScreen" type="CanvasLayer" unique_id=2080269728]
 process_mode = 3
-script = ExtResource("1_c4rma")
+script = ExtResource("1_4ylis")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1826520914]
 custom_minimum_size = Vector2(250, 290)
@@ -34,7 +34,7 @@ alignment = 1
 
 [node name="Paused" type="Label" parent="PanelContainer/VBoxContainer" unique_id=590066484]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("2_ek3oe")
+theme_override_fonts/font = ExtResource("2_l7vou")
 theme_override_font_sizes/font_size = 39
 text = "Paused"
 horizontal_alignment = 1
@@ -44,7 +44,7 @@ custom_minimum_size = Vector2(200, 44)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7529412, 0.7529412, 0.7529412, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = ExtResource("3_mg525")
+theme_override_fonts/font = ExtResource("3_ydkpc")
 theme_override_font_sizes/font_size = 21
 text = "Resume"
 
@@ -53,7 +53,7 @@ custom_minimum_size = Vector2(200, 44)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7529412, 0.7529412, 0.7529412, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = ExtResource("3_mg525")
+theme_override_fonts/font = ExtResource("3_ydkpc")
 theme_override_font_sizes/font_size = 21
 text = "Return to Base"
 
@@ -62,7 +62,7 @@ custom_minimum_size = Vector2(200, 44)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.7529412, 0.7529412, 0.7529412, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
-theme_override_fonts/font = ExtResource("3_mg525")
+theme_override_fonts/font = ExtResource("3_ydkpc")
 theme_override_font_sizes/font_size = 21
 text = "Main Menu"
 

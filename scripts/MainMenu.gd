@@ -2,7 +2,7 @@ extends Control
 
 # Assign these in the Inspector by connecting Button signals
 # Scene paths — update as needed
-const GAME_SCENE = "res://scenes/intro_scene.tscn"  
+const GAME_SCENE = "res://scenes/IntroScene.tscn"  
 const SETTINGS_SCENE = "res://scenes/Settings.tscn" # Blank for now
 const CREDITS_SCENE = "res://scenes/Credits.tscn"
 
@@ -23,6 +23,7 @@ func _on_exit_button_pressed():
 func _on_credit_pressed():
 	get_tree().change_scene_to_file(CREDITS_SCENE)
 
-
 func _on_start_pressed() -> void:
+	PlayerState.reset_to_defaults()
+	Run.start_run()
 	get_tree().change_scene_to_file(GAME_SCENE)

@@ -8,7 +8,7 @@ func _ready():
 	hide()
 
 func _input(event):
-	if event.is_action_pressed("pause_game"):
+	if event.is_action_pressed("ui_cancel"):
 		if visible:
 			resume_game()
 		else:

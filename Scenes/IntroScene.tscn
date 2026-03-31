@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dut8gq86m8f0t"]
 
-[ext_resource type="Script" uid="uid://bnbmhd3865bj4" path="res://Scenes/intro_scene.gd" id="1_intro"]
+[ext_resource type="Script" uid="uid://bnbmhd3865bj4" path="res://Scenes/IntroScene.gd" id="1_y0wha"]
 
 [node name="IntroScene" type="Control" unique_id=443259015]
 layout_mode = 3
@@ -9,7 +9,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_intro")
+script = ExtResource("1_y0wha")
 
 [node name="Background" type="ColorRect" parent="." unique_id=1875848018]
 layout_mode = 1

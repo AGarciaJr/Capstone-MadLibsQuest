@@ -62,6 +62,9 @@ func _ready() -> void:
 	await get_tree().create_timer(1.0).timeout
 	_start_intro_narrative()
 
+func _refocus_input() -> void:
+	word_input.release_focus()
+	word_input.grab_focus()
 
 func _start_intro_narrative() -> void:
 	current_state = State.INTRO_NARRATIVE
@@ -146,7 +149,7 @@ func _show_next_blank_prompt() -> void:
 	# Show and focus input
 	input_container.visible = true
 	word_input.text = ""
-	word_input.grab_focus()
+	_refocus_input()
 	
 	# Update bard speech
 	var remaining = current_blanks.size() - current_blank_index
@@ -237,7 +240,7 @@ func _complete_intro() -> void:
 	intro_completed.emit()
 	
 	# Transition to the tutorial area
-	SceneTransition.change_scene("res://Scenes/StoryIntro.tscn", 1.5)
+	SceneTransition.change_scene("res://Scenes/LetterSelection.tscn", 1.5)
 
 
 # Typewriter effect system

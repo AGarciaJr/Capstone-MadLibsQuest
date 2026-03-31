@@ -92,10 +92,10 @@ func _ready() -> void:
 	word_input.text_submitted.connect(_on_text_submitted)
 	victory_continue_button.pressed.connect(_on_continue_pressed)
 	battle_log_button.pressed.connect(func(): battle_log_panel.visible = true)
+	player_name.text = PlayerState.player_name
 	$BattleLogPanel/CloseButton.pressed.connect(func(): 
 		battle_log_panel.visible = false
-		word_input.grab_focus()
-		word_input.select_all()
+		_refocus_input()
 	)
 
 	if not PlayerState.player_letters_changed.is_connected(_update_letters_label):
@@ -105,6 +105,9 @@ func _ready() -> void:
 	var tween := create_tween()
 	tween.tween_property(fade, "color", Color(0, 0, 0, 0), 0.35)
 
+func _refocus_input() -> void:
+	word_input.release_focus()
+	word_input.grab_focus()
 
 func _exit_tree() -> void:
 	if PlayerState.player_letters_changed.is_connected(_update_letters_label):
@@ -253,8 +256,7 @@ func _start_battle() -> void:
 
 	result_label.text = "Type a word and press Enter!"
 	word_input.text = ""
-	word_input.grab_focus()
-	word_input.select_all()
+	_refocus_input()
 	_update_letter_bonus_number_label()
 
 
@@ -301,8 +303,7 @@ func _advance_sentence() -> void:
 
 	line_preview.text = template_line
 	word_input.text   = ""
-	word_input.grab_focus()
-	word_input.select_all()
+	_refocus_input()
 	_update_prompt_ui()
 
 
@@ -393,8 +394,7 @@ func _resolve_turn(word: String, freq_scaling: float) -> void:
 	if not sentence_just_completed:
 		result_label.text = "Accepted '%s'!" % word
 		word_input.text = ""
-		word_input.grab_focus()
-		word_input.select_all()
+		_refocus_input()
 		_update_prompt_ui()
 		return
 
@@ -422,8 +422,7 @@ func _resolve_turn(word: String, freq_scaling: float) -> void:
 
 	result_label.text = "Accepted '%s'!" % word
 	word_input.text = ""
-	word_input.grab_focus()
-	word_input.select_all()
+	_refocus_input()
 	_update_prompt_ui()
 
 
@@ -447,8 +446,7 @@ func _resolve_multi_strike_turn_first_word(word: String, freq_scaling: float) ->
 		prompt_label.text = "Bonus strike — another %s!" % _strike_round_pos_display
 		result_label.text = "Enter a %s (same part of speech as before the enemy acts)." % _strike_round_pos_display
 		word_input.text = ""
-		word_input.grab_focus()
-		word_input.select_all()
+		_refocus_input()
 		return
 
 	await _finish_player_round_after_strikes()
@@ -486,8 +484,7 @@ func _submit_bonus_strike_word(word: String) -> void:
 		prompt_label.text = "Bonus strike — another %s!" % _strike_round_pos_display
 		result_label.text = "Enter a %s (same part of speech as before the enemy acts)." % _strike_round_pos_display
 		word_input.text = ""
-		word_input.grab_focus()
-		word_input.select_all()
+		_refocus_input()
 		return
 
 	await _finish_player_round_after_strikes()
@@ -519,8 +516,7 @@ func _finish_player_round_after_strikes() -> void:
 
 	result_label.text = "Round complete!"
 	word_input.text = ""
-	word_input.grab_focus()
-	word_input.select_all()
+	_refocus_input()
 	_update_prompt_ui()
 
 
@@ -584,8 +580,7 @@ func _apply_invalid_turn(message: String) -> void:
 	await _present_damage_messages(damage_messages)
 
 	word_input.text = ""
-	word_input.grab_focus()
-	word_input.select_all()
+	_refocus_input()
 
 	if result["player_defeated"]:
 		result_label.text = "You were defeated. Restarting..."
