@@ -240,7 +240,7 @@ func _complete_intro() -> void:
 	intro_completed.emit()
 	
 	# Transition to the tutorial area
-	SceneTransition.change_scene("res://Scenes/LetterSelection.tscn", 1.5)
+	SceneTransition.change_scene(Scenes.LETTER_SELECT, 1.5)
 
 
 # Typewriter effect system
