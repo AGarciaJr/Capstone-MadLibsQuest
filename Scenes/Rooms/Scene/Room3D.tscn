@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cwtitldoo8dvx"]
 
 [ext_resource type="Script" uid="uid://cwh0iyo32lve3" path="res://scripts/room/Room3D.gd" id="1_528hv"]
-[ext_resource type="PackedScene" uid="uid://ds5oef4l1w2u6" path="res://Scenes/Rooms/Scene/DoorInteractable.tscn" id="2_bv8rd"]
+[ext_resource type="PackedScene" uid="uid://ds5oef4l1w2u6" path="res://scenes/Rooms/Scene/DoorInteractable.tscn" id="2_bv8rd"]
 [ext_resource type="Script" uid="uid://by0l5vrov16w2" path="res://scripts/room/Map.gd" id="3_odja0"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_swdye"]

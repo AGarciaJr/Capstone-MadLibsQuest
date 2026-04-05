@@ -152,7 +152,7 @@ func _on_door_clicked(next_node_id: int):
 		
 		EncounterSceneTransition.start_battle_with_prebattle(
 			{"encounter_id": encounter_id},
-			scene_file_path,
+			Scenes.ROOM,
 			{"node_id": Run.current_id}
 		)
 		return

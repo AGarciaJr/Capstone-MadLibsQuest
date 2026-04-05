@@ -105,7 +105,7 @@ func _on_continue_button_pressed() -> void:
 			# Save data and go to the room
 			PlayerState.player_name = player_name
 			PlayerState.set_initial_player_letters(PackedStringArray(selected_letters))
-			get_tree().change_scene_to_file(\"res://Scenes/Rooms/Scene/Room3D.tscn\")
+			get_tree().change_scene_to_file(Scenes.ROOM)
 	
 	_update_ui()
 

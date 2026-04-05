@@ -25,7 +25,6 @@ config/icon="res://icon.svg"
 EncounterSceneTransition="*res://scripts/autoloads/EncounterSceneTransition.gd"
 Progress="*res://scripts/autoloads/ProgressManager.gd"
 Run="*res://scripts/autoloads/RunManager.gd"
-GameData="*res://scripts/GameData.gd"
 WordNet="*res://scripts/nlp/WordNetBridge.cs"
 WordFreq="*uid://d2b46q28jxqrr"
 Elements="*uid://bvgm7byk5q4hw"
@@ -34,6 +33,7 @@ ItemSystem="*uid://orag13re17qh"
 MapBuilder="*uid://028lbysuding"
 EnemyModifierDB="*uid://dgarlludqnkf7"
 SceneTransition="*res://scripts/autoloads/SceneTransition.tscn"
+Scenes="*uid://xwp80yc533f6"
 
 [display]
 

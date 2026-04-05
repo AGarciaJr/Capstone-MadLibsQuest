@@ -1,8 +1,5 @@
 extends CanvasLayer
 
-const BASE_SCENE = "res://scenes/intro_scene.tscn" 
-const MAIN_MENU_SCENE = "res://scenes/MainMenu.tscn"
-
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	hide()
@@ -28,11 +25,11 @@ func _on_resume_button_pressed():
 
 func _on_return_base_pressed():
 	get_tree().paused = false
-	get_tree().change_scene_to_file(BASE_SCENE)
+	get_tree().change_scene_to_file(Scenes.INTRO)
 
 func _on_main_menu_pressed():
 	get_tree().paused = false
-	get_tree().change_scene_to_file(MAIN_MENU_SCENE)
+	get_tree().change_scene_to_file(Scenes.MAIN_MENU)
 
 
 func _on_resume_pressed() -> void:
