@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dfbignak050jf" path="res://assets/Art/TitleBackground.png" id="2_l72w3"]
 [ext_resource type="FontFile" uid="uid://dl2x675iiclpr" path="res://assets/Fonts/PlayfairDisplay-Black.ttf" id="3_ghw46"]
 [ext_resource type="FontFile" uid="uid://caqk3gmdt5r4e" path="res://assets/Fonts/PlayfairDisplay-Bold.ttf" id="4_df05h"]
+[ext_resource type="AudioStream" uid="uid://h5bb5k7e8tgo" path="res://assets/Art/TitleMusic.mp3" id="5_df05h"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cqjrg"]
 bg_color = Color(0.101960786, 0.039215688, 0.18039216, 1)
@@ -37,14 +38,14 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -123.0
-offset_top = -278.0
-offset_right = 127.0
-offset_bottom = 34.0
+offset_left = -240.0
+offset_top = -378.0
+offset_right = 224.0
+offset_bottom = 36.0
 grow_horizontal = 2
 grow_vertical = 0
 pivot_offset = Vector2(0, -20)
-theme_override_constants/separation = 3
+theme_override_constants/separation = 6
 alignment = 1
 
 [node name="Start" type="Button" parent="VBoxContainer" unique_id=1221666355]
@@ -54,26 +55,12 @@ theme_override_font_sizes/font_size = 42
 theme_override_styles/normal = SubResource("StyleBoxFlat_cqjrg")
 text = "Start"
 
-[node name="Settings" type="Button" parent="VBoxContainer" unique_id=1438667308]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("3_ghw46")
-theme_override_font_sizes/font_size = 42
-theme_override_styles/normal = SubResource("StyleBoxFlat_e2xy7")
-text = "Settings"
-
 [node name="Credit" type="Button" parent="VBoxContainer" unique_id=670672001]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_ghw46")
 theme_override_font_sizes/font_size = 42
 theme_override_styles/normal = SubResource("StyleBoxFlat_e2xy7")
 text = "Credits"
-
-[node name="Exit" type="Button" parent="VBoxContainer" unique_id=1816762341]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("3_ghw46")
-theme_override_font_sizes/font_size = 42
-theme_override_styles/normal = SubResource("StyleBoxFlat_e2xy7")
-text = "Exit"
 
 [node name="GameTitle" type="Label" parent="." unique_id=618499384]
 layout_mode = 1
@@ -136,6 +123,10 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Cancel"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=2135407391]
+stream = ExtResource("5_df05h")
+autoplay = true
 
 [connection signal="pressed" from="VBoxContainer/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="VBoxContainer/Credit" to="." method="_on_credit_pressed"]

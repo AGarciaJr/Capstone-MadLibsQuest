@@ -55,14 +55,6 @@ theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 21
 text = "Restart Level"
 
-[node name="ReturnBase" type="Button" parent="ColorRect/PanelContainer/VBoxContainer" unique_id=1713396757]
-custom_minimum_size = Vector2(200, 44)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.8, 0.26666668, 0.26666668, 1)
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 21
-text = "Return to Base"
-
 [node name="MainMenu" type="Button" parent="ColorRect/PanelContainer/VBoxContainer" unique_id=765240854]
 custom_minimum_size = Vector2(200, 44)
 layout_mode = 2
@@ -70,3 +62,6 @@ theme_override_colors/font_color = Color(0.8, 0.26666668, 0.26666668, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 21
 text = "Main Menu"
+
+[connection signal="pressed" from="ColorRect/PanelContainer/VBoxContainer/Restart" to="." method="_on_restart_pressed"]
+[connection signal="pressed" from="ColorRect/PanelContainer/VBoxContainer/MainMenu" to="." method="_on_main_menu_pressed"]

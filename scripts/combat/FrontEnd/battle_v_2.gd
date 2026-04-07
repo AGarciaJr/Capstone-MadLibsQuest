@@ -8,7 +8,7 @@ const _TurnResolverScript = preload("res://scripts/combat/BackEnd/TurnResolver.g
 @export var enemy_attacks_per_turn: int = 1
 
 var enemy_max_hp: int = 30
-
+var _death_screen = null
 ## Letter bonus tuning for this battle lives on PlayerState (set from encounter cfg in _start_battle).
 var battle_title: String = "~ The Bard's Tale ~"
 var template_line: String = "The hero faced a fearsome ___, chose to ___, and won with ___ force!"
@@ -84,10 +84,8 @@ var _strike_round_pos_display: String = "noun"
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-
 	fade.color = Color(0, 0, 0, 1)
 	rng.randomize()
-
 	submit_button.pressed.connect(_on_submit_pressed)
 	word_input.text_submitted.connect(_on_text_submitted)
 	victory_continue_button.pressed.connect(_on_continue_pressed)
@@ -97,13 +95,16 @@ func _ready() -> void:
 		battle_log_panel.visible = false
 		_refocus_input()
 	)
-
 	if not PlayerState.player_letters_changed.is_connected(_update_letters_label):
 		PlayerState.player_letters_changed.connect(_update_letters_label)
-
 	_start_battle()
 	var tween := create_tween()
 	tween.tween_property(fade, "color", Color(0, 0, 0, 0), 0.35)
+	
+	# Load death screen last
+	var death_scene = load("res://Scenes/YouDiedScreen.tscn")
+	_death_screen = death_scene.instantiate()
+	get_tree().root.add_child(_death_screen)
 
 func _refocus_input() -> void:
 	word_input.release_focus()
@@ -417,10 +418,12 @@ func _resolve_turn(word: String, freq_scaling: float) -> void:
 	if result2["enemy_defeated"]:
 		_finish_battle()
 		return
+
 	if result2["player_defeated"]:
 		result_label.text = "You were defeated."
 		await get_tree().create_timer(0.75).timeout
-		_start_battle()
+		if _death_screen:
+			_death_screen.show_death_screen()
 		return
 
 	result_label.text = "Accepted '%s'!" % word
@@ -514,7 +517,8 @@ func _finish_player_round_after_strikes() -> void:
 	if result["player_defeated"]:
 		result_label.text = "You were defeated."
 		await get_tree().create_timer(0.75).timeout
-		_start_battle()
+		if _death_screen:
+			_death_screen.show_death_screen()
 		return
 
 	result_label.text = "Round complete!"
@@ -588,7 +592,9 @@ func _apply_invalid_turn(message: String) -> void:
 	if result["player_defeated"]:
 		result_label.text = "You were defeated. Restarting..."
 		await get_tree().create_timer(0.75).timeout
-		_start_battle()
+		if _death_screen:
+			_death_screen.show_death_screen()
+		return
 
 
 func _finish_battle() -> void:

@@ -11,7 +11,7 @@ func show_death_screen():
 
 func _on_restart_button_pressed():
 	hide()
-	get_tree().change_scene_to_file(current_level)
+	get_tree().change_scene_to_file("res://Scenes/PreBattle/PreBattleModifier.tscn")
 
 func _on_base_button_pressed():
 	hide()
@@ -20,3 +20,13 @@ func _on_base_button_pressed():
 func _on_menu_button_pressed():
 	hide()
 	get_tree().change_scene_to_file(Scenes.MAIN_MENU)
+
+
+func _on_restart_pressed() -> void:
+	hide()
+	get_tree().change_scene_to_file("res://Scenes/PreBattle/PreBattleModifier.tscn")
+
+
+func _on_main_menu_pressed() -> void:
+	hide()
+	get_tree().change_scene_to_file("res://Scenes/MainMenu.tscn")
