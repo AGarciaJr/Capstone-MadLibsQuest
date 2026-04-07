@@ -18,7 +18,7 @@ func _init() -> void:
 	sprite_animation_name = "Idle"
 
 	max_sentences  = 3
-	defeat_message = "The fungal spores in the room infected you and you became a mushroom."
+	defeat_message = "The spores overwhelmed you. Slowly, silently, you took root. The Bard stares at the spot where a hero once stood. It is now a very nice mushroom."
 
 	base_move = {
 		"base_damage": 20,
@@ -29,27 +29,43 @@ func _init() -> void:
 
 	templates = [
 		{
-			"line": "The hero dodged the ___ spores, tried to ___, and struck with ___ fury!",
+			"line": "The hero ___ through the spore cloud and struck the ___ mushroom with a ___ blow!",
 			"blanks": [
-				{"type": "adjective", "hint": "describe the spores",        "display": "ADJECTIVE"},
-				{"type": "verb",      "hint": "an action",                  "display": "VERB"},
-				{"type": "adjective", "hint": "a powerful describing word", "display": "ADJECTIVE"},
+				{"type": "verb",      "hint": "how did the hero push through the spores? (charge? crawl? hold their breath and?)", "display": "VERB"},
+				{"type": "adjective", "hint": "describe the mushroom boss (colossal? pulsing? unsettlingly cute?)",                "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "what kind of blow landed? (decisive? thunderous? completely lucky?)",               "display": "ADJECTIVE"},
 			]
 		},
 		{
-			"line": "The ___ mushroom released a ___ cloud that tried to ___ the hero's senses!",
+			"line": "The ___ mushroom released a ___ cloud of spores that tried to ___ the hero's mind!",
 			"blanks": [
-				{"type": "adjective", "hint": "describe the mushroom", "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "describe the cloud",    "display": "ADJECTIVE"},
-				{"type": "verb",      "hint": "an action",             "display": "VERB"},
+				{"type": "adjective", "hint": "describe the mushroom (ancient? hulking? disturbingly sentient?)",           "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe the spore cloud (choking? glowing? surprisingly fragrant?)",        "display": "ADJECTIVE"},
+				{"type": "verb",      "hint": "what did the spores try to do to the hero's mind? (scramble? overwhelm? redecorate?)", "display": "VERB"},
 			]
 		},
 		{
-			"line": "In a ___ rage, the mushroom lunged forward with a ___ roar and a ___ slam!",
+			"line": "In a ___ rage, the mushroom slammed down a ___ fist with a ___ shockwave!",
 			"blanks": [
-				{"type": "adjective", "hint": "describe the rage",  "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "describe the roar",  "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "describe the slam",  "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "what kind of rage? (fungal? silent? catastrophic?)",           "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe that fist (enormous? slimy? unexpectedly fast?)",     "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe the shockwave (ground-shaking? blinding? very damp?)", "display": "ADJECTIVE"},
+			]
+		},
+		{
+			"line": "The hero ___ around the mushroom's ___ tendrils and countered with a ___ strike!",
+			"blanks": [
+				{"type": "verb",      "hint": "how did the hero evade? (weave? vault? dramatically slide?)",   "display": "VERB"},
+				{"type": "adjective", "hint": "describe the tendrils (writhing? sticky? surprisingly gentle?)", "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe the counter-attack (precise? desperate? magnificent?)", "display": "ADJECTIVE"},
+			]
+		},
+		{
+			"line": "Spores burst from the ___ cap above and the hero had to ___ through a ___ storm of them!",
+			"blanks": [
+				{"type": "adjective", "hint": "describe the mushroom's enormous cap (glowing? pulsing? ancient?)",      "display": "ADJECTIVE"},
+				{"type": "verb",      "hint": "how did the hero push through? (sprint? crawl? power-walk?)",            "display": "VERB"},
+				{"type": "adjective", "hint": "describe that spore storm (blinding? rainbow-colored? seemingly endless?)", "display": "ADJECTIVE"},
 			]
 		},
 	]
