@@ -3,7 +3,7 @@ extends Node3D
 @onready var camera: Camera3D = $Camera3D
 @onready var hint_label: Label = $CanvasLayer/UIRoot/BottomCenter/HintLabel
 @onready var completion_center: Control = $CanvasLayer/UIRoot/CompletionCenter
-@onready var restart_button: Button = $CanvasLayer/UIRoot/CompletionCenter/CompletionPanel/CompletionVBox/RestartButton
+@onready var begin_run_button: Button = $CanvasLayer/UIRoot/CompletionCenter/CompletionPanel/CompletionVBox/BeginRunButton
 @onready var fade: ColorRect = $CanvasLayer/UIRoot/Fade
 @onready var crosshair: Control = $CanvasLayer/UIRoot/Crosshair
 @onready var doors_root : Node3D = $DoorsRoot
@@ -29,8 +29,8 @@ func _ready() -> void:
 	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
-	if not restart_button.pressed.is_connected(_on_restart_pressed):	
-		restart_button.pressed.connect(_on_restart_pressed)
+	if not begin_run_button.pressed.is_connected(_on_begin_run_pressed):	
+		begin_run_button.pressed.connect(_on_begin_run_pressed)
 	
 	completion_center.visible = false
 	map_overlay.visible = false
@@ -226,17 +226,14 @@ func _refresh_ui() -> void:
 		hint_label.text = "Click a door to continue."
 	_update_map_overlay()
 
-func _on_restart_pressed():
+func _on_begin_run_pressed():
 	var saved_name := PlayerState.player_name
-	
 	PlayerState.reset_to_defaults()
 	PlayerState.player_name = saved_name
-	# Reset run state
-	if Run.run_mode == RunManager.RunMode.TUTORIAL:
-		Run.new_tutorial_run()
-	else:
-		Run.new_generated_run()
 	
+	# Reset run state
+	Run.run_mode = RunManager.RunMode.GENERATED
+	Run.start_run()
 	# Reset progress manager
 	Progress.reset_progress()
 	
@@ -297,9 +294,9 @@ func _build_room_walls() -> void:
 	# [position, rotation_degrees, plane_size, tile_index]
 	var walls := [
 		[Vector3( 0.0, 0.5, -1.0), Vector3( 90, 0,   0), Vector2(2.0, 1.0), 0],  # front (door wall)
-		[Vector3( 0.0, 0.5,  1.0), Vector3(-90, 0,   0), Vector2(2.0, 1.0), 0],  # back
-		[Vector3(-1.0, 0.5,  0.0), Vector3(  0, 0, -90), Vector2(2.0, 1.0), 1],  # left
-		[Vector3( 1.0, 0.5,  0.0), Vector3(  0, 0,  90), Vector2(2.0, 1.0), 1],  # right
+		[Vector3( 0.0, 0.5,  1.0), Vector3( 90, 180, 0), Vector2(2.0, 1.0), 0],  # back
+		[Vector3(-1.0, 0.5,  0.0), Vector3(  90, 90, 0), Vector2(2.0, 1.0), 1],  # left
+		[Vector3( 1.0, 0.5,  0.0), Vector3(  90, -90,  0), Vector2(2.0, 1.0), 1],  # right
 		[Vector3( 0.0, 1.0,  0.0), Vector3(180, 0,   0), Vector2(2.0, 2.0), 2],  # ceiling
 	]
 
