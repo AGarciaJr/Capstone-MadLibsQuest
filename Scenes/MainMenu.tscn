@@ -88,5 +88,57 @@ theme_override_font_sizes/font_size = 85
 text = "MadLibs Quest"
 horizontal_alignment = 1
 
+[node name="ModeModal" type="PanelContainer" parent="." unique_id=1238681689]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="ModeModal" unique_id=1782388374]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ModeModal/CenterContainer" unique_id=366917301]
+layout_mode = 2
+mouse_filter = 0
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="ModeModal/CenterContainer/VBoxContainer" unique_id=1174521907]
+layout_mode = 2
+text = "Would you like to play the tutorial first?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ModeModal/CenterContainer/VBoxContainer" unique_id=1986081466]
+layout_mode = 2
+theme_override_constants/separation = 25
+alignment = 1
+
+[node name="TutorialButton" type="Button" parent="ModeModal/CenterContainer/VBoxContainer/HBoxContainer" unique_id=2120892130]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Yes"
+
+[node name="NewRunButton" type="Button" parent="ModeModal/CenterContainer/VBoxContainer/HBoxContainer" unique_id=1236577373]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "No"
+
+[node name="BackButton" type="Button" parent="ModeModal/CenterContainer/VBoxContainer" unique_id=582072630]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Cancel"
+
 [connection signal="pressed" from="VBoxContainer/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="VBoxContainer/Credit" to="." method="_on_credit_pressed"]
+[connection signal="pressed" from="ModeModal/CenterContainer/VBoxContainer/HBoxContainer/TutorialButton" to="." method="_on_tutorial_pressed"]
+[connection signal="pressed" from="ModeModal/CenterContainer/VBoxContainer/HBoxContainer/NewRunButton" to="." method="_on_new_run_pressed"]
+[connection signal="pressed" from="ModeModal/CenterContainer/VBoxContainer/BackButton" to="." method="_on_modal_back_pressed"]
