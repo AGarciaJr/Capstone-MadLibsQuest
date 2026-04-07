@@ -2,9 +2,16 @@ extends Node
 
 const ALPHABET := "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
+## Used by `get_random_choices` when n == 3: one roll per pool, shuffled for display order.
+const REWARD_POOL_BASE_STATS := "base_stats"
+const REWARD_POOL_LETTER_POWER := "letter_power"
+## Single-letter picks and multi-letter rolls are mutually exclusive — both live here; only one is offered per victory.
+const REWARD_POOL_LETTER_ACQUISITION := "letter_acquisition"
+
 var items: Array[Dictionary] = [
 	{
 		"id": "hp_and_stats_boost",
+		"reward_pool": REWARD_POOL_BASE_STATS,
 		"category": "Base Stats",
 		"name": "Hanma's Charm",
 		"description": "Increase max HP and core stats.",
@@ -17,6 +24,7 @@ var items: Array[Dictionary] = [
 	},
 	{
 		"id": "add_bonus_letters_2",
+		"reward_pool": REWARD_POOL_LETTER_ACQUISITION,
 		"category": "Power Boost",
 		"name": "Glyph of Many Letters",
 		"description": "Adds 2 random player letters.",
@@ -27,6 +35,7 @@ var items: Array[Dictionary] = [
 	},
 	{
 		"id": "improve_bonus_letter",
+		"reward_pool": REWARD_POOL_LETTER_POWER,
 		"category": "Power Boost",
 		"name": "Alphabet Amplification",
 		"description": "Increases letter bonus damage.",
@@ -37,6 +46,7 @@ var items: Array[Dictionary] = [
 	},
 	{
 		"id": "heal_player",
+		"reward_pool": REWARD_POOL_BASE_STATS,
 		"category": "Base Stats",
 		"name": "Apple",
 		"description": "Restores HP after battle.",
@@ -47,8 +57,56 @@ var items: Array[Dictionary] = [
 	},
 ]
 
-# TODO: merge this with the get one random letter item
+
 func get_random_choices(n: int = 3) -> Array[Dictionary]:
+	if n == 3:
+		return _get_pooled_random_choices_3()
+	return _get_random_choices_legacy(n)
+
+
+func _get_pooled_random_choices_3() -> Array[Dictionary]:
+	var base_pool: Array[Dictionary] = []
+	var letter_power_pool: Array[Dictionary] = []
+	var letter_acquisition_pool: Array[Dictionary] = []
+
+	for it in items:
+		var pool: String = String(it.get("reward_pool", ""))
+		match pool:
+			REWARD_POOL_BASE_STATS:
+				base_pool.append(it)
+			REWARD_POOL_LETTER_POWER:
+				letter_power_pool.append(it)
+			REWARD_POOL_LETTER_ACQUISITION:
+				letter_acquisition_pool.append(it)
+			_:
+				pass
+
+	for i in range(ALPHABET.length()):
+		var letter: String = ALPHABET.substr(i, 1)
+		letter_acquisition_pool.append({
+			"id": "letter_%s" % letter,
+			"reward_pool": REWARD_POOL_LETTER_ACQUISITION,
+			"category": "Letters recruitment",
+			"name": "Letter %s" % letter,
+			"description": "Adds '%s' as a player letter. If you already have it, doubles the damage bonus for that letter!" % letter,
+			"effect_type": "add_player_letter",
+			"params": {"letter": letter}
+		})
+
+	if base_pool.is_empty() or letter_power_pool.is_empty() or letter_acquisition_pool.is_empty():
+		push_warning("ItemSystem: empty reward pool, using legacy item roll")
+		return _get_random_choices_legacy(3)
+
+	var out: Array[Dictionary] = [
+		base_pool[randi() % base_pool.size()].duplicate(true),
+		letter_power_pool[randi() % letter_power_pool.size()].duplicate(true),
+		letter_acquisition_pool[randi() % letter_acquisition_pool.size()].duplicate(true),
+	]
+	out.shuffle()
+	return out
+
+
+func _get_random_choices_legacy(n: int) -> Array[Dictionary]:
 	var non_letter_pool: Array[Dictionary] = items.duplicate()
 	non_letter_pool.shuffle()
 	var letter_pool: Array[Dictionary] = []
