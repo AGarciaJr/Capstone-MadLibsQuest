@@ -10,15 +10,23 @@ extends Node3D
 @onready var map_overlay: Control = $CanvasLayer/UIRoot/MapOverlay
 @onready var map_view: MapView = $CanvasLayer/UIRoot/MapOverlay/Panel/MapView
 
-@export var door_scene: PackedScene
 @export var door_radius: float = .75
+
+const DOOR_SCENE := preload("res://Scenes/Rooms/Scene/DoorInteractable.tscn")
 
 var sensitivity := 0.003
 var _hovered_door: DoorInteractable = null
 var _is_transitioning: bool = false
 var _active_doors: Array[DoorInteractable] = []
+var _gate_mesh: Mesh
+var _gate_tex: Texture2D
+var _atlas_tex: Texture2D
 
 func _ready() -> void:
+	_gate_mesh = load("res://assets/Art/Envoirnment/3D-CubeMaps/gate.obj")
+	_gate_tex  = load("res://assets/Art/Envoirnment/3D-CubeMaps/gate.png")
+	_atlas_tex = load("res://assets/Art/Envoirnment/3D-CubeMaps/cubemap_atlas01.png")
+	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
 	if not restart_button.pressed.is_connected(_on_restart_pressed):	
@@ -32,6 +40,7 @@ func _ready() -> void:
 	_update_map_overlay()
 	_rebuild_doors()
 	_refresh_ui()
+	_apply_3d_assets()
 
 func _input(event):
 	# looking
@@ -71,7 +80,7 @@ func _rebuild_doors() -> void:
 	
 	for i in range(nexts.size()):
 		var next_node_id: int = nexts[i]
-		var door := door_scene.instantiate() as DoorInteractable
+		var door := DOOR_SCENE.instantiate() as DoorInteractable
 		doors_root.add_child(door)
 		door.next_node_id = next_node_id
 		door.name = "Door_%s" % i
@@ -79,6 +88,7 @@ func _rebuild_doors() -> void:
 	
 	for door in _active_doors:
 		_place_door(door)
+		_apply_gate_to_door(door)
 
 func _clear_spawned_doors() -> void:
 	_set_hovered_door(null)
@@ -208,25 +218,12 @@ func _refresh_ui() -> void:
 	if tutorial_complete:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		return
-	
-	if Run.run_mode == RunManager.RunMode.TUTORIAL:
-		if Run.current_id == 0:
-			hint_label.text = "Look at a door and click to continue."
-		elif Run.current_id == 1:
-			hint_label.text = "You made it through. Click a door to face the boss."
-		else:
-			hint_label.text = "Click a door to continue." 
+		
+	var hint: String = curr.get("hint", "")
+	if hint != "":
+		hint_label.text = hint
 	else:
-		match curr.get("type", ""):
-			"start":
-				hint_label.text = "Choose a path."
-			"fight":
-				hint_label.text = "Choose your next path"
-			"boss":
-				hint_label.text = "Defeated the boss"
-			_:
-				hint_label.text = "Choose a path."
-	
+		hint_label.text = "Click a door to continue."
 	_update_map_overlay()
 
 func _on_restart_pressed():
@@ -234,8 +231,11 @@ func _on_restart_pressed():
 	
 	PlayerState.reset_to_defaults()
 	PlayerState.player_name = saved_name
-	# Reset tutorial run state
-	Run.new_tutorial_run()
+	# Reset run state
+	if Run.run_mode == RunManager.RunMode.TUTORIAL:
+		Run.new_tutorial_run()
+	else:
+		Run.new_generated_run()
 	
 	# Reset progress manager
 	Progress.reset_progress()
@@ -274,3 +274,106 @@ func _find_node_position(node_id: int, map: Dictionary) -> Dictionary:
 			if layer[row_index] == node_id:
 				return {"layer": layer_index, "row": row_index, "layer_size": layer.size()}
 	return not_found
+
+func _apply_3d_assets() -> void:
+	_build_room_walls()
+	_setup_dungeon_environment()
+
+
+func _build_room_walls() -> void:
+	# cubemap_atlas01.png is a 256x256 texture with a 2x2 grid of 128x128 tiles.
+	# Tile UV offsets (each tile occupies 0.5x0.5 of UV space):
+	#   Tile 0 (top-left)     : offset (0.0, 0.0)
+	#   Tile 1 (top-right)    : offset (0.5, 0.0)
+	#   Tile 2 (bottom-left)  : offset (0.0, 0.5)
+	#   Tile 3 (bottom-right) : offset (0.5, 0.5)
+	const TILE_UV := [
+		Vector3(0.0, 0.0, 0.0),
+		Vector3(0.5, 0.0, 0.0),
+		Vector3(0.0, 0.5, 0.0),
+		Vector3(0.5, 0.5, 0.0),
+	]
+
+	# [position, rotation_degrees, plane_size, tile_index]
+	var walls := [
+		[Vector3( 0.0, 0.5, -1.0), Vector3( 90, 0,   0), Vector2(2.0, 1.0), 0],  # front (door wall)
+		[Vector3( 0.0, 0.5,  1.0), Vector3(-90, 0,   0), Vector2(2.0, 1.0), 0],  # back
+		[Vector3(-1.0, 0.5,  0.0), Vector3(  0, 0, -90), Vector2(2.0, 1.0), 1],  # left
+		[Vector3( 1.0, 0.5,  0.0), Vector3(  0, 0,  90), Vector2(2.0, 1.0), 1],  # right
+		[Vector3( 0.0, 1.0,  0.0), Vector3(180, 0,   0), Vector2(2.0, 2.0), 2],  # ceiling
+	]
+
+	for wall_def in walls:
+		var mesh_inst := MeshInstance3D.new()
+		var plane     := PlaneMesh.new()
+		plane.size    = wall_def[2]
+		mesh_inst.mesh = plane
+
+		var mat := StandardMaterial3D.new()
+		if _atlas_tex != null:
+			mat.albedo_texture = _atlas_tex
+			mat.uv1_offset     = TILE_UV[wall_def[3]]
+			mat.uv1_scale      = Vector3(0.5, 0.5, 1.0)
+		else:
+			mat.albedo_color = Color(0.25, 0.20, 0.15)
+
+		mesh_inst.set_surface_override_material(0, mat)
+		mesh_inst.position         = wall_def[0]
+		mesh_inst.rotation_degrees = wall_def[1]
+		add_child(mesh_inst)
+
+	# Apply tile 3 (bottom-right) to the existing floor mesh
+	var floor_node := get_node_or_null("Floor") as MeshInstance3D
+	if floor_node != null and _atlas_tex != null:
+		var mat := StandardMaterial3D.new()
+		mat.albedo_texture = _atlas_tex
+		
+		mat.uv1_offset     = TILE_UV[3]
+		mat.uv1_scale      = Vector3(0.5, 0.5, 1.0)
+		floor_node.set_surface_override_material(0, mat)
+
+func _apply_gate_to_door(door: DoorInteractable) -> void:
+	# Gate OBJ native bounds: X(-37,43)  Y(0,465)  Z(-759,-449)
+	# Scale to ~0.33 m height, rotate 90° around Y so the gate face is visible,
+	# and re-center at the door node's local origin.
+	const GATE_SCALE := 0.33 / 465.0
+	const GATE_CX    := 3.024    # native centroid X
+	const GATE_CY    := 232.290  # native centroid Y
+	const GATE_CZ    := -603.695 # native centroid Z
+
+	var rot90          := Basis(Vector3.UP, deg_to_rad(90))
+	var scale_basis    := Basis().scaled(Vector3(GATE_SCALE, GATE_SCALE, GATE_SCALE))
+	# Origin must cancel the centroid after both rotation and scale are applied:
+	#   (rot90 * scale_basis) * centroid + origin = 0
+	#   => origin = -(rot90 * scaled_centroid)
+	# (Calling rotate_y() after setting the transform would also rotate the origin
+	#  vector, displacing the gate ~0.43 m sideways — hence building it all at once.)
+	var scaled_centroid := Vector3(GATE_CX * GATE_SCALE, GATE_CY * GATE_SCALE, GATE_CZ * GATE_SCALE)
+	var gate_transform  := Transform3D(rot90 * scale_basis, -(rot90 * scaled_centroid))
+
+	var mesh_inst := door.get_node_or_null("MeshInstance3D") as MeshInstance3D
+	if mesh_inst == null:
+		return
+
+	if _gate_mesh != null:
+		mesh_inst.mesh      = _gate_mesh
+		mesh_inst.transform = gate_transform
+
+	if _gate_tex != null:
+		var mat            := StandardMaterial3D.new()
+		mat.albedo_texture = _gate_tex
+		mesh_inst.set_surface_override_material(0, mat)
+	
+	door.refresh_base_material()
+
+func _setup_dungeon_environment() -> void:
+	var env := Environment.new()
+	env.background_mode       = Environment.BG_COLOR
+	env.background_color      = Color(0.04, 0.03, 0.02)   # near-black cave bg
+	env.ambient_light_source  = Environment.AMBIENT_SOURCE_COLOR
+	env.ambient_light_color   = Color(0.60, 0.45, 0.25)   # warm torchlight tint
+	env.ambient_light_energy  = 0.4
+
+	var world_env := WorldEnvironment.new()
+	world_env.environment = env
+	add_child(world_env)

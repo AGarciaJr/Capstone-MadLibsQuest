@@ -11,8 +11,7 @@ var current_id := 0
 var run_mode : RunMode = RunMode.TUTORIAL
 
 func _ready() -> void:
-	if map.is_empty():
-		start_run()
+	pass
 		
 func start_run() -> void:
 	match run_mode:

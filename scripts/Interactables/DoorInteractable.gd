@@ -44,3 +44,13 @@ func set_highlight(enabled: bool):
 		_mesh.set_surface_override_material(0, _highlight_material)
 	else:
 		_mesh.set_surface_override_material(0, _base_material)
+
+func refresh_base_material() -> void:
+	if _mesh == null:
+		return
+	_base_material = _mesh.get_surface_override_material(0)
+	if _base_material != null:
+		_highlight_material = _base_material.duplicate() as Material
+		if _highlight_material is StandardMaterial3D:
+			var std := _highlight_material as StandardMaterial3D
+			std.albedo_color = std.albedo_color * Color(1.25, 1.25, 1.25, 1.0)

@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://cwtitldoo8dvx"]
 
 [ext_resource type="Script" uid="uid://cwh0iyo32lve3" path="res://scripts/room/Room3D.gd" id="1_528hv"]
-[ext_resource type="PackedScene" uid="uid://ds5oef4l1w2u6" path="res://scenes/Rooms/Scene/DoorInteractable.tscn" id="2_bv8rd"]
 [ext_resource type="Script" uid="uid://by0l5vrov16w2" path="res://scripts/room/Map.gd" id="3_odja0"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_swdye"]
@@ -22,7 +21,6 @@ corner_detail = 5
 
 [node name="Room3D" type="Node3D" unique_id=504167618]
 script = ExtResource("1_528hv")
-door_scene = ExtResource("2_bv8rd")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1467096609]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.214, 0)
@@ -91,7 +89,7 @@ layout_mode = 2
 text = "You defeated the Mushroom and finished the tutorial!"
 horizontal_alignment = 1
 
-[node name="RestartButton" type="Button" parent="CanvasLayer/UIRoot/CompletionCenter/CompletionPanel/CompletionVBox" unique_id=1972448444]
+[node name="BeginRunButton" type="Button" parent="CanvasLayer/UIRoot/CompletionCenter/CompletionPanel/CompletionVBox" unique_id=1972448444]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 4
