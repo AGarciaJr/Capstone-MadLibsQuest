@@ -45,7 +45,7 @@ offset_bottom = 36.0
 grow_horizontal = 2
 grow_vertical = 0
 pivot_offset = Vector2(0, -20)
-theme_override_constants/separation = 6
+theme_override_constants/separation = 12
 alignment = 1
 
 [node name="Start" type="Button" parent="VBoxContainer" unique_id=1221666355]
@@ -72,7 +72,7 @@ grow_horizontal = 2
 theme_override_colors/font_color = Color(0.9607843, 0.84705883, 0.47843137, 1)
 theme_override_fonts/font = ExtResource("4_df05h")
 theme_override_font_sizes/font_size = 85
-text = "MadLibs Quest"
+text = "WordWoven"
 horizontal_alignment = 1
 
 [node name="ModeModal" type="PanelContainer" parent="." unique_id=1238681689]
