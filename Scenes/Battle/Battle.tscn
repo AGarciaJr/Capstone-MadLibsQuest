@@ -4,8 +4,8 @@
 [ext_resource type="FontFile" uid="uid://cidaxvdq4u675" path="res://assets/Fonts/Junicode.ttf" id="3_2msnx"]
 [ext_resource type="FontFile" uid="uid://c1n3r6n1s0e1w" path="res://assets/Fonts/BLKCHCRY.TTF" id="3_47d8v"]
 [ext_resource type="FontFile" uid="uid://xrdaqecbc33" path="res://assets/Fonts/MorrisRomanAlternate-Black.ttf" id="4_g8wve"]
-[ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://Scenes/CanvasLayer.tscn" id="5_vn0yc"]
-[ext_resource type="PackedScene" uid="uid://wdlitqgfnt17" path="res://Scenes/YouDiedScreen.tscn" id="7_8ftua"]
+[ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://scenes/CanvasLayer.tscn" id="5_vn0yc"]
+[ext_resource type="PackedScene" uid="uid://wdlitqgfnt17" path="res://scenes/YouDiedScreen.tscn" id="7_8ftua"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_textbox"]
 bg_color = Color(0.07, 0.05, 0.03, 0.94)
@@ -248,11 +248,18 @@ text = "Battle Log"
 
 [node name="DefeatPanel" type="Control" parent="." unique_id=355079481]
 visible = false
-anchors_preset = 0
-offset_left = 120.0
-offset_top = 80.0
-offset_right = 520.0
-offset_bottom = 260.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -90.0
+offset_right = 200.0
+offset_bottom = 90.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="PanelBg" type="ColorRect" parent="DefeatPanel" unique_id=831040101]
 layout_mode = 0
@@ -279,14 +286,6 @@ offset_bottom = 130.0
 theme_override_font_sizes/font_size = 13
 horizontal_alignment = 1
 autowrap_mode = 3
-
-[node name="RetryButton" type="Button" parent="DefeatPanel" unique_id=392767969]
-layout_mode = 0
-offset_left = 150.0
-offset_top = 140.0
-offset_right = 250.0
-offset_bottom = 168.0
-text = "Try Again"
 
 [node name="BattleLogPanel" type="Control" parent="." unique_id=881644895]
 visible = false
@@ -347,41 +346,3 @@ visible = false
 
 [node name="YouDiedScreen" parent="." unique_id=156634254 instance=ExtResource("7_8ftua")]
 visible = false
-
-[node name="VictoryPanel" type="Control" parent="." unique_id=911848340]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -80.0
-offset_top = -35.0
-offset_right = 80.0
-offset_bottom = 35.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="PanelBg" type="ColorRect" parent="VictoryPanel" unique_id=1500870292]
-layout_mode = 0
-offset_right = 160.0
-offset_bottom = 70.0
-color = Color(0.1, 0.2, 0.1, 1)
-
-[node name="Label" type="Label" parent="VictoryPanel" unique_id=2073411731]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 8.0
-offset_right = 156.0
-offset_bottom = 28.0
-text = "VICTORY!"
-horizontal_alignment = 1
-
-[node name="ContinueButton" type="Button" parent="VictoryPanel" unique_id=552772643]
-layout_mode = 0
-offset_left = 40.0
-offset_top = 36.0
-offset_right = 120.0
-offset_bottom = 60.0
-text = "Continue"

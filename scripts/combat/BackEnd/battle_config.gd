@@ -50,6 +50,7 @@ static func build(encounter: Dictionary) -> Dictionary:
 			if enemy.templates.size() > 0:
 				cfg.template_line = enemy.templates[0].get("line", cfg.template_line)
 				cfg.blanks        = enemy.templates[0].get("blanks", cfg.blanks)
+			cfg["defeat_message"] = enemy.defeat_message
 			enemy.free()
 
 	return cfg
