@@ -3,13 +3,17 @@ extends Node3D
 @onready var camera: Camera3D = $Camera3D
 @onready var hint_label: Label = $CanvasLayer/UIRoot/BottomCenter/HintLabel
 @onready var completion_center: Control = $CanvasLayer/UIRoot/CompletionCenter
-@onready var begin_run_button: Button = $CanvasLayer/UIRoot/CompletionCenter/CompletionPanel/CompletionVBox/BeginRunButton
+@onready var begin_run_button: Button = (
+	$CanvasLayer/UIRoot/CompletionCenter/CompletionPanel/CompletionVBox/HBoxContainer/BeginRunButton
+)
 @onready var fade: ColorRect = $CanvasLayer/UIRoot/Fade
 @onready var crosshair: Control = $CanvasLayer/UIRoot/Crosshair
 @onready var doors_root : Node3D = $DoorsRoot
 @onready var map_overlay: Control = $CanvasLayer/UIRoot/MapOverlay
 @onready var map_view: MapView = $CanvasLayer/UIRoot/MapOverlay/Panel/MapView
-
+@onready var main_menu_button: Button = (
+	$CanvasLayer/UIRoot/CompletionCenter/CompletionPanel/CompletionVBox/HBoxContainer/MainMenuButton
+)
 @export var door_radius: float = .75
 
 const DOOR_SCENE := preload("res://Scenes/Rooms/Scene/DoorInteractable.tscn")
@@ -31,6 +35,9 @@ func _ready() -> void:
 	
 	if not begin_run_button.pressed.is_connected(_on_begin_run_pressed):	
 		begin_run_button.pressed.connect(_on_begin_run_pressed)
+		
+	if not main_menu_button.pressed.is_connected(_on_main_menu_pressed):	
+		main_menu_button.pressed.connect(_on_main_menu_pressed)
 	
 	completion_center.visible = false
 	map_overlay.visible = false
@@ -204,21 +211,34 @@ func _refresh_ui() -> void:
 	
 	var encounter_id: String = curr.get("encounter_id", "")
 	var boss_cleared := encounter_id != "" and Progress.is_encounter_cleared(encounter_id)
-	var tutorial_complete: bool = (
-		Run.run_mode == RunManager.RunMode.TUTORIAL
-		and nexts.is_empty()
+	var run_complete: bool = (
+		nexts.is_empty()
 		and curr.get("type", "") == "boss"
 		and boss_cleared
 	)
 	
-	completion_center.visible = tutorial_complete and not _is_transitioning
-	hint_label.visible = not tutorial_complete and not _is_transitioning
-	crosshair.visible = not tutorial_complete and not _is_transitioning
-	
-	if tutorial_complete:
+	if run_complete and Run.run_mode == RunManager.RunMode.TUTORIAL:
+		completion_center.visible = not _is_transitioning
+		hint_label.visible = false
+		crosshair.visible = false
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		return
+	
+	if run_complete and Run.run_mode == RunManager.RunMode.GENERATED and not _is_transitioning:
+		_is_transitioning = true
+		crosshair.visible = false
+		hint_label.visible = false
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		var tween = create_tween()
+		tween.tween_property(fade, "color", Color(0,0,0,1), 1.0)
+		await tween.finished
+		get_tree().change_scene_to_file(Scenes.RUN_COMPLETE)
+		return
 		
+	completion_center.visible = false
+	hint_label.visible = not _is_transitioning
+	crosshair.visible = not _is_transitioning
+	
 	var hint: String = curr.get("hint", "")
 	if hint != "":
 		hint_label.text = hint
@@ -240,7 +260,13 @@ func _on_begin_run_pressed():
 	EncounterSceneTransition.clear()
 	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	get_tree().reload_current_scene()
+	get_tree().change_scene_to_file(Scenes.ROOM)
+
+func _on_main_menu_pressed() -> void:
+	PlayerState.reset_to_defaults()
+	Progress.reset_progress()
+	EncounterSceneTransition.clear()
+	get_tree().change_scene_to_file(Scenes.MAIN_MENU)
 
 func _update_map_overlay() -> void:
 	map_view.set_map_data(Run.map, Run.current_id)

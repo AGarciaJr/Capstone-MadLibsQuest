@@ -22,6 +22,10 @@ var templates: Array = []
 var current_sentence_index: int = 0
 var _sprite_idle_animation: String = ""
 var _battle_log: Array[String] = []
+var _completed_sentences: Array[String] = []
+var _all_words_used: Array[String] = []
+var _defeat_message: String = ""
+var _total_damage_dealt: int = 0
 
 ## Filled from BattleConfigFactory / encounter each battle; mutated by encounter modifiers.
 var enemy_stats: Dictionary = {}
@@ -68,16 +72,13 @@ var _strike_round_pos_display: String = "noun"
 @onready var letter_limit_label: Label = $PlayerPanel/VBoxContainer/LetterLimit
 @onready var letter_bonus_number_label: Label = $PlayerPanel/VBoxContainer/LetterBonusNumber
 
-@onready var prompt_label: Label = $BottomPanel/PromptLabel
-@onready var line_preview: Label = $BottomPanel/LinePreview
-@onready var word_input: LineEdit = $BottomPanel/HBoxContainer/WordInput
-@onready var submit_button: Button = $BottomPanel/HBoxContainer/SubmitButton
-@onready var result_label: Label = $BottomPanel/ResultLabel
+@onready var prompt_label: Label = $BottomPanel/TextBoxBg/VBoxContainer/PromptLabel
+@onready var line_preview: Label = $BottomPanel/TextBoxBg/VBoxContainer/LinePreview
+@onready var word_input: LineEdit = $BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer/WordInput
+@onready var submit_button: Button = $BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer/SubmitButton
+@onready var result_label: Label = $BottomPanel/TextBoxBg/VBoxContainer/ResultLabel
 
-@onready var victory_panel: Control = $VictoryPanel
-@onready var victory_continue_button: Button = $VictoryPanel/ContinueButton
-
-@onready var battle_log_button: Button = $BottomPanel/HBoxContainer/BattleLogButton
+@onready var battle_log_button: Button = $BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer/BattleLogButton
 @onready var battle_log_panel: Control = $BattleLogPanel
 @onready var battle_log_content: Label = $BattleLogPanel/ScrollContainer/LogContent
 
@@ -88,7 +89,6 @@ func _ready() -> void:
 	rng.randomize()
 	submit_button.pressed.connect(_on_submit_pressed)
 	word_input.text_submitted.connect(_on_text_submitted)
-	victory_continue_button.pressed.connect(_on_continue_pressed)
 	battle_log_button.pressed.connect(func(): battle_log_panel.visible = true)
 	player_name.text = PlayerState.player_name
 	$BattleLogPanel/CloseButton.pressed.connect(func(): 
@@ -194,6 +194,7 @@ func _start_battle() -> void:
 	current_sentence_index = 0
 	template_line = str(cfg.get("template_line", template_line))
 	blanks = cfg.get("blanks", blanks)
+	_defeat_message = cfg.get("defeat_message", "You were defeated!")
 
 	if cfg.has("player_letters"):
 		PlayerState.set_player_letters(cfg["player_letters"])
@@ -230,6 +231,10 @@ func _start_battle() -> void:
 	_battle_log.clear()
 	battle_log_content.text = ""
 	battle_log_panel.visible = false
+	
+	_all_words_used.clear()
+	
+	_total_damage_dealt = 0
 
 	_sprite_idle_animation = str(cfg.get("sprite_animation_name", ""))
 	enemy_sprite.stop()
@@ -247,7 +252,6 @@ func _start_battle() -> void:
 	if not enemy_sprite.animation_finished.is_connected(_on_enemy_animation_finished):
 		enemy_sprite.animation_finished.connect(_on_enemy_animation_finished)
 
-	victory_panel.visible = false
 	submit_button.disabled = false
 	word_input.editable = true
 
@@ -294,6 +298,8 @@ func _update_prompt_ui() -> void:
 
 
 func _advance_sentence() -> void:
+	_completed_sentences.append(_render_preview_line())
+	
 	current_sentence_index += 1
 	if current_sentence_index >= templates.size():
 		# All sentences exhausted — loop back to the first
@@ -303,6 +309,7 @@ func _advance_sentence() -> void:
 	template_line = t.get("line", template_line)
 	blanks        = t.get("blanks", blanks)
 	blank_index   = 0
+	_all_words_used.append_array(collected_words)
 	collected_words.clear()
 
 	line_preview.text = template_line
@@ -334,9 +341,6 @@ func _on_text_submitted(new_text: String) -> void:
 
 
 func _submit_word(raw: String) -> void:
-	if victory_panel.visible:
-		return
-
 	var word := raw.strip_edges()
 	if word == "":
 		return
@@ -383,8 +387,10 @@ func _resolve_turn(word: String, freq_scaling: float) -> void:
 	var letter_mult := PlayerState.letter_bonus_multiplier_for_word(word)
 	var ctx_attack := _build_turn_context(freq_scaling, letter_mult, word)
 	var result: Dictionary = _turn_resolver.resolve_single_player_attack(ctx_attack)
-
+	
+	var hp_before_attack := enemy_hp
 	enemy_hp = int(result["enemy_hp"])
+	_total_damage_dealt += max(0, hp_before_attack - enemy_hp)
 	PlayerState.current_hp = int(result["player_hp"])
 	_update_hp_ui()
 
@@ -420,10 +426,7 @@ func _resolve_turn(word: String, freq_scaling: float) -> void:
 		return
 
 	if result2["player_defeated"]:
-		result_label.text = "You were defeated."
-		await get_tree().create_timer(0.75).timeout
-		if _death_screen:
-			_death_screen.show_death_screen()
+		await _handle_player_defeat()
 		return
 
 	result_label.text = "Accepted '%s'!" % word
@@ -437,7 +440,9 @@ func _resolve_multi_strike_turn_first_word(word: String, freq_scaling: float) ->
 	var ctx := _build_turn_context(freq_scaling, PlayerState.letter_bonus_multiplier_for_word(word), word)
 	var result: Dictionary = _turn_resolver.resolve_single_player_attack(ctx)
 
+	var hp_before_attack := enemy_hp
 	enemy_hp = int(result["enemy_hp"])
+	_total_damage_dealt += max(0, hp_before_attack - enemy_hp)
 	PlayerState.current_hp = int(result["player_hp"])
 	_update_hp_ui()
 
@@ -474,7 +479,9 @@ func _submit_bonus_strike_word(word: String) -> void:
 	var ctx := _build_turn_context(S, PlayerState.letter_bonus_multiplier_for_word(word), word)
 	var result: Dictionary = _turn_resolver.resolve_single_player_attack(ctx)
 
+	var hp_before_attack := enemy_hp
 	enemy_hp = int(result["enemy_hp"])
+	_total_damage_dealt += max(0, hp_before_attack - enemy_hp)
 	PlayerState.current_hp = int(result["player_hp"])
 	_update_hp_ui()
 
@@ -515,10 +522,7 @@ func _finish_player_round_after_strikes() -> void:
 		_finish_battle()
 		return
 	if result["player_defeated"]:
-		result_label.text = "You were defeated."
-		await get_tree().create_timer(0.75).timeout
-		if _death_screen:
-			_death_screen.show_death_screen()
+		await _handle_player_defeat()
 		return
 
 	result_label.text = "Round complete!"
@@ -590,52 +594,55 @@ func _apply_invalid_turn(message: String) -> void:
 	_refocus_input()
 
 	if result["player_defeated"]:
-		result_label.text = "You were defeated. Restarting..."
-		await get_tree().create_timer(0.75).timeout
-		if _death_screen:
-			_death_screen.show_death_screen()
+		await _handle_player_defeat()
 		return
 
 
 func _finish_battle() -> void:
 	word_input.editable = false
 	submit_button.disabled = true
-
+	
+	# save current sentence if some blanks were filled
+	if collected_words.size() > 0:
+		_completed_sentences.append(_render_preview_line())
+	
 	var enc: Dictionary = EncounterSceneTransition.current_encounter
 	var encounter_id: String = str(enc.get("encounter_id", ""))
 	if encounter_id != "":
 		Progress.clear_encounter(encounter_id)
+	
+	# record player stats and score
+	_all_words_used.append_array(collected_words)
+	var longest_word := ""
+	for w in _all_words_used:
+		if w.length() > longest_word.length():
+			longest_word = w
+	
+	var battle_score: int = (
+		_total_damage_dealt + (_all_words_used.size() * 10) 
+		+ (longest_word.length() * 15) + (PlayerState.current_hp * 2)
+		+ (_completed_sentences.size() * 5)
+	)
+	
+	PlayerState.current_run_score += battle_score
+	
+	var recap := {
+		"enemy_name": enemy_name.text,
+		"completed_sentences": _completed_sentences.duplicate(),
+		"player_hp_remaining": PlayerState.current_hp,
+		"player_hp_max": PlayerState.max_hp,
+		"longest_word": longest_word,
+		"total_words": _all_words_used.size(),
+		"battle_score": battle_score,
+	}
 
-	pending_item_choices = ItemSystem.get_random_choices(3)
-	result_label.text = "The Bard weaves your words into legend!"
-	victory_panel.visible = true
-	victory_continue_button.visible = true
-
-
-func _on_continue_pressed() -> void:
-	# If we have rewards queued, go to the standalone post-battle item scene.
-	if use_standalone_postbattle_rewards and pending_item_choices.size() > 0:
-		EncounterSceneTransition.transition_to_postbattle(pending_item_choices)
-		return
-	_return_to_map()
-
-
-func _return_to_map() -> void:
-	var enc: Dictionary = EncounterSceneTransition.current_encounter
-	var encounter_id: String = enc.get("encounter_id", "")
-	if encounter_id != "":
-		Progress.clear_encounter(encounter_id)
-
-	word_input.editable = false
-	submit_button.disabled = true
-	victory_continue_button.disabled = true
-
+	var items = ItemSystem.get_random_choices(3)
+	
 	var tween := create_tween()
-	tween.tween_property(fade, "color", Color(0, 0, 0, 1), 0.35)
+	tween.tween_property(fade, "color", Color(0,0,0,1), 0.35)
 	await tween.finished
-
-	EncounterSceneTransition.return_to_scene()
-
+	
+	EncounterSceneTransition.transition_to_recap(recap, items)
 
 func _play_enemy_attack() -> void:
 	var frames := enemy_sprite.sprite_frames
@@ -689,3 +696,13 @@ func _get_article(word: String) -> String:
 		return "a"
 	var first := word.to_lower()[0]
 	return "an" if first in ["a", "e", "i", "o", "u"] else "a"
+	
+func _handle_player_defeat() -> void:
+	word_input.editable = false
+	submit_button.disabled = true
+	$DefeatPanel/DefeatMessage.text = _defeat_message
+	$DefeatPanel.visible = true
+	await get_tree().create_timer(2.5).timeout
+	$DefeatPanel.visible = false
+	if _death_screen:
+		_death_screen.show_death_screen()

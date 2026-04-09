@@ -4,7 +4,9 @@ extends Node
 const BATTLE_SCENE := preload("res://Scenes/Battle/Battle.tscn")
 const PREBATTLE_SCENE := preload("res://Scenes/PreBattle/PreBattleModifier.tscn")
 const POSTBATTLE_SCENE := preload("res://Scenes/PostBattle/PlayerItemChoice.tscn")
+const RECAP_SCENE := preload("res://scenes/PostBattle/BattleRecap.tscn")
 
+var pending_recap: Dictionary = {}
 var current_encounter: Dictionary = {}
 ## Set by PreBattle when player continues; battle reads this and applies the modifier.
 var current_encounter_modifier_id: String = ""
@@ -60,3 +62,14 @@ func clear() -> void:
 	pending_reward_items = []
 	_return_scene_path = ""
 	_return_state = {}
+	pending_recap = {}
+
+func transition_to_recap(recap: Dictionary, items: Array) -> void:
+	pending_recap = recap
+	pending_reward_items = items
+	get_tree().change_scene_to_packed(RECAP_SCENE)
+
+func consume_recap() -> Dictionary:
+	var out = pending_recap
+	pending_recap = {}
+	return out

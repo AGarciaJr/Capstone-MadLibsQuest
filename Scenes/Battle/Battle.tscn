@@ -4,8 +4,8 @@
 [ext_resource type="FontFile" uid="uid://cidaxvdq4u675" path="res://assets/Fonts/Junicode.ttf" id="3_2msnx"]
 [ext_resource type="FontFile" uid="uid://c1n3r6n1s0e1w" path="res://assets/Fonts/BLKCHCRY.TTF" id="3_47d8v"]
 [ext_resource type="FontFile" uid="uid://xrdaqecbc33" path="res://assets/Fonts/MorrisRomanAlternate-Black.ttf" id="4_g8wve"]
-[ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://Scenes/CanvasLayer.tscn" id="5_vn0yc"]
-[ext_resource type="PackedScene" uid="uid://wdlitqgfnt17" path="res://Scenes/YouDiedScreen.tscn" id="7_8ftua"]
+[ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://scenes/CanvasLayer.tscn" id="5_vn0yc"]
+[ext_resource type="PackedScene" uid="uid://wdlitqgfnt17" path="res://scenes/YouDiedScreen.tscn" id="7_8ftua"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_textbox"]
 bg_color = Color(0.07, 0.05, 0.03, 0.94)
@@ -141,50 +141,17 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_textbox")
 
-[node name="AttackButton" type="Button" parent="BottomPanel" unique_id=1914066688]
-visible = false
-layout_mode = 0
-offset_left = 29.0
-offset_top = 67.0
-offset_right = 142.0
-offset_bottom = 108.0
-text = "Attack
-"
+[node name="VBoxContainer" type="VBoxContainer" parent="BottomPanel/TextBoxBg" unique_id=410579466]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 15
 
-[node name="BuffButton" type="Button" parent="BottomPanel" unique_id=449357629]
-visible = false
-layout_mode = 0
-offset_left = 165.0
-offset_top = 63.0
-offset_right = 314.0
-offset_bottom = 105.0
-text = "Buff"
-
-[node name="Button" type="Button" parent="BottomPanel" unique_id=354180369]
-visible = false
-layout_mode = 0
-offset_left = 393.0
-offset_top = 63.0
-offset_right = 537.0
-offset_bottom = 107.0
-text = "Chain Attack
-"
-
-[node name="CancelButton" type="Button" parent="BottomPanel" unique_id=1611767109]
-visible = false
-layout_mode = 0
-offset_left = 497.0
-offset_top = 130.0
-offset_right = 617.0
-offset_bottom = 168.0
-text = "Cancel"
-
-[node name="ResultLabel" type="Label" parent="BottomPanel" unique_id=1234699025]
-layout_mode = 0
-offset_left = 18.099998
-offset_top = 18.549988
-offset_right = 1140.1
-offset_bottom = 49.549988
+[node name="ResultLabel" type="Label" parent="BottomPanel/TextBoxBg/VBoxContainer" unique_id=1234699025]
+layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
 theme_override_font_sizes/font_size = 22
 text = "Type a word and press Enter!"
@@ -192,12 +159,8 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="LinePreview" type="Label" parent="BottomPanel" unique_id=1785196963]
-layout_mode = 0
-offset_left = 15.099998
-offset_top = 73.54999
-offset_right = 1137.1
-offset_bottom = 141.54999
+[node name="LinePreview" type="Label" parent="BottomPanel/TextBoxBg/VBoxContainer" unique_id=1785196963]
+layout_mode = 2
 theme_override_colors/font_color = Color(0.82, 0.78, 0.58, 1)
 theme_override_fonts/font = ExtResource("4_g8wve")
 theme_override_font_sizes/font_size = 47
@@ -205,27 +168,26 @@ text = "The hero faced a fearsome ___!"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="PromptLabel" type="Label" parent="BottomPanel" unique_id=1623631982]
-layout_mode = 0
-offset_left = 17.099998
-offset_top = 152.54999
-offset_right = 1139.1
-offset_bottom = 207.54999
+[node name="PromptLabel" type="Label" parent="BottomPanel/TextBoxBg/VBoxContainer" unique_id=1623631982]
+layout_mode = 2
 theme_override_fonts/font = ExtResource("3_2msnx")
 theme_override_font_sizes/font_size = 29
 text = "The Bard needs a NOUN!"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="BottomPanel" unique_id=1426726009]
-layout_mode = 0
-offset_left = 15.0
-offset_top = 197.0
-offset_right = 1137.0
-offset_bottom = 244.0
+[node name="MarginContainer" type="MarginContainer" parent="BottomPanel/TextBoxBg/VBoxContainer" unique_id=2004630989]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 0
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="BottomPanel/TextBoxBg/VBoxContainer/MarginContainer" unique_id=1426726009]
+layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="WordInput" type="LineEdit" parent="BottomPanel/HBoxContainer" unique_id=1693271094]
+[node name="WordInput" type="LineEdit" parent="BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1693271094]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 21
@@ -233,14 +195,14 @@ placeholder_text = "Enter a word..."
 alignment = 1
 max_length = 30
 
-[node name="SubmitButton" type="Button" parent="BottomPanel/HBoxContainer" unique_id=2135709036]
+[node name="SubmitButton" type="Button" parent="BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer" unique_id=2135709036]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_47d8v")
 theme_override_font_sizes/font_size = 20
 text = "Submit"
 
-[node name="BattleLogButton" type="Button" parent="BottomPanel/HBoxContainer" unique_id=927040926]
+[node name="BattleLogButton" type="Button" parent="BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer" unique_id=927040926]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 21
@@ -248,11 +210,18 @@ text = "Battle Log"
 
 [node name="DefeatPanel" type="Control" parent="." unique_id=355079481]
 visible = false
-anchors_preset = 0
-offset_left = 120.0
-offset_top = 80.0
-offset_right = 520.0
-offset_bottom = 260.0
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -90.0
+offset_right = 200.0
+offset_bottom = 90.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="PanelBg" type="ColorRect" parent="DefeatPanel" unique_id=831040101]
 layout_mode = 0
@@ -279,14 +248,6 @@ offset_bottom = 130.0
 theme_override_font_sizes/font_size = 13
 horizontal_alignment = 1
 autowrap_mode = 3
-
-[node name="RetryButton" type="Button" parent="DefeatPanel" unique_id=392767969]
-layout_mode = 0
-offset_left = 150.0
-offset_top = 140.0
-offset_right = 250.0
-offset_bottom = 168.0
-text = "Try Again"
 
 [node name="BattleLogPanel" type="Control" parent="." unique_id=881644895]
 visible = false
@@ -347,41 +308,3 @@ visible = false
 
 [node name="YouDiedScreen" parent="." unique_id=156634254 instance=ExtResource("7_8ftua")]
 visible = false
-
-[node name="VictoryPanel" type="Control" parent="." unique_id=911848340]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -80.0
-offset_top = -35.0
-offset_right = 80.0
-offset_bottom = 35.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="PanelBg" type="ColorRect" parent="VictoryPanel" unique_id=1500870292]
-layout_mode = 0
-offset_right = 160.0
-offset_bottom = 70.0
-color = Color(0.1, 0.2, 0.1, 1)
-
-[node name="Label" type="Label" parent="VictoryPanel" unique_id=2073411731]
-layout_mode = 0
-offset_left = 4.0
-offset_top = 8.0
-offset_right = 156.0
-offset_bottom = 28.0
-text = "VICTORY!"
-horizontal_alignment = 1
-
-[node name="ContinueButton" type="Button" parent="VictoryPanel" unique_id=552772643]
-layout_mode = 0
-offset_left = 40.0
-offset_top = 36.0
-offset_right = 120.0
-offset_bottom = 60.0
-text = "Continue"
