@@ -260,7 +260,7 @@ func _on_begin_run_pressed():
 	EncounterSceneTransition.clear()
 	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	get_tree().reload_current_scene()
+	get_tree().change_scene_to_file(Scenes.ROOM)
 
 func _on_main_menu_pressed() -> void:
 	PlayerState.reset_to_defaults()

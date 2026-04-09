@@ -72,13 +72,13 @@ var _strike_round_pos_display: String = "noun"
 @onready var letter_limit_label: Label = $PlayerPanel/VBoxContainer/LetterLimit
 @onready var letter_bonus_number_label: Label = $PlayerPanel/VBoxContainer/LetterBonusNumber
 
-@onready var prompt_label: Label = $BottomPanel/PromptLabel
-@onready var line_preview: Label = $BottomPanel/LinePreview
-@onready var word_input: LineEdit = $BottomPanel/HBoxContainer/WordInput
-@onready var submit_button: Button = $BottomPanel/HBoxContainer/SubmitButton
-@onready var result_label: Label = $BottomPanel/ResultLabel
+@onready var prompt_label: Label = $BottomPanel/TextBoxBg/VBoxContainer/PromptLabel
+@onready var line_preview: Label = $BottomPanel/TextBoxBg/VBoxContainer/LinePreview
+@onready var word_input: LineEdit = $BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer/WordInput
+@onready var submit_button: Button = $BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer/SubmitButton
+@onready var result_label: Label = $BottomPanel/TextBoxBg/VBoxContainer/ResultLabel
 
-@onready var battle_log_button: Button = $BottomPanel/HBoxContainer/BattleLogButton
+@onready var battle_log_button: Button = $BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer/BattleLogButton
 @onready var battle_log_panel: Control = $BattleLogPanel
 @onready var battle_log_content: Label = $BattleLogPanel/ScrollContainer/LogContent
 
