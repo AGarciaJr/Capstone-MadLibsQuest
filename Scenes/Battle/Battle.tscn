@@ -4,8 +4,8 @@
 [ext_resource type="FontFile" uid="uid://cidaxvdq4u675" path="res://assets/Fonts/Junicode.ttf" id="3_2msnx"]
 [ext_resource type="FontFile" uid="uid://c1n3r6n1s0e1w" path="res://assets/Fonts/BLKCHCRY.TTF" id="3_47d8v"]
 [ext_resource type="FontFile" uid="uid://xrdaqecbc33" path="res://assets/Fonts/MorrisRomanAlternate-Black.ttf" id="4_g8wve"]
-[ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://scenes/CanvasLayer.tscn" id="5_vn0yc"]
-[ext_resource type="PackedScene" uid="uid://wdlitqgfnt17" path="res://scenes/YouDiedScreen.tscn" id="7_8ftua"]
+[ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://Scenes/CanvasLayer.tscn" id="5_vn0yc"]
+[ext_resource type="PackedScene" uid="uid://wdlitqgfnt17" path="res://Scenes/YouDiedScreen.tscn" id="7_8ftua"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_textbox"]
 bg_color = Color(0.07, 0.05, 0.03, 0.94)
@@ -110,11 +110,6 @@ show_percentage = false
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Player letters: A, E, S, T"
-
-[node name="LetterLimit" type="Label" parent="PlayerPanel/VBoxContainer" unique_id=1811216814]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Letter limit: 4"
 
 [node name="LetterBonusNumber" type="Label" parent="PlayerPanel/VBoxContainer" unique_id=2100456123]
 layout_mode = 2

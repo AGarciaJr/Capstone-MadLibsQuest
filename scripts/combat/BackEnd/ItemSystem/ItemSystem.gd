@@ -45,7 +45,7 @@ var items: Array[Dictionary] = [
 		}
 	},
 	{
-		"id": "heal_player",
+		"id": "heal_player_low",
 		"reward_pool": REWARD_POOL_BASE_STATS,
 		"category": "Base Stats",
 		"name": "Apple",
@@ -55,6 +55,29 @@ var items: Array[Dictionary] = [
 			"amount": 20
 		}
 	},
+	{
+		"id": "heal_player_med",
+		"reward_pool": REWARD_POOL_BASE_STATS,
+		"category": "Base Stats",
+		"name": "Bandage",
+		"description": "Restores HP after battle.",
+		"effect_type": "heal",
+		"params": {
+			"amount": 40
+		}
+	},
+	{
+		"id": "heal_player_high",
+		"reward_pool": REWARD_POOL_BASE_STATS,
+		"category": "Base Stats",
+		"name": "Scroll of healing",
+		"description": "Restores HP after battle.",
+		"effect_type": "heal",
+		"params": {
+			"amount": 100
+		}
+	},
+	
 ]
 
 
