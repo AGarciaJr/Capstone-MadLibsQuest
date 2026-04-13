@@ -723,6 +723,7 @@ func _get_article(word: String) -> String:
 func _handle_player_defeat() -> void:
 	word_input.editable = false
 	submit_button.disabled = true
+	SaveManager.delete_save()
 	$DefeatPanel/DefeatMessage.text = _defeat_message
 	$DefeatPanel.visible = true
 	await get_tree().create_timer(2.5).timeout

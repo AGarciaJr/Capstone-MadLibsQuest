@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cwh0iyo32lve3" path="res://scripts/room/Room3D.gd" id="1_528hv"]
 [ext_resource type="Script" uid="uid://by0l5vrov16w2" path="res://scripts/room/Map.gd" id="3_odja0"]
+[ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://scenes/CanvasLayer.tscn" id="3_rubiw"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_swdye"]
 
@@ -198,3 +199,5 @@ color = Color(0, 0, 0, 1)
 [node name="DoorsRoot" type="Node3D" parent="." unique_id=1457464861]
 
 [node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1343598014]
+
+[node name="PauseScreen" parent="." unique_id=2080269728 instance=ExtResource("3_rubiw")]
