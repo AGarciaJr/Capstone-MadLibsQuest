@@ -262,7 +262,10 @@ func _start_battle() -> void:
 	_update_hp_ui()
 	_update_prompt_ui()
 
-	result_label.text = "Type a word and press Enter!"
+	if Run.run_mode == RunManager.RunMode.TUTORIAL:
+		result_label.text = "Use words containing your letters to deal damage!"
+	else:
+		result_label.text = "Type a word and press Enter!"
 	word_input.text = ""
 	_refocus_input()
 	_update_letter_bonus_number_label()

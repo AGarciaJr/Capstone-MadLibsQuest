@@ -11,7 +11,7 @@ func build_tutorial_run() -> Dictionary:
 		"seed": 0,
 		"start_id": 0,
 		"nodes": {
-			0: {"type": "start", "next": [1], "hint": "Look at a door and click to continue."},
+			0: {"type": "start", "next": [1], "hint": "Look at a door and click to enter. Press M to open your map!"},
 			1: {"type": "fight", "next": [2], "encounter_id": Goblin.ENCOUNTER_ID, "hint": "You made it through. Click a door to continue."},
 			2: {"type": "fight", "next": [3], "encounter_id": Skeleton.ENCOUNTER_ID, "hint": "Almost there! Click the door to fight the boss."},
 			3: {"type": "boss",  "next": [],  "encounter_id": Mushroom.ENCOUNTER_ID},
