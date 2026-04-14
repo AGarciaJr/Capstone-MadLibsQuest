@@ -8,6 +8,7 @@ extends Control
 @onready var main_menu_button: Button = $CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer/MainMenuButton
 
 func _ready() -> void:
+	SaveManager.delete_save()
 	title_label.text = "Run Complete!"
 	player_label.text = "Well done, %s!" % PlayerState.player_name
 	score_label.text = "Final Score: %d" % PlayerState.current_run_score

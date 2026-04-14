@@ -49,6 +49,7 @@ func return_to_scene() -> void:
 	if _return_scene_path.is_empty():
 		push_error("EncounterSceneTransition: return scene path is empty.")
 		return
+	SaveManager.save()
 	get_tree().change_scene_to_file(_return_scene_path)
 
 func consume_return_state() -> Dictionary:

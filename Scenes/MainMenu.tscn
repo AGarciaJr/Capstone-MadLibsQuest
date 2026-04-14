@@ -45,7 +45,7 @@ offset_bottom = 36.0
 grow_horizontal = 2
 grow_vertical = 0
 pivot_offset = Vector2(0, -20)
-theme_override_constants/separation = 6
+theme_override_constants/separation = 12
 alignment = 1
 
 [node name="Start" type="Button" parent="VBoxContainer" unique_id=1221666355]
@@ -54,6 +54,13 @@ theme_override_fonts/font = ExtResource("3_ghw46")
 theme_override_font_sizes/font_size = 42
 theme_override_styles/normal = SubResource("StyleBoxFlat_cqjrg")
 text = "Start"
+
+[node name="Continue" type="Button" parent="VBoxContainer" unique_id=1052734435]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_ghw46")
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = SubResource("StyleBoxFlat_e2xy7")
+text = "Continue"
 
 [node name="Credit" type="Button" parent="VBoxContainer" unique_id=670672001]
 layout_mode = 2
@@ -72,7 +79,7 @@ grow_horizontal = 2
 theme_override_colors/font_color = Color(0.9607843, 0.84705883, 0.47843137, 1)
 theme_override_fonts/font = ExtResource("4_df05h")
 theme_override_font_sizes/font_size = 85
-text = "MadLibs Quest"
+text = "WordWoven"
 horizontal_alignment = 1
 
 [node name="ModeModal" type="PanelContainer" parent="." unique_id=1238681689]
@@ -129,6 +136,7 @@ stream = ExtResource("5_df05h")
 autoplay = true
 
 [connection signal="pressed" from="VBoxContainer/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="VBoxContainer/Continue" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="VBoxContainer/Credit" to="." method="_on_credit_pressed"]
 [connection signal="pressed" from="ModeModal/CenterContainer/VBoxContainer/HBoxContainer/TutorialButton" to="." method="_on_tutorial_pressed"]
 [connection signal="pressed" from="ModeModal/CenterContainer/VBoxContainer/HBoxContainer/NewRunButton" to="." method="_on_new_run_pressed"]

@@ -303,3 +303,7 @@ visible = false
 
 [node name="YouDiedScreen" parent="." unique_id=156634254 instance=ExtResource("7_8ftua")]
 visible = false
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=624657916]
+stream = ExtResource("7_dcr6b")
+autoplay = true

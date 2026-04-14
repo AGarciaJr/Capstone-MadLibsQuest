@@ -262,7 +262,10 @@ func _start_battle() -> void:
 	_update_hp_ui()
 	_update_prompt_ui()
 
-	result_label.text = "Type a word and press Enter!"
+	if Run.run_mode == RunManager.RunMode.TUTORIAL:
+		result_label.text = "Use words containing your letters to deal damage!"
+	else:
+		result_label.text = "Type a word and press Enter!"
 	word_input.text = ""
 	_refocus_input()
 	_update_letter_bonus_number_label()
@@ -276,12 +279,32 @@ func _update_hp_ui() -> void:
 	player_hp_label.text = "HP: %d/%d" % [PlayerState.current_hp, PlayerState.max_hp]
 
 	enemy_hp_bar.max_value = enemy_max_hp
-	enemy_hp_bar.value = enemy_hp
-
 	player_hp_bar.max_value = PlayerState.max_hp
-	player_hp_bar.value = PlayerState.current_hp
 
+	# Smooth sliding animation
+	var tween := create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(enemy_hp_bar, "value", enemy_hp, 0.4).set_ease(Tween.EASE_OUT)
+	tween.tween_property(player_hp_bar, "value", PlayerState.current_hp, 0.4).set_ease(Tween.EASE_OUT)
 
+	# Update colors
+	_update_hp_bar_color(enemy_hp_bar, enemy_hp, enemy_max_hp)
+	_update_hp_bar_color(player_hp_bar, PlayerState.current_hp, PlayerState.max_hp)
+
+func _update_hp_bar_color(bar: ProgressBar, current: int, maximum: int) -> void:
+	var percent := float(current) / float(maximum)
+	var color: Color
+	if percent > 0.5:
+		color = Color(0.2, 0.8, 0.2)  # green
+	elif percent > 0.1:
+		color = Color(0.9, 0.8, 0.1)  # yellow
+	else:
+		color = Color(0.9, 0.1, 0.1)  # red
+	
+	var style := StyleBoxFlat.new()
+	style.bg_color = color
+	bar.add_theme_stylebox_override("fill", style)
+	
 func _update_prompt_ui() -> void:
 	if blank_index >= blanks.size():
 		_advance_sentence()
@@ -700,6 +723,7 @@ func _get_article(word: String) -> String:
 func _handle_player_defeat() -> void:
 	word_input.editable = false
 	submit_button.disabled = true
+	SaveManager.delete_save()
 	$DefeatPanel/DefeatMessage.text = _defeat_message
 	$DefeatPanel.visible = true
 	await get_tree().create_timer(2.5).timeout
