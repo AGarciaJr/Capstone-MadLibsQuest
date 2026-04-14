@@ -64,6 +64,7 @@ var _strike_round_pos_display: String = "noun"
 @onready var enemy_hp_label: Label = $EnemyPanel/VBoxContainer/EnemyHP
 @onready var enemy_hp_bar: ProgressBar = $EnemyPanel/VBoxContainer/EnemyHPBar
 @onready var enemy_sprite: AnimatedSprite2D = $CenterContainer/EnemySprite
+@onready var damage_effects: AnimatedSprite2D = $CenterContainer/DamageEffects
 
 @onready var player_name: Label = $PlayerPanel/VBoxContainer/PlayerName
 @onready var player_hp_label: Label = $PlayerPanel/VBoxContainer/PlayerHP
@@ -252,6 +253,9 @@ func _start_battle() -> void:
 	if not enemy_sprite.animation_finished.is_connected(_on_enemy_animation_finished):
 		enemy_sprite.animation_finished.connect(_on_enemy_animation_finished)
 
+	if not damage_effects.animation_finished.is_connected(_on_damage_effects_animation_finished):
+		damage_effects.animation_finished.connect(_on_damage_effects_animation_finished)
+
 	submit_button.disabled = false
 	word_input.editable = true
 
@@ -261,6 +265,9 @@ func _start_battle() -> void:
 
 	_update_hp_ui()
 	_update_prompt_ui()
+
+	damage_effects.visible = false
+	damage_effects.stop()
 
 	if Run.run_mode == RunManager.RunMode.TUTORIAL:
 		result_label.text = "Use words containing your letters to deal damage!"
@@ -413,9 +420,11 @@ func _resolve_turn(word: String, freq_scaling: float) -> void:
 	
 	var hp_before_attack := enemy_hp
 	enemy_hp = int(result["enemy_hp"])
-	_total_damage_dealt += max(0, hp_before_attack - enemy_hp)
+	var player_damage_dealt: int = maxi(0, hp_before_attack - enemy_hp)
+	_total_damage_dealt += player_damage_dealt
 	PlayerState.current_hp = int(result["player_hp"])
 	_update_hp_ui()
+	_play_enemy_hit_smoke(player_damage_dealt)
 
 	await _present_damage_messages(result["damage_messages"])
 
@@ -465,9 +474,11 @@ func _resolve_multi_strike_turn_first_word(word: String, freq_scaling: float) ->
 
 	var hp_before_attack := enemy_hp
 	enemy_hp = int(result["enemy_hp"])
-	_total_damage_dealt += max(0, hp_before_attack - enemy_hp)
+	var player_damage_dealt: int = maxi(0, hp_before_attack - enemy_hp)
+	_total_damage_dealt += player_damage_dealt
 	PlayerState.current_hp = int(result["player_hp"])
 	_update_hp_ui()
+	_play_enemy_hit_smoke(player_damage_dealt)
 
 	await _present_damage_messages(result["damage_messages"])
 
@@ -504,9 +515,11 @@ func _submit_bonus_strike_word(word: String) -> void:
 
 	var hp_before_attack := enemy_hp
 	enemy_hp = int(result["enemy_hp"])
-	_total_damage_dealt += max(0, hp_before_attack - enemy_hp)
+	var player_damage_dealt: int = maxi(0, hp_before_attack - enemy_hp)
+	_total_damage_dealt += player_damage_dealt
 	PlayerState.current_hp = int(result["player_hp"])
 	_update_hp_ui()
+	_play_enemy_hit_smoke(player_damage_dealt)
 
 	await _present_damage_messages(result["damage_messages"])
 
@@ -666,6 +679,28 @@ func _finish_battle() -> void:
 	await tween.finished
 	
 	EncounterSceneTransition.transition_to_recap(recap, items)
+
+func _play_enemy_hit_smoke(damage: int) -> void:
+	if damage <= 0:
+		return
+	var anim_name: String
+	if damage > 15:
+		anim_name = "Smoke 2"
+	elif damage > 5:
+		anim_name = "Smoke 1"
+	else:
+		anim_name = "Smoke 3"
+	var frames := damage_effects.sprite_frames
+	if frames == null or not frames.has_animation(anim_name):
+		return
+	damage_effects.visible = true
+	damage_effects.play(anim_name)
+
+
+func _on_damage_effects_animation_finished() -> void:
+	damage_effects.visible = false
+	damage_effects.stop()
+
 
 func _play_enemy_attack() -> void:
 	var frames := enemy_sprite.sprite_frames
