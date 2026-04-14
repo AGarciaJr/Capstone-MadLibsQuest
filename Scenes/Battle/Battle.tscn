@@ -123,11 +123,6 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Player letters: A, E, S, T"
 
-[node name="LetterLimit" type="Label" parent="PlayerPanel/VBoxContainer" unique_id=1811216814]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Letter limit: 4"
-
 [node name="LetterBonusNumber" type="Label" parent="PlayerPanel/VBoxContainer" unique_id=2100456123]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
