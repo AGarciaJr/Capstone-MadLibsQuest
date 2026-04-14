@@ -58,6 +58,12 @@ var _strike_round_pos_display: String = "noun"
 @export var test_enemy_damage_per_strike: int = 5
 ## How long the full Scrabble breakdown stays on ResultLabel before the next step (seconds).
 @export var scrabble_result_hold_seconds: float = 2.5
+## Per damage tier: index 0 = light (≤5), 1 = medium (6–15), 2 = heavy (>15), same breakpoints as smoke VFX.
+## If a tier slot is empty, falls back to the stream on the PlayerHitSound node.
+@export var extra_player_hit_sounds: Array[AudioStream] = []
+## Optional extra enemy hit clips (same pattern as player).
+@export var extra_enemy_hit_sounds: Array[AudioStream] = []
+
 @onready var fade: ColorRect = $Fade
 
 @onready var enemy_name: Label = $EnemyPanel/VBoxContainer/EnemyName
@@ -83,6 +89,11 @@ var _strike_round_pos_display: String = "noun"
 @onready var battle_log_panel: Control = $BattleLogPanel
 @onready var battle_log_content: Label = $BattleLogPanel/ScrollContainer/LogContent
 
+@onready var player_hit_sound: AudioStreamPlayer = $PlayerPanel/PlayerHitSound
+@onready var enemy_hit_sound: AudioStreamPlayer = $EnemyPanel/EnemyHitSound
+
+var _enemy_hit_sound_pool: Array[AudioStream] = []
+
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -99,6 +110,7 @@ func _ready() -> void:
 	if not PlayerState.player_letters_changed.is_connected(_update_letters_label):
 		PlayerState.player_letters_changed.connect(_update_letters_label)
 	_start_battle()
+	_rebuild_hit_sound_pools()
 	var tween := create_tween()
 	tween.tween_property(fade, "color", Color(0, 0, 0, 0), 0.35)
 	
@@ -695,6 +707,44 @@ func _play_enemy_hit_smoke(damage: int) -> void:
 		return
 	damage_effects.visible = true
 	damage_effects.play(anim_name)
+	_play_player_hit_sfx_for_damage(damage)
+
+
+func _player_hit_tier_index(damage: int) -> int:
+	if damage > 15:
+		return 2
+	if damage > 5:
+		return 1
+	return 0
+
+
+func _rebuild_hit_sound_pools() -> void:
+	_enemy_hit_sound_pool.clear()
+	if enemy_hit_sound.stream != null:
+		_enemy_hit_sound_pool.append(enemy_hit_sound.stream)
+	for s in extra_enemy_hit_sounds:
+		if s != null:
+			_enemy_hit_sound_pool.append(s)
+
+
+func _play_player_hit_sfx_for_damage(damage: int) -> void:
+	var tier: int = _player_hit_tier_index(damage)
+	var stream: AudioStream = null
+	if tier < extra_player_hit_sounds.size():
+		stream = extra_player_hit_sounds[tier]
+	if stream == null:
+		stream = player_hit_sound.stream
+	if stream == null:
+		return
+	player_hit_sound.stream = stream
+	player_hit_sound.play()
+
+
+func _play_enemy_hit_sfx() -> void:
+	if _enemy_hit_sound_pool.is_empty():
+		return
+	enemy_hit_sound.stream = _enemy_hit_sound_pool[rng.randi_range(0, _enemy_hit_sound_pool.size() - 1)]
+	enemy_hit_sound.play()
 
 
 func _on_damage_effects_animation_finished() -> void:
@@ -703,6 +753,7 @@ func _on_damage_effects_animation_finished() -> void:
 
 
 func _play_enemy_attack() -> void:
+	_play_enemy_hit_sfx()
 	var frames := enemy_sprite.sprite_frames
 	if frames != null and frames.has_animation("Attack"):
 		enemy_sprite.play("Attack")
