@@ -195,7 +195,7 @@ func _on_word_submitted(word: String) -> void:
 	current_blank_index += 1
 	
 	# Brief pause to show feedback, then move to next
-	await get_tree().create_timer(0.8).timeout
+	await get_tree().create_timer(1.2).timeout
 	
 	# Clear input and move to next
 	word_input.text = ""

@@ -103,6 +103,9 @@ func _get_pooled_random_choices_3() -> Array[Dictionary]:
 				letter_acquisition_pool.append(it)
 			_:
 				pass
+	
+	if PlayerState.current_hp >= PlayerState.max_hp:
+		base_pool = base_pool.filter(func(item): return item.get("effect_type", "") != "heal")
 
 	for i in range(ALPHABET.length()):
 		var letter: String = ALPHABET.substr(i, 1)
