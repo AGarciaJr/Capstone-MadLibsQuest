@@ -128,7 +128,6 @@ func _get_pooled_random_choices_3() -> Array[Dictionary]:
 		letter_power_pool[randi() % letter_power_pool.size()].duplicate(true),
 		letter_acquisition_pool[randi() % letter_acquisition_pool.size()].duplicate(true),
 	]
-	out.shuffle()
 	return out
 
 
