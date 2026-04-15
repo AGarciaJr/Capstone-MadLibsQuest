@@ -59,6 +59,7 @@ horizontal_alignment = 1
 [node name="InputContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=29147168]
 visible = false
 layout_mode = 2
+theme_override_constants/separation = 10
 alignment = 1
 
 [node name="PromptLabel" type="Label" parent="VBoxContainer/InputContainer" unique_id=1240755618]

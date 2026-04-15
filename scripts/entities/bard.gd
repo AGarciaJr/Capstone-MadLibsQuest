@@ -14,8 +14,8 @@ var dialogue_templates := {
 		"title": "A Hero's Arrival",
 		"template": "A {0} hero arrived at the Bard's {1}, gripping their {2} tightly. 'I will restore the world's lost words!' they announced with {3} determination. The Bard studied them with {4} eyes and declared: 'You are exactly the {5} champion this story needs!'",
 		"blanks": [
-			{"type": "adjective", "hint": "What kind of hero are you? Bold? Nervous? Surprisingly well-rested?"},
-			{"type": "noun", "hint": "Where does the Bard live? A tower? A cave? A very fancy hat?"},
+			{"type": "adjective", "hint": "What kind of hero are you?"},
+			{"type": "noun", "hint": "Where does the Bard live?"},
 			{"type": "noun", "hint": "What does the hero carry on their journey?"},
 			{"type": "adjective", "hint": "How determined does this hero seem?"},
 			{"type": "adjective", "hint": "How does the Bard look at the new hero?"},

@@ -54,6 +54,7 @@ func _ready() -> void:
 	$VBoxContainer/SelectedLetters.visible = false
 	$VBoxContainer/HBoxContainer/RemoveButton.visible = false
 	$VBoxContainer/HBoxContainer/ContinueButton.grab_focus()
+	$VBoxContainer/NameInput.text_submitted.connect(func(_word): _on_continue_button_pressed())
 
 func _update_ui() -> void:
 	if current_state == State.CONFIRM:
@@ -99,6 +100,7 @@ func _on_continue_button_pressed() -> void:
 				return
 			current_state = State.CONFIRM
 			$VBoxContainer/LetterInput.visible = false
+			$VBoxContainer/HBoxContainer/RemoveButton.visible = false
 			$VBoxContainer/HBoxContainer/ContinueButton.text = \"Start Quest!\"
 		State.CONFIRM:
 			intro_complete.emit(player_name, selected_letters)
