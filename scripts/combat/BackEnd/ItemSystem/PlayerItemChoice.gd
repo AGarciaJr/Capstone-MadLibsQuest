@@ -18,6 +18,7 @@ var _reward_items: Array[Dictionary] = []
 @onready var choice_3_name: Label = $ItemNodeOriginContainer/DetailsRow/ItemChoice3/ItemName
 @onready var choice_3_desc: Label = $ItemNodeOriginContainer/DetailsRow/ItemChoice3/ItemDescription
 @onready var choice_3_btn: Button = $ItemNodeOriginContainer/DetailsRow/ItemChoice3/Button
+@onready var letters_label: Label = $ItemNodeOriginContainer/LettersLabel
 
 
 func _ready() -> void:
@@ -31,6 +32,9 @@ func _ready() -> void:
 		if typeof(it_any) == TYPE_DICTIONARY:
 			_reward_items.append(it_any as Dictionary)
 	set_items(_reward_items)
+	var sorted := Array(PlayerState.player_letters)
+	sorted.sort()
+	letters_label.text = "Your letters: %s" % ", ".join(sorted)
 	item_chosen.connect(_on_item_chosen)
 
 

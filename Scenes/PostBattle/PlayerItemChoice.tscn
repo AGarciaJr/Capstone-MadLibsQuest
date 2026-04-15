@@ -29,8 +29,13 @@ offset_bottom = -0.040008545
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 16
-alignment = 0
 metadata/_edit_use_anchors_ = true
+
+[node name="LettersLabel" type="Label" parent="ItemNodeOriginContainer" unique_id=986682557]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "placeholder"
+horizontal_alignment = 1
 
 [node name="CategoryRow" type="HBoxContainer" parent="ItemNodeOriginContainer" unique_id=518000001]
 layout_mode = 2
@@ -40,7 +45,6 @@ alignment = 1
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-alignment = 0
 
 [node name="ItemBucket" type="Label" parent="ItemNodeOriginContainer/CategoryRow/CatCol1" unique_id=606568605]
 custom_minimum_size = Vector2(100, 0)
@@ -57,7 +61,6 @@ metadata/_edit_use_anchors_ = true
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-alignment = 0
 
 [node name="ItemBucket" type="Label" parent="ItemNodeOriginContainer/CategoryRow/CatCol2" unique_id=2058926070]
 custom_minimum_size = Vector2(100, 0)
@@ -74,7 +77,6 @@ metadata/_edit_use_anchors_ = true
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-alignment = 0
 
 [node name="ItemBucket" type="Label" parent="ItemNodeOriginContainer/CategoryRow/CatCol3" unique_id=1321158141]
 custom_minimum_size = Vector2(100, 0)
@@ -97,7 +99,6 @@ custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-alignment = 0
 
 [node name="ItemName" type="Label" parent="ItemNodeOriginContainer/DetailsRow/ItemChoice1" unique_id=290381069]
 custom_minimum_size = Vector2(100, 0)
@@ -135,7 +136,6 @@ custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-alignment = 0
 
 [node name="ItemName" type="Label" parent="ItemNodeOriginContainer/DetailsRow/ItemChoice2" unique_id=1702349602]
 custom_minimum_size = Vector2(100, 0)
@@ -173,7 +173,6 @@ custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-alignment = 0
 
 [node name="ItemName" type="Label" parent="ItemNodeOriginContainer/DetailsRow/ItemChoice3" unique_id=217927833]
 custom_minimum_size = Vector2(100, 0)
