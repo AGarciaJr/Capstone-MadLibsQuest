@@ -84,11 +84,11 @@ var _strike_round_pos_display: String = "noun"
 @onready var line_preview: Label = $BottomPanel/TextBoxBg/VBoxContainer/LinePreview
 @onready var word_input: LineEdit = $BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer/WordInput
 @onready var submit_button: Button = $BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer/SubmitButton
-@onready var result_label: Label = $BottomPanel/TextBoxBg/VBoxContainer/ResultLabel
+@onready var result_label: RichTextLabel = $BottomPanel/TextBoxBg/VBoxContainer/ResultLabel
 
 @onready var battle_log_button: Button = $BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer/BattleLogButton
 @onready var battle_log_panel: Control = $BattleLogPanel
-@onready var battle_log_content: Label = $BattleLogPanel/ScrollContainer/LogContent
+@onready var battle_log_content: RichTextLabel = $BattleLogPanel/ScrollContainer/LogContent
 
 @onready var player_hit_sound: AudioStreamPlayer = $PlayerPanel/PlayerHitSound
 @onready var enemy_hit_sound: AudioStreamPlayer = $EnemyPanel/EnemyHitSound

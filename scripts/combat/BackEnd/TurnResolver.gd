@@ -17,7 +17,18 @@ const _SCRABBLE: Dictionary = {
 ## Added per letter in the word that matches a player letter (testing mode).
 const _PLAYER_LETTER_MULT_PER_HIT: float = 0.25
 
+## Battle UI uses RichTextLabel BBCode for player crit styling.
+const _PLAYER_CRIT_COLOR := "#e64545"
+
 var _status_effects := StatusEffects.new()
+
+
+func _format_player_strike_damage_line(damage: int, is_crit: bool) -> String:
+	## Same line as non-crit (default RichTextLabel color). Crit appends only ` (crit)` in red.
+	var line := "You dealt: %d damage." % damage
+	if is_crit:
+		line += "[color=%s] (crit)[/color]" % _PLAYER_CRIT_COLOR
+	return line
 
 ## Full turn in one call when player_attacks_per_turn is 1 (single word for the round).
 func resolve_valid_turn(ctx: Dictionary) -> Dictionary:
@@ -80,7 +91,9 @@ func _resolve(ctx: Dictionary, include_player_attacks: bool) -> Dictionary:
 				var outcome := CombatEngine.compute_attack(player_stats, enemy_stats, player_move, rng)
 				var total_player_damage: int = int(outcome.damage)
 				current_enemy_hp = CombatEngine.apply_damage(current_enemy_hp, total_player_damage)
-				damage_messages.append("You dealt: %d damage." % total_player_damage)
+				damage_messages.append(
+					_format_player_strike_damage_line(total_player_damage, bool(outcome.get("is_crit", false)))
+				)
 			else:
 				damage_messages.append("You dealt: 0 damage.")
 
@@ -176,7 +189,7 @@ func resolve_single_player_attack(ctx: Dictionary) -> Dictionary:
 			var outcome := CombatEngine.compute_attack(player_stats, enemy_stats, player_move, rng)
 			var dmg: int = int(outcome.damage)
 			current_enemy_hp = CombatEngine.apply_damage(current_enemy_hp, dmg)
-			damage_messages.append("You dealt: %d damage." % dmg)
+			damage_messages.append(_format_player_strike_damage_line(dmg, bool(outcome.get("is_crit", false))))
 		else:
 			damage_messages.append("You dealt: 0 damage.")
 

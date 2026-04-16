@@ -14,12 +14,13 @@ var items: Array[Dictionary] = [
 		"reward_pool": REWARD_POOL_BASE_STATS,
 		"category": "Base Stats",
 		"name": "Hanma's Charm",
-		"description": "Increase max HP and core stats.",
+		"description": "Increase max HP, restore HP by that amount (up to your new max), boost core stats, and gain +10% critical strike chance.",
 		"effect_type": "boost_stats",
 		"params": {
 			"max_hp_flat": 10,
-			"atk_flat": 3,
-			"def_flat": 2
+			"atk_flat": 5,
+			"def_flat": 2,
+			"crit_chance_flat": 0.1
 		}
 	},
 	{
@@ -42,6 +43,18 @@ var items: Array[Dictionary] = [
 		"effect_type": "improve_letter_bonus",
 		"params": {
 			"extra_per_match": 0.12
+		}
+	},
+	{
+		"id": "infinity_edge",
+		"reward_pool": REWARD_POOL_LETTER_POWER,
+		"category": "Power Boost",
+		"name": "Infinity Edge",
+		"description": "Sharpen your strikes: more critical hits and harder crits.",
+		"effect_type": "boost_crit",
+		"params": {
+			"crit_chance_flat": 0.12,
+			"crit_mult_flat": 0.25
 		}
 	},
 	{
@@ -174,10 +187,22 @@ func apply_item(item: Dictionary) -> void:
 				flat["atk"] = int(p["atk_flat"])
 			if p.has("def_flat"):
 				flat["def"] = int(p["def_flat"])
+			if p.has("crit_chance_flat"):
+				flat["crit_chance"] = float(p["crit_chance_flat"])
 
-			PlayerState.max_hp += int(p.get("max_hp_flat", 0))
-			PlayerState.heal(int(p.get("max_hp_flat", 0)))
+			var max_hp_gain: int = int(p.get("max_hp_flat", 0))
+			if max_hp_gain > 0:
+				PlayerState.max_hp += max_hp_gain
+				PlayerState.current_hp = clampi(PlayerState.current_hp + max_hp_gain, 0, PlayerState.max_hp)
 			PlayerState.apply_stat_mod(flat, {})
+
+		"boost_crit":
+			var flat_crit: Dictionary = {}
+			if p.has("crit_chance_flat"):
+				flat_crit["crit_chance"] = float(p["crit_chance_flat"])
+			if p.has("crit_mult_flat"):
+				flat_crit["crit_mult"] = float(p["crit_mult_flat"])
+			PlayerState.apply_stat_mod(flat_crit, {})
 
 		"add_bonus_letter":
 			PlayerState.add_player_letter(String(p.get("letter", "A")))
