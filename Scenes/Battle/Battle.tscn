@@ -138,6 +138,11 @@ theme_override_font_sizes/font_size = 20
 text = "Letter bonus per match: 0.50"
 autowrap_mode = 3
 
+[node name="CurrentBonusMultiplier" type="Label" parent="PlayerPanel/VBoxContainer" unique_id=205681733]
+layout_mode = 2
+text = "Current Letter Multipler: "
+autowrap_mode = 3
+
 [node name="PlayerHitSound" type="AudioStreamPlayer" parent="PlayerPanel" unique_id=73008059]
 stream = ExtResource("4_u8i6w")
 
