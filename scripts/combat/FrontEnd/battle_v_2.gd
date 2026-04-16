@@ -18,6 +18,8 @@ var blanks: Array = []
 var enemy_hp: int
 var blank_index: int = 0
 var collected_words: Array[String] = []
+## Normalized duplicate of every word that resolved a player attack this encounter (main + bonus strikes).
+var _attack_words_this_encounter: Array[String] = []
 var templates: Array = []
 var current_sentence_index: int = 0
 var _sprite_idle_animation: String = ""
@@ -302,7 +304,8 @@ func _start_battle() -> void:
 	battle_log_panel.visible = false
 	
 	_all_words_used.clear()
-	
+	_attack_words_this_encounter.clear()
+
 	_total_damage_dealt = 0
 
 	_sprite_idle_animation = str(cfg.get("sprite_animation_name", ""))
@@ -487,7 +490,8 @@ func _resolve_turn(word: String, freq_scaling: float) -> void:
 	var letter_mult := PlayerState.letter_bonus_multiplier_for_word(word)
 	var ctx_attack := _build_turn_context(freq_scaling, letter_mult, word)
 	var result: Dictionary = _turn_resolver.resolve_single_player_attack(ctx_attack)
-	
+	_register_attack_word_this_encounter(word)
+
 	var hp_before_attack := enemy_hp
 	enemy_hp = int(result["enemy_hp"])
 	var player_damage_dealt: int = maxi(0, hp_before_attack - enemy_hp)
@@ -543,6 +547,7 @@ func _resolve_turn(word: String, freq_scaling: float) -> void:
 func _resolve_multi_strike_turn_first_word(word: String, freq_scaling: float) -> void:
 	var ctx := _build_turn_context(freq_scaling, PlayerState.letter_bonus_multiplier_for_word(word), word)
 	var result: Dictionary = _turn_resolver.resolve_single_player_attack(ctx)
+	_register_attack_word_this_encounter(word)
 
 	var hp_before_attack := enemy_hp
 	enemy_hp = int(result["enemy_hp"])
@@ -585,6 +590,7 @@ func _submit_bonus_strike_word(word: String) -> void:
 
 	var ctx := _build_turn_context(S, PlayerState.letter_bonus_multiplier_for_word(word), word)
 	var result: Dictionary = _turn_resolver.resolve_single_player_attack(ctx)
+	_register_attack_word_this_encounter(word)
 
 	var hp_before_attack := enemy_hp
 	enemy_hp = int(result["enemy_hp"])
@@ -663,7 +669,25 @@ func _build_turn_context(freq_scaling: float, letter_bonus_mult: float, strike_w
 	if strike_word != "":
 		ctx["strike_word"] = strike_word
 		ctx["uses_player_letters"] = _word_uses_any_player_letter(strike_word)
+		ctx["repeat_word_prior_uses"] = _attack_word_repeat_prior_count(strike_word)
 	return ctx
+
+
+func _normalize_attack_word_for_repeat(word: String) -> String:
+	return word.strip_edges().to_lower()
+
+
+func _attack_word_repeat_prior_count(word: String) -> int:
+	var key := _normalize_attack_word_for_repeat(word)
+	var n := 0
+	for w in _attack_words_this_encounter:
+		if _normalize_attack_word_for_repeat(w) == key:
+			n += 1
+	return n
+
+
+func _register_attack_word_this_encounter(word: String) -> void:
+	_attack_words_this_encounter.append(word)
 
 
 ## True if the word contains at least one player letter (or there are none — strike always counts).
