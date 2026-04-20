@@ -34,6 +34,7 @@ MapBuilder="*uid://028lbysuding"
 EnemyModifierDB="*uid://dgarlludqnkf7"
 SceneTransition="*res://scripts/autoloads/SceneTransition.tscn"
 Scenes="*uid://xwp80yc533f6"
+AudioPlayer="*uid://b60kderxkt4rx"
 
 [display]
 

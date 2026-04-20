@@ -7,6 +7,9 @@ extends Control
 @onready var continue_button: Button = $ColorRect/CenterContainer/Panel/MarginContainer/VBoxContainer/ContinueButton
 
 func _ready() -> void:
+	AudioPlayer.play_music_level()
+	AudioPlayer.play_sfx(preload("res://assets/Art/717771__1bob__victory-chime.wav"))
+	
 	var recap := EncounterSceneTransition.consume_recap()
 	
 	var enemy_name: String = recap.get("enemy_name", "the enemy")

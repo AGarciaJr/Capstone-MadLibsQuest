@@ -49,6 +49,7 @@ var current_blank_index: int = 0
 
 
 func _ready() -> void:
+	AudioPlayer.play_music_level()
 	# Create the Bard instance
 	bard = Bard.new()
 	add_child(bard)

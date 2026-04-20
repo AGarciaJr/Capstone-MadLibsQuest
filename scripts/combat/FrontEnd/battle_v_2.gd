@@ -84,6 +84,8 @@ var _strike_round_pos_display: String = "noun"
 
 
 func _ready() -> void:
+	AudioPlayer.play_music_battle()
+	
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	fade.color = Color(0, 0, 0, 1)
 	rng.randomize()

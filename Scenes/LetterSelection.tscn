@@ -48,6 +48,7 @@ const LETTER_DIALOGUES = {
 }
 
 func _ready() -> void:
+	AudioPlayer.play_music_level()
 	_update_ui()
 	$VBoxContainer/NameInput.visible = false
 	$VBoxContainer/LetterInput.visible = false
@@ -134,6 +135,7 @@ func _on_letter_input_text_changed(new_text: String) -> void:
 	if new_text.length() == 1:
 		_add_letter(new_text)
 		$VBoxContainer/LetterInput.clear()
+		
 "
 
 [node name="StoryIntro" type="Control" unique_id=1507070943]
