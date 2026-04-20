@@ -40,7 +40,7 @@ func _init() -> void:
 			"line": "With a ___ screech, the goblin hurled a ___ rock and tried to ___ the hero!",
 			"blanks": [
 				{"type": "adjective", "hint": "describe the screech (ear-splitting? musical? wet?)",          "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "describe the rock (enormous? glowing? suspiciously smooth?)",  "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe the rock (enormous? glowing? smooth?)",  "display": "ADJECTIVE"},
 				{"type": "verb",      "hint": "what did it try to do to the hero? (squash? confuse? tackle?)", "display": "VERB"},
 			]
 		},
@@ -71,7 +71,7 @@ func _init() -> void:
 		{
 			"line": "Covered in ___ warpaint, the goblin tried to ___ the hero's ___ shield away!",
 			"blanks": [
-				{"type": "adjective", "hint": "describe the warpaint (lurid? smeared? surprisingly artistic?)", "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe the warpaint (lurid? smeared? artistic?)", "display": "ADJECTIVE"},
 				{"type": "verb",      "hint": "what did it try to do to the shield? (yank? bite? charm?)",      "display": "VERB"},
 				{"type": "adjective", "hint": "describe the hero's shield (battered? gleaming? borrowed?)",     "display": "ADJECTIVE"},
 			]
@@ -81,15 +81,15 @@ func _init() -> void:
 			"blanks": [
 				{"type": "verb",      "hint": "what should the hero do immediately? (strike? hide? apologize?)", "display": "VERB"},
 				{"type": "verb",      "hint": "how does a goblin alert its tribe? (shriek? drum? whistle?)",     "display": "VERB"},
-				{"type": "adjective", "hint": "describe the warning signal (deafening? oddly melodic? distant?)", "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe the warning signal (deafening? melodic? distant?)", "display": "ADJECTIVE"},
 			]
 		},
 		{
 			"line": "A ___ trap sprung from the shadows and the goblin lunged to ___ the hero with ___ cunning!",
 			"blanks": [
-				{"type": "adjective", "hint": "what kind of trap? (rope? glue? politely labeled?)",            "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "what kind of trap? (rope? glue? labeled?)",            "display": "ADJECTIVE"},
 				{"type": "verb",      "hint": "what did the goblin try? (grab? tackle? trick?)",               "display": "VERB"},
-				{"type": "adjective", "hint": "how cunning is this goblin really? (fiendish? barely adequate?)", "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "how cunning is this goblin really? (fiendish? adequate?)", "display": "ADJECTIVE"},
 			]
 		},
 		{
