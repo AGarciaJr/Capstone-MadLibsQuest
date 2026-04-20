@@ -1,11 +1,23 @@
 [gd_scene format=3 uid="uid://by6ivvrwnhxn5"]
 
 [ext_resource type="Script" uid="uid://w81077twrwsa" path="res://scripts/combat/FrontEnd/battle_v_2.gd" id="1_2msnx"]
+[ext_resource type="AudioStream" uid="uid://7i1q3piy5v66" path="res://assets/Audio/massivedamagesoundeffect_rfdYblNy.mp3" id="2_d6svl"]
+[ext_resource type="SpriteFrames" uid="uid://c2uuddt135lms" path="res://assets/Art/Effects/Smoke Effects - BDragon1727/Smoke_Explosion_Effects.tres" id="2_ydegg"]
 [ext_resource type="FontFile" uid="uid://cidaxvdq4u675" path="res://assets/Fonts/Junicode.ttf" id="3_2msnx"]
-[ext_resource type="FontFile" uid="uid://c1n3r6n1s0e1w" path="res://assets/Fonts/BLKCHCRY.TTF" id="3_47d8v"]
+[ext_resource type="AudioStream" uid="uid://bvopih1jvlq8g" path="res://assets/Audio/LowDamageSoundEffect.mp3" id="3_alxtf"]
+[ext_resource type="AudioStream" uid="uid://4r26a606s1uw" path="res://assets/Audio/EnemyAttackSoundEffect.wav" id="3_ui8bb"]
+[ext_resource type="FontFile" uid="uid://caqk3gmdt5r4e" path="res://assets/Fonts/PlayfairDisplay-Bold.ttf" id="3_ydegg"]
+[ext_resource type="AudioStream" uid="uid://bmlydj3nxvg52" path="res://assets/Audio/MediumDamageSoundEffect.mp3" id="4_dnfe4"]
 [ext_resource type="FontFile" uid="uid://xrdaqecbc33" path="res://assets/Fonts/MorrisRomanAlternate-Black.ttf" id="4_g8wve"]
+<<<<<<< HEAD
 [ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://Scenes/CanvasLayer.tscn" id="5_vn0yc"]
 [ext_resource type="PackedScene" uid="uid://wdlitqgfnt17" path="res://Scenes/YouDiedScreen.tscn" id="7_8ftua"]
+=======
+[ext_resource type="AudioStream" uid="uid://py3y7vd88rsa" path="res://assets/Audio/BigDamageSoundEffect.mp3" id="4_u8i6w"]
+[ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://scenes/CanvasLayer.tscn" id="5_vn0yc"]
+[ext_resource type="PackedScene" uid="uid://wdlitqgfnt17" path="res://scenes/YouDiedScreen.tscn" id="7_8ftua"]
+[ext_resource type="AudioStream" uid="uid://emi3y03p3dbd" path="res://assets/Art/BattleMusic.mp3" id="7_dcr6b"]
+>>>>>>> ab1c1b4d05ac9f02e287a39550257c1489141674
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_textbox"]
 bg_color = Color(0.07, 0.05, 0.03, 0.94)
@@ -29,6 +41,8 @@ offset_bottom = -1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_2msnx")
+extra_player_hit_sounds = Array[AudioStream]([ExtResource("3_alxtf"), ExtResource("4_dnfe4"), ExtResource("2_d6svl")])
+metadata/_edit_lock_ = true
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=1141814085]
 layout_mode = 1
@@ -38,10 +52,19 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+metadata/_edit_lock_ = true
 
 [node name="EnemySprite" type="AnimatedSprite2D" parent="CenterContainer" unique_id=1897032973]
 position = Vector2(640, 300)
 scale = Vector2(6, 6)
+
+[node name="DamageEffects" type="AnimatedSprite2D" parent="CenterContainer" unique_id=331781333]
+position = Vector2(696, 304)
+scale = Vector2(5.6875, 5.6875)
+sprite_frames = ExtResource("2_ydegg")
+animation = &"Smoke 3"
+frame = 7
+frame_progress = 1.0
 
 [node name="EnemyPanel" type="Control" parent="." unique_id=718284901]
 layout_mode = 1
@@ -78,6 +101,9 @@ layout_mode = 2
 value = 100.0
 show_percentage = false
 
+[node name="EnemyHitSound" type="AudioStreamPlayer" parent="EnemyPanel" unique_id=1259490565]
+stream = ExtResource("3_ui8bb")
+
 [node name="PlayerPanel" type="Control" parent="." unique_id=98662082]
 anchors_preset = 0
 offset_left = 8.0
@@ -111,16 +137,19 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Player letters: A, E, S, T"
 
-[node name="LetterLimit" type="Label" parent="PlayerPanel/VBoxContainer" unique_id=1811216814]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Letter limit: 4"
-
 [node name="LetterBonusNumber" type="Label" parent="PlayerPanel/VBoxContainer" unique_id=2100456123]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "Letter bonus per match: 0.50"
 autowrap_mode = 3
+
+[node name="CurrentBonusMultiplier" type="Label" parent="PlayerPanel/VBoxContainer" unique_id=205681733]
+layout_mode = 2
+text = "Current Letter Multipler: "
+autowrap_mode = 3
+
+[node name="PlayerHitSound" type="AudioStreamPlayer" parent="PlayerPanel" unique_id=73008059]
+stream = ExtResource("4_u8i6w")
 
 [node name="BottomPanel" type="Control" parent="." unique_id=1099714150]
 clip_contents = true
@@ -153,20 +182,39 @@ theme_override_constants/separation = 15
 [node name="ResultLabel" type="Label" parent="BottomPanel/TextBoxBg/VBoxContainer" unique_id=1234699025]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
+theme_override_fonts/font = ExtResource("3_ydegg")
 theme_override_font_sizes/font_size = 22
 text = "Type a word and press Enter!"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="LinePreview" type="Label" parent="BottomPanel/TextBoxBg/VBoxContainer" unique_id=1785196963]
+[node name="LinePreviewContainer" type="VBoxContainer" parent="BottomPanel/TextBoxBg/VBoxContainer" unique_id=100626632]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.78, 0.58, 1)
+
+[node name="LinePreviewBefore" type="Label" parent="BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer" unique_id=1812279332]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.81960785, 0.78039217, 0.5803922, 1)
 theme_override_fonts/font = ExtResource("4_g8wve")
-theme_override_font_sizes/font_size = 47
-text = "The hero faced a fearsome ___!"
+theme_override_font_sizes/font_size = 32
 horizontal_alignment = 1
-autowrap_mode = 3
+autowrap_mode = 2
+
+[node name="LinePreviewBlank" type="Label" parent="BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer" unique_id=311225896]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.81960785, 0.78039217, 0.5803922, 1)
+theme_override_fonts/font = ExtResource("4_g8wve")
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="LinePreviewAfter" type="Label" parent="BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer" unique_id=1270515167]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.81960785, 0.78039217, 0.5803922, 1)
+theme_override_fonts/font = ExtResource("4_g8wve")
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="PromptLabel" type="Label" parent="BottomPanel/TextBoxBg/VBoxContainer" unique_id=1623631982]
 layout_mode = 2
@@ -198,13 +246,14 @@ max_length = 30
 [node name="SubmitButton" type="Button" parent="BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer" unique_id=2135709036]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-theme_override_fonts/font = ExtResource("3_47d8v")
+theme_override_fonts/font = ExtResource("3_ydegg")
 theme_override_font_sizes/font_size = 20
 text = "Submit"
 
 [node name="BattleLogButton" type="Button" parent="BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer" unique_id=927040926]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_ydegg")
 theme_override_font_sizes/font_size = 21
 text = "Battle Log"
 

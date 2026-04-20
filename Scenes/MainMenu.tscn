@@ -55,6 +55,13 @@ theme_override_font_sizes/font_size = 42
 theme_override_styles/normal = SubResource("StyleBoxFlat_cqjrg")
 text = "Start"
 
+[node name="Continue" type="Button" parent="VBoxContainer" unique_id=1052734435]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_ghw46")
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = SubResource("StyleBoxFlat_e2xy7")
+text = "Continue"
+
 [node name="Credit" type="Button" parent="VBoxContainer" unique_id=670672001]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("3_ghw46")
@@ -129,6 +136,7 @@ stream = ExtResource("5_df05h")
 autoplay = true
 
 [connection signal="pressed" from="VBoxContainer/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="VBoxContainer/Continue" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="VBoxContainer/Credit" to="." method="_on_credit_pressed"]
 [connection signal="pressed" from="ModeModal/CenterContainer/VBoxContainer/HBoxContainer/TutorialButton" to="." method="_on_tutorial_pressed"]
 [connection signal="pressed" from="ModeModal/CenterContainer/VBoxContainer/HBoxContainer/NewRunButton" to="." method="_on_new_run_pressed"]

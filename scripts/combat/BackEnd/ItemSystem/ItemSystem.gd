@@ -45,7 +45,7 @@ var items: Array[Dictionary] = [
 		}
 	},
 	{
-		"id": "heal_player",
+		"id": "heal_player_low",
 		"reward_pool": REWARD_POOL_BASE_STATS,
 		"category": "Base Stats",
 		"name": "Apple",
@@ -55,6 +55,29 @@ var items: Array[Dictionary] = [
 			"amount": 20
 		}
 	},
+	{
+		"id": "heal_player_med",
+		"reward_pool": REWARD_POOL_BASE_STATS,
+		"category": "Base Stats",
+		"name": "Bandage",
+		"description": "Restores HP after battle.",
+		"effect_type": "heal",
+		"params": {
+			"amount": 40
+		}
+	},
+	{
+		"id": "heal_player_high",
+		"reward_pool": REWARD_POOL_BASE_STATS,
+		"category": "Base Stats",
+		"name": "Scroll of healing",
+		"description": "Restores HP after battle.",
+		"effect_type": "heal",
+		"params": {
+			"amount": 100
+		}
+	},
+	
 ]
 
 
@@ -80,6 +103,9 @@ func _get_pooled_random_choices_3() -> Array[Dictionary]:
 				letter_acquisition_pool.append(it)
 			_:
 				pass
+	
+	if PlayerState.current_hp >= PlayerState.max_hp:
+		base_pool = base_pool.filter(func(item): return item.get("effect_type", "") != "heal")
 
 	for i in range(ALPHABET.length()):
 		var letter: String = ALPHABET.substr(i, 1)
@@ -102,7 +128,6 @@ func _get_pooled_random_choices_3() -> Array[Dictionary]:
 		letter_power_pool[randi() % letter_power_pool.size()].duplicate(true),
 		letter_acquisition_pool[randi() % letter_acquisition_pool.size()].duplicate(true),
 	]
-	out.shuffle()
 	return out
 
 

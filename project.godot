@@ -16,7 +16,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 config/name="madlibsquest"
 run/main_scene="uid://mhf2f8rk8kse"
-config/features=PackedStringArray("4.6", "Forward Plus")
+config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 <<<<<<<HEADrun/main_scene="uid://by6ivvrwnhxn5"
 
@@ -34,7 +34,11 @@ MapBuilder="*uid://028lbysuding"
 EnemyModifierDB="*uid://dgarlludqnkf7"
 SceneTransition="*res://scripts/autoloads/SceneTransition.tscn"
 Scenes="*uid://xwp80yc533f6"
+<<<<<<< HEAD
 AudioPlayer="*uid://b60kderxkt4rx"
+=======
+SaveManager="*uid://cp40fvkh56vk6"
+>>>>>>> ab1c1b4d05ac9f02e287a39550257c1489141674
 
 [display]
 
@@ -67,5 +71,8 @@ attack={
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
+textures/canvas_textures/default_texture_repeat=1
+textures/vram_compression/import_etc2_astc=true
+viewport/hdr_2d=true
 textures/size/viewport_height=270
 textures/size/viewport_width=480

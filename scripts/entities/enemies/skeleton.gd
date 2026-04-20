@@ -32,40 +32,40 @@ func _init() -> void:
 			"line": "The hero ___ through the chamber and shattered the skeleton's ___ bones with a ___ blow!",
 			"blanks": [
 				{"type": "verb",      "hint": "how did the hero move? (charge? dash? cartwheel?)",                   "display": "VERB"},
-				{"type": "adjective", "hint": "describe those bones (brittle? ancient? suspiciously sturdy?)",        "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe those bones (brittle? ancient? sturdy?)",        "display": "ADJECTIVE"},
 				{"type": "adjective", "hint": "what kind of finishing blow? (devastating? lucky? accidental?)",       "display": "ADJECTIVE"},
 			]
 		},
 		{
 			"line": "The skeleton's ___ eye sockets blazed as it raised a ___ blade and swung with ___ fury!",
 			"blanks": [
-				{"type": "adjective", "hint": "describe the glowing eyes (eerie? neon? disappointingly dim?)",        "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe the glowing eyes (eerie? neon? dim?)",        "display": "ADJECTIVE"},
 				{"type": "adjective", "hint": "describe the blade (rusted? enchanted? borrowed?)",                    "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "what kind of fury? (bone-rattling? cold? surprisingly polite?)",       "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "what kind of fury? (bone-rattling? cold? polite?)",       "display": "ADJECTIVE"},
 			]
 		},
 		{
 			"line": "A ___ clatter rang out as the skeleton swung its ___ sword in a ___ arc overhead!",
 			"blanks": [
-				{"type": "adjective", "hint": "describe that awful noise (deafening? hollow? strangely musical?)",    "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "describe the sword (cracked? enchanted? way too oversized?)",          "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "what kind of arc? (sweeping? awkward? surprisingly graceful?)",        "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe that awful noise (deafening? hollow? musical?)",    "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe the sword (cracked? enchanted? oversized?)",          "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "what kind of arc? (sweeping? awkward? graceful?)",        "display": "ADJECTIVE"},
 			]
 		},
 		{
 			"line": "The hero had to ___ fast as the skeleton summoned a ___ wave of ___ dark magic!",
 			"blanks": [
-				{"type": "verb",      "hint": "how did the hero react? (dodge? roll? reconsider everything?)",        "display": "VERB"},
-				{"type": "adjective", "hint": "describe the wave (crackling? ominous? disturbingly colorful?)",       "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "what flavor of dark magic? (ancient? freezing? oddly familiar?)",      "display": "ADJECTIVE"},
+				{"type": "verb",      "hint": "how did the hero react? (dodge? roll?)",        "display": "VERB"},
+				{"type": "adjective", "hint": "describe the wave (crackling? ominous? colorful?)",       "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "what flavor of dark magic? (ancient? freezing? familiar?)",      "display": "ADJECTIVE"},
 			]
 		},
 		{
 			"line": "With a ___ shriek the skeleton made one final ___ strike in the ___ dungeon corridor!",
 			"blanks": [
-				{"type": "adjective", "hint": "describe that final shriek (unearthly? rattling? almost musical?)",    "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "describe the last strike (desperate? powerful? catastrophically wide?)", "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "what kind of dungeon is this? (crumbling? ancient? suspiciously clean?)", "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe that final shriek (unearthly? rattling? musical?)",    "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe the last strike (desperate? powerful? wide?)", "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "what kind of dungeon is this? (crumbling? ancient? clean?)", "display": "ADJECTIVE"},
 			]
 		},
 	]

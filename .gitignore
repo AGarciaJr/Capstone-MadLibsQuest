@@ -13,3 +13,13 @@ obj/
 assets/wordnet/dict/
 .vscode/settings.json
 export_presets.cfg
+MadLibsQuest_Test_Mac.app/Contents/MacOS/madlibsquest
+*.dll
+*.pdb
+data_madlibsquest_windows_x86_64/madlibsquest.deps.json
+data_madlibsquest_windows_x86_64/createdump.exe
+data_madlibsquest_windows_x86_64/madlibsquest.runtimeconfig.json
+MadLibsQuest_Test.console.exe
+MadLibsQuest_Test.exe
+MadLibsQuest_Test.pck
+MadLibsQuest_Test.zip

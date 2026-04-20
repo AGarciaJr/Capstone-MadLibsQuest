@@ -1,10 +1,12 @@
 extends Control
 
 @onready var mode_modal: Control = $ModeModal
+@onready var continue_button: Button = $VBoxContainer/Continue
 
 func _ready():
 	Engine.time_scale = 1.0
 	mode_modal.visible = false
+	continue_button.visible = SaveManager.has_save()
 
 func _on_settings_button_pressed():
 	# Placeholder — scene not built yet
@@ -39,3 +41,9 @@ func _on_new_run_pressed() -> void:
 
 func _on_modal_back_pressed() -> void:
 	mode_modal.visible = false
+
+func _on_continue_pressed() -> void:
+	if SaveManager.load_save():
+		get_tree().change_scene_to_file(Scenes.ROOM)
+	else:
+		continue_button.visible = false

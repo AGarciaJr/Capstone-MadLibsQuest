@@ -150,8 +150,8 @@ func _show_next_blank_prompt() -> void:
 	var type_display = word_type.replace("_", " ").capitalize()
 	
 	# Show the prompt
-	prompt_label.text = "Enter " + _get_article(type_display) + " " + type_display + ":"
-	hint_label.text = "Hint: " + hint if hint else ""
+	prompt_label.text = "Enter " + _get_article(type_display) + " " + type_display + " (" + (hint if hint else "") + ") :"
+	hint_label.text = ""
 	
 	# Show and focus input
 	input_container.visible = true
@@ -196,7 +196,7 @@ func _on_word_submitted(word: String) -> void:
 	current_blank_index += 1
 	
 	# Brief pause to show feedback, then move to next
-	await get_tree().create_timer(0.4).timeout
+	await get_tree().create_timer(1.2).timeout
 	
 	# Clear input and move to next
 	word_input.text = ""
@@ -249,7 +249,7 @@ func _complete_intro() -> void:
 	_typewrite_to_label(narrative_label, final_text)
 	continue_label.text = ""
 	
-	await get_tree().create_timer(4.0).timeout
+	await get_tree().create_timer(7.0).timeout
 	intro_completed.emit()
 	
 	# Transition to the tutorial area
