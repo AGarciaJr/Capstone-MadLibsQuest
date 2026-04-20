@@ -184,14 +184,32 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="LinePreview" type="Label" parent="BottomPanel/TextBoxBg/VBoxContainer" unique_id=1785196963]
+[node name="LinePreviewContainer" type="VBoxContainer" parent="BottomPanel/TextBoxBg/VBoxContainer" unique_id=100626632]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.78, 0.58, 1)
+
+[node name="LinePreviewBefore" type="Label" parent="BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer" unique_id=1812279332]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.81960785, 0.78039217, 0.5803922, 1)
 theme_override_fonts/font = ExtResource("4_g8wve")
-theme_override_font_sizes/font_size = 47
-text = "The hero faced a fearsome ___!"
+theme_override_font_sizes/font_size = 32
 horizontal_alignment = 1
-autowrap_mode = 3
+autowrap_mode = 2
+
+[node name="LinePreviewBlank" type="Label" parent="BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer" unique_id=311225896]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.81960785, 0.78039217, 0.5803922, 1)
+theme_override_fonts/font = ExtResource("4_g8wve")
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="LinePreviewAfter" type="Label" parent="BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer" unique_id=1270515167]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.81960785, 0.78039217, 0.5803922, 1)
+theme_override_fonts/font = ExtResource("4_g8wve")
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="PromptLabel" type="Label" parent="BottomPanel/TextBoxBg/VBoxContainer" unique_id=1623631982]
 layout_mode = 2

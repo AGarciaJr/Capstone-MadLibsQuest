@@ -31,16 +31,16 @@ func _init() -> void:
 		{
 			"line": "The hero ___ through the spore cloud and struck the ___ mushroom with a ___ blow!",
 			"blanks": [
-				{"type": "verb",      "hint": "how did the hero push through the spores? (charge? crawl? hold their breath and?)", "display": "VERB"},
-				{"type": "adjective", "hint": "describe the mushroom boss (colossal? pulsing? unsettlingly cute?)",                "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "what kind of blow landed? (decisive? thunderous? completely lucky?)",               "display": "ADJECTIVE"},
+				{"type": "verb",      "hint": "how did the hero push through the spores? (charge? crawl?)", "display": "VERB"},
+				{"type": "adjective", "hint": "describe the mushroom boss (colossal? pulsing? cute?)",                "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "what kind of blow landed? (decisive? thunderous? lucky?)",               "display": "ADJECTIVE"},
 			]
 		},
 		{
 			"line": "The ___ mushroom released a ___ cloud of spores that tried to ___ the hero's mind!",
 			"blanks": [
-				{"type": "adjective", "hint": "describe the mushroom (ancient? hulking? disturbingly sentient?)",           "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "describe the spore cloud (choking? glowing? surprisingly fragrant?)",        "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe the mushroom (ancient? hulking?)",           "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe the spore cloud (choking? glowing? fragrant?)",        "display": "ADJECTIVE"},
 				{"type": "verb",      "hint": "what did the spores try to do to the hero's mind? (scramble? overwhelm? redecorate?)", "display": "VERB"},
 			]
 		},
@@ -48,15 +48,15 @@ func _init() -> void:
 			"line": "In a ___ rage, the mushroom slammed down a ___ fist with a ___ shockwave!",
 			"blanks": [
 				{"type": "adjective", "hint": "what kind of rage? (fungal? silent? catastrophic?)",           "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "describe that fist (enormous? slimy? unexpectedly fast?)",     "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "describe the shockwave (ground-shaking? blinding? very damp?)", "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe that fist (enormous? slimy? fast?)",     "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe the shockwave (ground-shaking? blinding? damp?)", "display": "ADJECTIVE"},
 			]
 		},
 		{
 			"line": "The hero ___ around the mushroom's ___ tendrils and countered with a ___ strike!",
 			"blanks": [
-				{"type": "verb",      "hint": "how did the hero evade? (weave? vault? dramatically slide?)",   "display": "VERB"},
-				{"type": "adjective", "hint": "describe the tendrils (writhing? sticky? surprisingly gentle?)", "display": "ADJECTIVE"},
+				{"type": "verb",      "hint": "how did the hero evade? (weave? vault? slide?)",   "display": "VERB"},
+				{"type": "adjective", "hint": "describe the tendrils (writhing? sticky? gentle?)", "display": "ADJECTIVE"},
 				{"type": "adjective", "hint": "describe the counter-attack (precise? desperate? magnificent?)", "display": "ADJECTIVE"},
 			]
 		},
@@ -65,7 +65,7 @@ func _init() -> void:
 			"blanks": [
 				{"type": "adjective", "hint": "describe the mushroom's enormous cap (glowing? pulsing? ancient?)",      "display": "ADJECTIVE"},
 				{"type": "verb",      "hint": "how did the hero push through? (sprint? crawl? power-walk?)",            "display": "VERB"},
-				{"type": "adjective", "hint": "describe that spore storm (blinding? rainbow-colored? seemingly endless?)", "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe that spore storm (blinding? rainbow-colored? endless?)", "display": "ADJECTIVE"},
 			]
 		},
 	]
