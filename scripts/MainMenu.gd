@@ -4,6 +4,7 @@ extends Control
 @onready var continue_button: Button = $VBoxContainer/Continue
 
 func _ready():
+	AudioPlayer.play_music_title()
 	Engine.time_scale = 1.0
 	mode_modal.visible = false
 	continue_button.visible = SaveManager.has_save()

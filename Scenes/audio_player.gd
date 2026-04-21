@@ -20,6 +20,12 @@ func play_music_battle():
 
 var sfx_player = AudioStreamPlayer.new()
 
+const title_music = preload("res://assets/Art/TitleMusic.mp3")
+
+func play_music_title():
+	_play_music(title_music)
+
+
 func _ready():
 	add_child(sfx_player)
 

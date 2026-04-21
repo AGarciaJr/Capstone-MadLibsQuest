@@ -4,7 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://dfbignak050jf" path="res://assets/Art/TitleBackground.png" id="2_l72w3"]
 [ext_resource type="FontFile" uid="uid://dl2x675iiclpr" path="res://assets/Fonts/PlayfairDisplay-Black.ttf" id="3_ghw46"]
 [ext_resource type="FontFile" uid="uid://caqk3gmdt5r4e" path="res://assets/Fonts/PlayfairDisplay-Bold.ttf" id="4_df05h"]
-[ext_resource type="AudioStream" uid="uid://h5bb5k7e8tgo" path="res://assets/Art/TitleMusic.mp3" id="5_df05h"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cqjrg"]
 bg_color = Color(0.101960786, 0.039215688, 0.18039216, 1)
@@ -130,10 +129,6 @@ custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Cancel"
-
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=2135407391]
-stream = ExtResource("5_df05h")
-autoplay = true
 
 [connection signal="pressed" from="VBoxContainer/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="VBoxContainer/Continue" to="." method="_on_continue_pressed"]
