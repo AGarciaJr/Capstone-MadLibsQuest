@@ -4,7 +4,7 @@ extends Node
 const BATTLE_SCENE := preload("res://Scenes/Battle/Battle.tscn")
 const PREBATTLE_SCENE := preload("res://Scenes/PreBattle/PreBattleModifier.tscn")
 const POSTBATTLE_SCENE := preload("res://Scenes/PostBattle/PlayerItemChoice.tscn")
-const RECAP_SCENE := preload("res://scenes/PostBattle/BattleRecap.tscn")
+const RECAP_SCENE := preload("res://Scenes/PostBattle/BattleRecap.tscn")
 
 var pending_recap: Dictionary = {}
 var current_encounter: Dictionary = {}

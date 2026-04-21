@@ -9,15 +9,10 @@
 [ext_resource type="FontFile" uid="uid://caqk3gmdt5r4e" path="res://assets/Fonts/PlayfairDisplay-Bold.ttf" id="3_ydegg"]
 [ext_resource type="AudioStream" uid="uid://bmlydj3nxvg52" path="res://assets/Audio/MediumDamageSoundEffect.mp3" id="4_dnfe4"]
 [ext_resource type="FontFile" uid="uid://xrdaqecbc33" path="res://assets/Fonts/MorrisRomanAlternate-Black.ttf" id="4_g8wve"]
-<<<<<<< HEAD
+[ext_resource type="AudioStream" uid="uid://py3y7vd88rsa" path="res://assets/Audio/BigDamageSoundEffect.mp3" id="4_u8i6w"]
 [ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://Scenes/CanvasLayer.tscn" id="5_vn0yc"]
 [ext_resource type="PackedScene" uid="uid://wdlitqgfnt17" path="res://Scenes/YouDiedScreen.tscn" id="7_8ftua"]
-=======
-[ext_resource type="AudioStream" uid="uid://py3y7vd88rsa" path="res://assets/Audio/BigDamageSoundEffect.mp3" id="4_u8i6w"]
-[ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://scenes/CanvasLayer.tscn" id="5_vn0yc"]
-[ext_resource type="PackedScene" uid="uid://wdlitqgfnt17" path="res://scenes/YouDiedScreen.tscn" id="7_8ftua"]
 [ext_resource type="AudioStream" uid="uid://emi3y03p3dbd" path="res://assets/Art/BattleMusic.mp3" id="7_dcr6b"]
->>>>>>> ab1c1b4d05ac9f02e287a39550257c1489141674
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_textbox"]
 bg_color = Color(0.07, 0.05, 0.03, 0.94)
