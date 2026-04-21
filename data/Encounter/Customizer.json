@@ -386,7 +386,7 @@
 		"status_effects_on_hit": [],
 		"status_effects_on_turn_start": [],
 		"post_fight_modifiers": [],
-		"difficulty": 3,
+		"difficulty": 0,
 		"element_override": null,
 		"behavior_flags": [],
 		"stackable": false,

@@ -772,7 +772,10 @@ func _finish_battle() -> void:
 		"battle_score": battle_score,
 	}
 
-	var items = ItemSystem.get_random_choices(3)
+	var reward_difficulty: int = 0
+	if _encounter_modifier != null:
+		reward_difficulty = _encounter_modifier.difficulty
+	var items: Array[Dictionary] = ItemSystem.get_random_choices(3, reward_difficulty)
 	
 	var tween := create_tween()
 	tween.tween_property(fade, "color", Color(0,0,0,1), 0.35)
@@ -780,31 +783,31 @@ func _finish_battle() -> void:
 	
 	EncounterSceneTransition.transition_to_recap(recap, items)
 
+# teir the player damage so that the vfx's scale correctly 
+func _player_hit_tier_index(damage: int) -> int:
+	if damage > 20:
+		return 2
+	if damage > 10:
+		return 1
+	return 0
+
+
 func _play_enemy_hit_smoke(damage: int) -> void:
 	if damage <= 0:
 		return
 	var anim_name: String
-	if damage > 15:
+	if damage > 20:
 		anim_name = "Smoke 2"
-	elif damage > 5:
+	elif damage > 10:
 		anim_name = "Smoke 1"
 	else:
-		anim_name = "Smoke 3"
+		anim_name = "Smoke 8"
 	var frames := damage_effects.sprite_frames
 	if frames == null or not frames.has_animation(anim_name):
 		return
 	damage_effects.visible = true
 	damage_effects.play(anim_name)
 	_play_player_hit_sfx_for_damage(damage)
-
-
-func _player_hit_tier_index(damage: int) -> int:
-	if damage > 15:
-		return 2
-	if damage > 5:
-		return 1
-	return 0
-
 
 func _rebuild_hit_sound_pools() -> void:
 	_enemy_hit_sound_pool.clear()

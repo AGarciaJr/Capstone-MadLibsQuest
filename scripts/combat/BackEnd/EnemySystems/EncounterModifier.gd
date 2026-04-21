@@ -17,6 +17,7 @@ var post_fight_modifiers: Array = []
 var behavior_flags: Array = []
 
 var element_override: String = ""
+## Post-battle loot: low values favor low-`rarity` items, high values favor high-`rarity` (`ItemSystem` α lerp).
 var difficulty: int = 0
 var stackable: bool = false
 var rarity_weight: int = 0
