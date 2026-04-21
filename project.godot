@@ -18,7 +18,6 @@ config/name="madlibsquest"
 run/main_scene="uid://mhf2f8rk8kse"
 config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
-<<<<<<<HEADrun/main_scene="uid://by6ivvrwnhxn5"
 
 [autoload]
 
@@ -34,11 +33,8 @@ MapBuilder="*uid://028lbysuding"
 EnemyModifierDB="*uid://dgarlludqnkf7"
 SceneTransition="*res://scripts/autoloads/SceneTransition.tscn"
 Scenes="*uid://xwp80yc533f6"
-<<<<<<< HEAD
 AudioPlayer="*uid://b60kderxkt4rx"
-=======
 SaveManager="*uid://cp40fvkh56vk6"
->>>>>>> ab1c1b4d05ac9f02e287a39550257c1489141674
 
 [display]
 
