@@ -112,8 +112,13 @@ func _ready() -> void:
 		battle_log_panel.visible = false
 		_refocus_input()
 	)
+	
 	if not PlayerState.player_letters_changed.is_connected(_update_letters_label):
 		PlayerState.player_letters_changed.connect(_update_letters_label)
+		
+	if not PlayerState.letter_leveled_up.is_connected(_on_letter_leveled_up):
+		PlayerState.letter_leveled_up.connect(_on_letter_leveled_up)
+	
 	_start_battle()
 	_rebuild_hit_sound_pools()
 	var tween := create_tween()
@@ -131,26 +136,22 @@ func _refocus_input() -> void:
 func _exit_tree() -> void:
 	if PlayerState.player_letters_changed.is_connected(_update_letters_label):
 		PlayerState.player_letters_changed.disconnect(_update_letters_label)
+	
+	if not PlayerState.letter_leveled_up.is_connected(_on_letter_leveled_up):
+		PlayerState.letter_leveled_up.disconnect(_on_letter_leveled_up)
 
 
 func _update_letters_label(_letters: PackedStringArray = PackedStringArray()) -> void:
 	if letters_label == null:
 		return
-		
-	var letter_counts = {}
-	for letter in PlayerState.player_letters:
-		if letter_counts.has(letter):
-			letter_counts[letter] += 1
-		else:
-			letter_counts[letter] = 1
 	
-	var sorted = letter_counts.keys()
+	var sorted = Array(PlayerState.player_letters)
 	sorted.sort()
 	var display_letters = []
 	for letter in sorted:
-		var count = letter_counts[letter]
-		if count > 1:
-			display_letters.append("%s x%d" % [letter, count])
+		var level := PlayerState.get_letter_level(letter)
+		if level > 1:
+			display_letters.append("%s Lv. %d" % [letter, level])
 		else:
 			display_letters.append(letter)
 			
@@ -488,6 +489,8 @@ func _submit_word(raw: String) -> void:
 		var msg := hint if hint != "" else ("That doesn't look like %s %s." % [_get_article(expected_pos), expected_pos])
 		await _apply_invalid_turn(msg)
 		return
+		
+	_add_xp_for_word(word)
 
 	collected_words.append(word)
 	_strike_round_expected_pos = expected_pos
@@ -606,6 +609,8 @@ func _submit_bonus_strike_word(word: String) -> void:
 		var msg := hint if hint != "" else ("That doesn't look like %s %s." % [_get_article(expected_pos), expected_pos])
 		await _apply_invalid_turn(msg)
 		return
+		
+	_add_xp_for_word(word)
 
 	var S: float = _get_word_freq_scaling(word)
 	if use_element_system and not use_scrabble_test_damage:
@@ -935,3 +940,22 @@ func _update_line_preview() -> void:
 
 	line_preview_after.visible = not after.is_empty()
 	line_preview_after.text = after
+
+func _add_xp_for_word(word: String) -> void:
+	if PlayerState.player_letters.is_empty():
+		return
+	
+	var counts := {}
+	var upper := word.to_upper()
+	for ch in upper:
+		counts[ch] = counts.get(ch, 0) + 1
+	
+	for letter in PlayerState.player_letters:
+		if counts.has(letter):
+			PlayerState.add_letter_xp(letter, counts[letter])
+
+func _on_letter_leveled_up(letter: String, new_level: int) -> void:
+	var msg := "Letter %s reached level %d!" % [letter, new_level]
+	_append_log(msg)
+	result_label.text = msg
+	_update_letters_label()

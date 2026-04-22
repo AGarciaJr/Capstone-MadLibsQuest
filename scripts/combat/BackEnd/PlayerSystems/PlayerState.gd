@@ -1,7 +1,14 @@
 extends Node
 
 signal player_letters_changed(letters: PackedStringArray)
+signal letter_leveled_up(letter: String, new_level: int)
 
+const XP_PER_LEVEL: int = 10
+const MAX_LETTER_LEVEL: int = 5
+const BONUS_XP_OWNED_PICKUP: int = 5
+const PER_LEVEL_BONUS := 0.25
+
+var letters_data: Dictionary = {}
 var max_hp: int = 100
 var current_hp: int = 100
 
@@ -36,6 +43,7 @@ func reset_to_defaults() -> void:
 		"armor": 2,
 	}
 	player_letters = initial_player_letters.duplicate()
+	letters_data.clear()
 	letter_limit = 6
 	letter_bonus_per_match = 0.05
 	letter_bonus_all_letters_extra = 2.0
@@ -66,13 +74,36 @@ func set_player_letters(letters: PackedStringArray) -> void:
 func set_initial_player_letters(letters: PackedStringArray) -> void:
 	initial_player_letters = letters.duplicate()
 	player_letters = letters.duplicate()
+	
+	# Init letter levels
+	for letter in player_letters:
+		var upper := letter.to_upper()
+		if not letters_data.has(upper):
+			letters_data[upper] = {"xp": 0, "level": 1, "times_used": 0}
+	
 	player_letters_changed.emit(player_letters)
 
 func add_player_letter(letter: String) -> void:
-	var up := letter.to_upper()
-	if up.length() == 1 and up in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
-		player_letters.append(up)
-		player_letters_changed.emit(player_letters)
+	var upper := letter.to_upper()
+	if upper.length() != 1 or upper not in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+		return
+	
+	# Repeat letter, grant bonus XP
+	if upper in player_letters:
+		
+		# already maxed, heal instead (for now, maybe change this to a different prize later)
+		if get_letter_level(upper) >= MAX_LETTER_LEVEL:
+			heal(15)
+			return
+		
+		add_letter_xp(upper, BONUS_XP_OWNED_PICKUP)
+		return
+	
+	# New letter, add to our list
+	player_letters.append(upper)
+	if not letters_data.has(upper):
+		letters_data[upper] = {"xp": 0, "level": 1, "times_used": 0}
+	player_letters_changed.emit(player_letters)
 
 func add_random_player_letters(count: int, rng: RandomNumberGenerator = null) -> PackedStringArray:
 	if rng == null:
@@ -101,10 +132,15 @@ func letter_bonus_multiplier_for_word(word: String) -> float:
 		return 1.0
 	var w := word.to_upper()
 	var match_count := 0
+	var bonus = 0.0
+	
 	for letter in player_letters:
 		if w.contains(letter):
 			match_count += 1
-	var bonus := float(match_count) * letter_bonus_per_match
+			var level := get_letter_level(letter)
+			var level_mult := 1.0 + float(level - 1) * PER_LEVEL_BONUS
+			bonus += letter_bonus_per_match * level_mult
+	
 	if match_count == player_letters.size():
 		bonus += letter_bonus_all_letters_extra
 	bonus = clampf(bonus, 0.0, letter_bonus_cap)
@@ -113,3 +149,31 @@ func letter_bonus_multiplier_for_word(word: String) -> float:
 
 func add_letter_limit(amount: int) -> void:
 	letter_limit = max(1, letter_limit + amount)
+
+func add_letter_xp(letter: String, amount: int = 1) -> void:
+	var upper = letter.to_upper()
+	if upper.length() != 1 or not upper in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+		return
+	
+	# Only grant XP to letters the player has
+	if not upper in player_letters:
+		return
+	
+	if not letters_data.has(upper):
+		letters_data[upper] = {"xp": 0, "level": 1, "times_used": 0}
+	
+	var letter_data : Dictionary = letters_data[upper]
+	letter_data["times_used"] += 1
+	
+	if int(letter_data["level"]) >= MAX_LETTER_LEVEL:
+		return
+	
+	letter_data["xp"] = int(letter_data["xp"]) + amount
+	while int(letter_data["xp"]) >= XP_PER_LEVEL and int(letter_data["level"]) < MAX_LETTER_LEVEL:
+		letter_data["xp"] = int(letter_data["xp"]) - XP_PER_LEVEL
+		letter_data["level"] = int(letter_data["level"]) + 1
+		letter_leveled_up.emit(upper, int(letter_data["level"]))
+
+func get_letter_level(letter: String) -> int:
+	var upper := letter.to_upper()
+	return int(letters_data.get(upper, {}).get("level", 1))
