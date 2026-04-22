@@ -32,9 +32,8 @@ func _ready() -> void:
 		if typeof(it_any) == TYPE_DICTIONARY:
 			_reward_items.append(it_any as Dictionary)
 	set_items(_reward_items)
-	var sorted := Array(PlayerState.player_letters)
-	sorted.sort()
-	letters_label.text = "Your letters: %s" % ", ".join(sorted)
+	
+	letters_label.text = "Your letters: %s" % PlayerState.format_player_letters_with_levels()
 	item_chosen.connect(_on_item_chosen)
 
 

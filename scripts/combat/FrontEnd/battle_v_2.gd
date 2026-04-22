@@ -145,17 +145,7 @@ func _update_letters_label(_letters: PackedStringArray = PackedStringArray()) ->
 	if letters_label == null:
 		return
 	
-	var sorted = Array(PlayerState.player_letters)
-	sorted.sort()
-	var display_letters = []
-	for letter in sorted:
-		var level := PlayerState.get_letter_level(letter)
-		if level > 1:
-			display_letters.append("%s Lv. %d" % [letter, level])
-		else:
-			display_letters.append(letter)
-			
-	letters_label.text = "Player letters: %s" % ", ".join(display_letters)
+	letters_label.text = "Player letters: %s" % PlayerState.format_player_letters_with_levels()
 	_update_letter_bonus_number_label()
 	_update_current_bonus_multiplier_label()
 

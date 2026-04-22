@@ -177,3 +177,15 @@ func add_letter_xp(letter: String, amount: int = 1) -> void:
 func get_letter_level(letter: String) -> int:
 	var upper := letter.to_upper()
 	return int(letters_data.get(upper, {}).get("level", 1))
+	
+func format_player_letters_with_levels() -> String:
+	var sorted := Array(player_letters)
+	sorted.sort()
+	var parts := []
+	for letter in sorted:
+		var level := get_letter_level(letter)
+		if level > 1:
+			parts.append("%s Lv.%d" % [letter, level])
+		else:
+			parts.append(letter)
+	return ", ".join(parts)
