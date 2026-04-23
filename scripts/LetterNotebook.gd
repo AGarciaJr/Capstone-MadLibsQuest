@@ -1,14 +1,14 @@
 extends Control
 
-@onready var close_button: Button = $NotebookPanel/MarginContainer/VBoxContainer/HeaderRow/CloseButton
-@onready var letter_label: Label = $NotebookPanel/MarginContainer/VBoxContainer/PortraitPlaceholder/LetterLabel
-@onready var level_label: Label = $NotebookPanel/MarginContainer/VBoxContainer/StatsContainer/LevelLabel
-@onready var xp_bar: ProgressBar = $NotebookPanel/MarginContainer/VBoxContainer/StatsContainer/XPBar
-@onready var xp_text: Label = $NotebookPanel/MarginContainer/VBoxContainer/StatsContainer/XPText
-@onready var used_label: Label = $NotebookPanel/MarginContainer/VBoxContainer/StatsContainer/UsedLabel
-@onready var prev_button: Button = $NotebookPanel/MarginContainer/VBoxContainer/NavRow/PrevButton
-@onready var next_button: Button = $NotebookPanel/MarginContainer/VBoxContainer/NavRow/NextButton
-@onready var page_indicator: Label = $NotebookPanel/MarginContainer/VBoxContainer/NavRow/PageIndicator
+@onready var close_button: Button = $NotebookPanel/VBoxContainer/HeaderRow/CloseButton
+@onready var letter_label: Label = $NotebookPanel/VBoxContainer/PortraitPlaceholder/LetterLabel
+@onready var level_label: Label = $NotebookPanel/VBoxContainer/StatsContainer/LevelLabel
+@onready var xp_bar: ProgressBar = $NotebookPanel/VBoxContainer/StatsContainer/XPBar
+@onready var xp_text: Label = $NotebookPanel/VBoxContainer/StatsContainer/XPText
+@onready var used_label: Label = $NotebookPanel/VBoxContainer/StatsContainer/UsedLabel
+@onready var prev_button: Button = $NotebookPanel/VBoxContainer/NavRow/PrevButton
+@onready var next_button: Button = $NotebookPanel/VBoxContainer/NavRow/NextButton
+@onready var page_indicator: Label = $NotebookPanel/VBoxContainer/NavRow/PageIndicator
 
 var _current_page: int = 1
 var _sorted_letters: Array = []

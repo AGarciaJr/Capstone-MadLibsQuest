@@ -1,6 +1,58 @@
 [gd_scene format=3 uid="uid://crpx8kcdgmlp1"]
 
 [ext_resource type="Script" uid="uid://bg0lym555qaqi" path="res://scripts/LetterNotebook.gd" id="1_yy3mt"]
+[ext_resource type="FontFile" uid="uid://caqk3gmdt5r4e" path="res://assets/Fonts/PlayfairDisplay-Bold.ttf" id="2_2prlg"]
+[ext_resource type="FontFile" uid="uid://dl2x675iiclpr" path="res://assets/Fonts/PlayfairDisplay-Black.ttf" id="2_3a8x2"]
+[ext_resource type="FontFile" uid="uid://bqm5yq0e5w8cx" path="res://assets/Fonts/PlayfairDisplay-Italic.ttf" id="4_33cp6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yy3mt"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+bg_color = Color(0.29337206, 0.24780053, 0.1897483, 0.94000006)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.8666667, 0.7490196, 0.4627451, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+expand_margin_left = 20.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eodyn"]
+bg_color = Color(0.38109186, 0.33183005, 0.2716998, 0.8)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.86504203, 0.7483791, 0.46135613, 0.5)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_81nok"]
+bg_color = Color(0.42358288, 0.38109186, 0.3133042, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ro6ey"]
+bg_color = Color(0.86504203, 0.7483791, 0.46135613, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0w6jr"]
+bg_color = Color(0.60038817, 0.60038817, 0.60038817, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yuhra"]
+bg_color = Color(0.60038817, 0.60038817, 0.60038817, 0)
 
 [node name="LetterNotebook" type="Control" unique_id=385097229]
 layout_mode = 3
@@ -35,24 +87,18 @@ offset_right = 70.0
 offset_bottom = 83.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_yy3mt")
 
-[node name="MarginContainer" type="MarginContainer" parent="NotebookPanel" unique_id=897521319]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="NotebookPanel/MarginContainer" unique_id=1155687202]
+[node name="VBoxContainer" type="VBoxContainer" parent="NotebookPanel" unique_id=1155687202]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="HeaderRow" type="Control" parent="NotebookPanel/MarginContainer/VBoxContainer" unique_id=93725479]
+[node name="HeaderRow" type="Control" parent="NotebookPanel/VBoxContainer" unique_id=93725479]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 size_flags_vertical = 6
 
-[node name="CloseButton" type="Button" parent="NotebookPanel/MarginContainer/VBoxContainer/HeaderRow" unique_id=1924514138]
+[node name="CloseButton" type="Button" parent="NotebookPanel/VBoxContainer/HeaderRow" unique_id=1924514138]
 custom_minimum_size = Vector2(40, 30)
 layout_mode = 1
 anchors_preset = 1
@@ -63,9 +109,14 @@ offset_bottom = 31.0
 grow_horizontal = 0
 size_flags_horizontal = 8
 size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.9822071, 0.9309246, 0.7220274, 1)
+theme_override_colors/font_disabled_color = Color(0.8750814, 0.8750814, 0.8750814, 0)
+theme_override_colors/icon_disabled_color = Color(1, 1, 1, 0)
+theme_override_fonts/font = ExtResource("2_2prlg")
+theme_override_font_sizes/font_size = 20
 text = "X"
 
-[node name="Title" type="Label" parent="NotebookPanel/MarginContainer/VBoxContainer/HeaderRow" unique_id=30505099]
+[node name="Title" type="Label" parent="NotebookPanel/VBoxContainer/HeaderRow" unique_id=30505099]
 custom_minimum_size = Vector2(0, 26)
 layout_mode = 1
 anchors_preset = 8
@@ -79,17 +130,21 @@ offset_right = 240.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_colors/font_color = Color(0.9822071, 0.9309246, 0.7220274, 1)
+theme_override_fonts/font = ExtResource("2_3a8x2")
+theme_override_font_sizes/font_size = 32
 text = "Letter Notebook"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PortraitPlaceholder" type="Panel" parent="NotebookPanel/MarginContainer/VBoxContainer" unique_id=323213591]
+[node name="PortraitPlaceholder" type="Panel" parent="NotebookPanel/VBoxContainer" unique_id=323213591]
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_eodyn")
 
-[node name="LetterLabel" type="Label" parent="NotebookPanel/MarginContainer/VBoxContainer/PortraitPlaceholder" unique_id=1983181269]
+[node name="LetterLabel" type="Label" parent="NotebookPanel/VBoxContainer/PortraitPlaceholder" unique_id=1983181269]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -102,56 +157,77 @@ offset_right = 20.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_2prlg")
 theme_override_font_sizes/font_size = 120
 text = "A"
 
-[node name="StatsContainer" type="VBoxContainer" parent="NotebookPanel/MarginContainer/VBoxContainer" unique_id=1108771629]
+[node name="StatsContainer" type="VBoxContainer" parent="NotebookPanel/VBoxContainer" unique_id=1108771629]
 layout_mode = 2
 
-[node name="LevelLabel" type="Label" parent="NotebookPanel/MarginContainer/VBoxContainer/StatsContainer" unique_id=955990237]
+[node name="LevelLabel" type="Label" parent="NotebookPanel/VBoxContainer/StatsContainer" unique_id=955990237]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(0.91627353, 0.89624393, 0.785777, 1)
+theme_override_fonts/font = ExtResource("2_2prlg")
+theme_override_font_sizes/font_size = 28
 text = "1/5"
 horizontal_alignment = 1
 
-[node name="XPBar" type="ProgressBar" parent="NotebookPanel/MarginContainer/VBoxContainer/StatsContainer" unique_id=1320408141]
-custom_minimum_size = Vector2(0, 30)
+[node name="XPBar" type="ProgressBar" parent="NotebookPanel/VBoxContainer/StatsContainer" unique_id=1320408141]
+custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_81nok")
+theme_override_styles/fill = SubResource("StyleBoxFlat_ro6ey")
 max_value = 5.0
+value = 1.0
 show_percentage = false
 
-[node name="XPText" type="Label" parent="NotebookPanel/MarginContainer/VBoxContainer/StatsContainer" unique_id=714163478]
+[node name="XPText" type="Label" parent="NotebookPanel/VBoxContainer/StatsContainer" unique_id=714163478]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.82665706, 0.7977378, 0.7014107, 1)
+theme_override_fonts/font = ExtResource("4_33cp6")
+theme_override_font_sizes/font_size = 18
 text = "0/10"
 horizontal_alignment = 1
 
-[node name="UsedLabel" type="Label" parent="NotebookPanel/MarginContainer/VBoxContainer/StatsContainer" unique_id=902153290]
+[node name="UsedLabel" type="Label" parent="NotebookPanel/VBoxContainer/StatsContainer" unique_id=902153290]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.82665706, 0.7977378, 0.7014107, 1)
+theme_override_fonts/font = ExtResource("4_33cp6")
 theme_override_font_sizes/font_size = 20
 text = "Times used: 1"
 horizontal_alignment = 1
 
-[node name="NavRow" type="HBoxContainer" parent="NotebookPanel/MarginContainer/VBoxContainer" unique_id=658557665]
+[node name="NavRow" type="HBoxContainer" parent="NotebookPanel/VBoxContainer" unique_id=658557665]
 layout_mode = 2
 size_flags_vertical = 10
 
-[node name="PrevButton" type="Button" parent="NotebookPanel/MarginContainer/VBoxContainer/NavRow" unique_id=591375579]
+[node name="PrevButton" type="Button" parent="NotebookPanel/VBoxContainer/NavRow" unique_id=591375579]
 layout_mode = 2
-text = "<-"
+theme_override_colors/font_color = Color(0.8808251, 0.8808251, 0.8808251, 1)
+theme_override_fonts/font = ExtResource("2_2prlg")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_0w6jr")
+text = "🡸"
 
-[node name="Control" type="Control" parent="NotebookPanel/MarginContainer/VBoxContainer/NavRow" unique_id=55219469]
+[node name="Control" type="Control" parent="NotebookPanel/VBoxContainer/NavRow" unique_id=55219469]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PageIndicator" type="Label" parent="NotebookPanel/MarginContainer/VBoxContainer/NavRow" unique_id=757565803]
+[node name="PageIndicator" type="Label" parent="NotebookPanel/VBoxContainer/NavRow" unique_id=757565803]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.82665706, 0.7977378, 0.7014107, 1)
+theme_override_fonts/font = ExtResource("4_33cp6")
+theme_override_font_sizes/font_size = 22
 text = "0/5"
 
-[node name="Control2" type="Control" parent="NotebookPanel/MarginContainer/VBoxContainer/NavRow" unique_id=1440570009]
+[node name="Control2" type="Control" parent="NotebookPanel/VBoxContainer/NavRow" unique_id=1440570009]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="NextButton" type="Button" parent="NotebookPanel/MarginContainer/VBoxContainer/NavRow" unique_id=1778667234]
+[node name="NextButton" type="Button" parent="NotebookPanel/VBoxContainer/NavRow" unique_id=1778667234]
 layout_mode = 2
-text = "->"
+theme_override_colors/font_color = Color(0.8808251, 0.8808251, 0.8808251, 1)
+theme_override_fonts/font = ExtResource("2_2prlg")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_yuhra")
+text = "🡺"

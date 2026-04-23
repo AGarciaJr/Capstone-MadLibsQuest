@@ -36,6 +36,7 @@ Scenes="*uid://xwp80yc533f6"
 AudioPlayer="*uid://b60kderxkt4rx"
 SaveManager="*uid://cp40fvkh56vk6"
 MouseModeStack="*uid://bqavvxj2bqdof"
+InputBlocker="*uid://dyf0oogclqik1"
 
 [display]
 
