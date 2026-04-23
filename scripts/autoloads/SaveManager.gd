@@ -18,6 +18,7 @@ func save() -> void:
 			"letter_bonus_all_letters_extra": PlayerState.letter_bonus_all_letters_extra,
 			"letter_bonus_cap": PlayerState.letter_bonus_cap,
 			"letter_limit": PlayerState.letter_limit,
+			"letters_data": PlayerState.letters_data,
 			"inventory": PlayerState.inventory,
 			"current_run_score": PlayerState.current_run_score
 		},
@@ -64,7 +65,13 @@ func load_save() -> bool:
 	PlayerState.current_hp = int(p.get("current_hp", 100))
 	PlayerState.stats = p.get("stats", PlayerState.stats)
 	PlayerState.set_initial_player_letters(PackedStringArray(Array(p.get("initial_player_letters", [])).map(func(x): return str(x))))
+	
 	PlayerState.set_player_letters(PackedStringArray(Array(p.get("player_letters", [])).map(func(x): return str(x))))
+	var saved_letters_data = p.get("letters_data", null)
+	if saved_letters_data is Dictionary:
+		PlayerState.letters_data = _retrieve_letters_data(saved_letters_data)
+		
+	
 	PlayerState.letter_bonus_per_match = float(p.get("letter_bonus_per_match", 0.05))
 	PlayerState.letter_bonus_all_letters_extra = float(p.get("letter_bonus_all_letters_extra", 2.0))
 	PlayerState.letter_bonus_cap = float(p.get("letter_bonus_cap", 99.0))
@@ -104,7 +111,7 @@ func load_save() -> bool:
 
 	Run.map = raw_map
 	Run.current_id = int(r.get("current_id", 0))
-	Run.run_mode = int(r.get("run_mode", RunManager.RunMode.GENERATED))
+	Run.run_mode = int(r.get("run_mode", RunManager.RunMode.GENERATED)) as RunManager.RunMode
 	
 	# Restore Progress
 	var prog: Dictionary = data.get("progress", {})
@@ -118,3 +125,15 @@ func delete_save() -> void:
 
 func has_save() -> bool:
 	return FileAccess.file_exists(SAVE_PATH)
+	
+func _retrieve_letters_data(rawJSON: Dictionary) -> Dictionary:
+	var out := {}
+	for key in rawJSON.keys():
+		var entry : Dictionary = rawJSON[key]
+		out[String(key).to_upper()] = {
+			"xp": int(entry.get("xp", 0)),
+			"level": int(entry.get("level", 1)),
+			"times_used": int(entry.get("times_used", 0)),
+		}
+	
+	return out

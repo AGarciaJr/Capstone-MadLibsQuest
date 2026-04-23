@@ -15,13 +15,12 @@ func _input(event):
 func pause_game():
 	show()
 	get_tree().paused = true
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	MouseModeStack.push(self, Input.MOUSE_MODE_VISIBLE)
 
 func resume_game():
 	get_tree().paused = false
 	hide()
-	if get_tree().current_scene.scene_file_path == Scenes.ROOM:
-		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	MouseModeStack.pop(self)
 
 func _on_resume_button_pressed():
 	resume_game()

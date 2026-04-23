@@ -16,7 +16,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 config/name="madlibsquest"
 run/main_scene="uid://mhf2f8rk8kse"
-config/features=PackedStringArray("4.6", "Forward Plus")
+config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -35,6 +35,7 @@ SceneTransition="*res://scripts/autoloads/SceneTransition.tscn"
 Scenes="*uid://xwp80yc533f6"
 AudioPlayer="*uid://b60kderxkt4rx"
 SaveManager="*uid://cp40fvkh56vk6"
+MouseModeStack="*uid://bqavvxj2bqdof"
 
 [display]
 

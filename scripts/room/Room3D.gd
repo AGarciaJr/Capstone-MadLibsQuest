@@ -16,7 +16,7 @@ extends Node3D
 )
 @export var door_radius: float = .75
 
-const DOOR_SCENE := preload("res://Scenes/Rooms/Scene/DoorInteractable.tscn")
+const DOOR_SCENE := preload("res://Scenes/Rooms/DoorInteractable.tscn")
 
 var sensitivity := 0.003
 var _hovered_door: DoorInteractable = null
@@ -31,7 +31,7 @@ func _ready() -> void:
 	_gate_tex  = load("res://assets/Art/Envoirnment/3D-CubeMaps/gate.png")
 	_atlas_tex = load("res://assets/Art/Envoirnment/3D-CubeMaps/cubemap_atlas01.png")
 	
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	MouseModeStack.set_default_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
 	if not begin_run_button.pressed.is_connected(_on_begin_run_pressed):	
 		begin_run_button.pressed.connect(_on_begin_run_pressed)

@@ -28,7 +28,7 @@ var items: Array[Dictionary] = [
 		"reward_pool": REWARD_POOL_LETTER_ACQUISITION,
 		"category": "Power Boost",
 		"name": "Glyph of Many Letters",
-		"description": "Adds 2 random player letters.",
+		"description": "Adds 2 random letters, or grants XP to ones you already own.",
 		"icon": "res://assets/Art/Items/scroll.png",
 		"effect_type": "add_random_player_letters",
 		"params": {
@@ -120,7 +120,7 @@ func _get_pooled_random_choices_3() -> Array[Dictionary]:
 			"reward_pool": REWARD_POOL_LETTER_ACQUISITION,
 			"category": "Letters recruitment",
 			"name": "Letter %s" % letter,
-			"description": "Adds '%s' as a player letter. If you already have it, doubles the damage bonus for that letter!" % letter,
+			"description": "Adds '%s' as a player letter, or grants bonus XP if you already have it!" % letter,
 			"icon": "res://assets/Art/Items/ink.png",
 			"effect_type": "add_player_letter",
 			"params": {"letter": letter}
@@ -148,7 +148,7 @@ func _get_random_choices_legacy(n: int) -> Array[Dictionary]:
 			"id": "letter_%s" % letter,
 			"category": "Letters recruitment",
 			"name": "Letter %s" % letter,
-			"description": "Adds '%s' as a player letter. If you already have it, doubles the damage bonus for that letter!" % letter,
+			"description": "Adds '%s' as a player letter, or grants bonus XP if you already have it!" % letter,
 			"icon": "res://assets/Art/Items/ink.png",
 			"effect_type": "add_player_letter",
 			"params": {"letter": letter}

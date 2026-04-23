@@ -1,0 +1,132 @@
+[gd_scene format=3 uid="uid://crpx8kcdgmlp1"]
+
+[ext_resource type="Script" uid="uid://bg0lym555qaqi" path="res://scripts/letter_notebook.gd" id="1_yy3mt"]
+
+[node name="LetterNotebook" type="Control" unique_id=385097229]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_yy3mt")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=171008591]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="NotebookPanel" type="PanelContainer" parent="." unique_id=872968509]
+custom_minimum_size = Vector2(500, 600)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -70.0
+offset_top = -83.0
+offset_right = 70.0
+offset_bottom = 83.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="NotebookPanel" unique_id=897521319]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="CloseButton" type="Button" parent="NotebookPanel/MarginContainer" unique_id=1924514138]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = "X"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="NotebookPanel/MarginContainer" unique_id=1155687202]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="NotebookPanel/MarginContainer/VBoxContainer" unique_id=30505099]
+layout_mode = 2
+text = "Letter Notebook"
+horizontal_alignment = 1
+
+[node name="PortraitPlaceholder" type="Panel" parent="NotebookPanel/MarginContainer/VBoxContainer" unique_id=323213591]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="LetterLabel" type="Label" parent="NotebookPanel/MarginContainer/VBoxContainer/PortraitPlaceholder" unique_id=1983181269]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 120
+text = "A"
+
+[node name="StatsContainer" type="VBoxContainer" parent="NotebookPanel/MarginContainer/VBoxContainer" unique_id=1108771629]
+layout_mode = 2
+
+[node name="LevelLabel" type="Label" parent="NotebookPanel/MarginContainer/VBoxContainer/StatsContainer" unique_id=955990237]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "1/5"
+horizontal_alignment = 1
+
+[node name="XPBar" type="ProgressBar" parent="NotebookPanel/MarginContainer/VBoxContainer/StatsContainer" unique_id=1320408141]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+max_value = 5.0
+show_percentage = false
+
+[node name="XPText" type="Label" parent="NotebookPanel/MarginContainer/VBoxContainer/StatsContainer" unique_id=714163478]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "0/10"
+horizontal_alignment = 1
+
+[node name="UsedLabel" type="Label" parent="NotebookPanel/MarginContainer/VBoxContainer/StatsContainer" unique_id=902153290]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Times used: 1"
+horizontal_alignment = 1
+
+[node name="NavRow" type="HBoxContainer" parent="NotebookPanel/MarginContainer/VBoxContainer" unique_id=658557665]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="PrevButton" type="Button" parent="NotebookPanel/MarginContainer/VBoxContainer/NavRow" unique_id=591375579]
+layout_mode = 2
+text = "<-"
+
+[node name="Control" type="Control" parent="NotebookPanel/MarginContainer/VBoxContainer/NavRow" unique_id=55219469]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PageIndicator" type="Label" parent="NotebookPanel/MarginContainer/VBoxContainer/NavRow" unique_id=757565803]
+layout_mode = 2
+text = "0/5"
+
+[node name="Control2" type="Control" parent="NotebookPanel/MarginContainer/VBoxContainer/NavRow" unique_id=1440570009]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NextButton" type="Button" parent="NotebookPanel/MarginContainer/VBoxContainer/NavRow" unique_id=1778667234]
+layout_mode = 2
+text = "->"
