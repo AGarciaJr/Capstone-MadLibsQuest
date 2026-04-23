@@ -13,8 +13,6 @@ func _ready() -> void:
 	player_label.text = "Well done, %s!" % PlayerState.player_name
 	score_label.text = "Final Score: %d" % PlayerState.current_run_score
 	
-	var sorted_letters := Array(PlayerState.player_letters)
-	sorted_letters.sort()
 	var stat_parts: Array[String] = []
 	stat_parts.append("HP Remaining: %d / %d" % [PlayerState.current_hp, PlayerState.max_hp])
 	stat_parts.append("Letters collected: %s" % PlayerState.format_player_letters_with_levels())

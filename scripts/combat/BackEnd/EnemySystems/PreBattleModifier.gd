@@ -13,6 +13,8 @@ var _last_modifier: EncounterModifier = null
 
 
 func _ready() -> void:
+	MouseModeStack.set_default_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	user_input.grab_focus()
 	submit_button.pressed.connect(_on_submit_pressed)
 	continue_button.pressed.connect(_on_continue_pressed)
 	user_input.text_submitted.connect(_on_text_submitted)
