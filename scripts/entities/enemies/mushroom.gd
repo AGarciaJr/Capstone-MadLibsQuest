@@ -49,7 +49,7 @@ func _init() -> void:
 			"blanks": [
 				{"type": "adjective", "hint": "what kind of rage? (fungal? silent? catastrophic?)",           "display": "ADJECTIVE"},
 				{"type": "adjective", "hint": "describe that fist (enormous? slimy? fast?)",     "display": "ADJECTIVE"},
-				{"type": "adjective", "hint": "describe the shockwave (ground-shaking? blinding? damp?)", "display": "ADJECTIVE"},
+				{"type": "adjective", "hint": "describe the shockwave ( blinding? damp?)", "display": "ADJECTIVE"},
 			]
 		},
 		{
@@ -64,8 +64,8 @@ func _init() -> void:
 			"line": "Spores burst from the ___ cap above and the hero had to ___ through a ___ storm of them!",
 			"blanks": [
 				{"type": "adjective", "hint": "describe the mushroom's enormous cap (glowing? pulsing? ancient?)",      "display": "ADJECTIVE"},
-				{"type": "verb",      "hint": "how did the hero push through? (sprint? crawl? power-walk?)",            "display": "VERB"},
-				{"type": "adjective", "hint": "describe that spore storm (blinding? rainbow-colored? endless?)", "display": "ADJECTIVE"},
+				{"type": "verb",      "hint": "how did the hero push through? (sprint? crawl?)",            "display": "VERB"},
+				{"type": "adjective", "hint": "describe that spore storm (blinding? endless?)", "display": "ADJECTIVE"},
 			]
 		},
 	]
