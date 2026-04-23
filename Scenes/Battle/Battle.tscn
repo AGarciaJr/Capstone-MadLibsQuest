@@ -13,7 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://Scenes/CanvasLayer.tscn" id="5_vn0yc"]
 [ext_resource type="PackedScene" uid="uid://wdlitqgfnt17" path="res://Scenes/YouDiedScreen.tscn" id="7_8ftua"]
 [ext_resource type="AudioStream" uid="uid://emi3y03p3dbd" path="res://assets/Art/BattleMusic.mp3" id="7_dcr6b"]
-[ext_resource type="PackedScene" uid="uid://crpx8kcdgmlp1" path="res://scenes/LetterNotebook.tscn" id="14_alxtf"]
+[ext_resource type="PackedScene" uid="uid://crpx8kcdgmlp1" path="res://Scenes/LetterNotebook.tscn" id="14_alxtf"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_textbox"]
 bg_color = Color(0.07, 0.05, 0.03, 0.94)

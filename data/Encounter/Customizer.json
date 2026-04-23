@@ -406,7 +406,9 @@
 				"fragile",
 				"delicate"
 			],
-			"flat_modifiers": {},
+			"flat_modifiers": {
+
+			},
 			"mult_modifiers": {
 				"hp": 0.78,
 				"def": 0.88
@@ -414,11 +416,11 @@
 			"status_effects_on_hit": [],
 			"status_effects_on_turn_start": [],
 			"post_fight_modifiers": [],
-			"difficulty": 1,
+			"difficulty": 1.0,
 			"element_override": null,
 			"behavior_flags": [],
 			"stackable": false,
-			"rarity_weight": 7
+			"rarity_weight": 7.0
 		},
 		{
 			"id": "lucky",
@@ -439,7 +441,9 @@
 				"fortunate",
 				"blessed"
 			],
-			"flat_modifiers": {},
+			"flat_modifiers": {
+
+			},
 			"mult_modifiers": {
 				"crit_chance": 1.28,
 				"crit_mult": 1.06
@@ -447,11 +451,11 @@
 			"status_effects_on_hit": [],
 			"status_effects_on_turn_start": [],
 			"post_fight_modifiers": [],
-			"difficulty": 2,
+			"difficulty": 2.0,
 			"element_override": null,
 			"behavior_flags": [],
 			"stackable": false,
-			"rarity_weight": 7
+			"rarity_weight": 7.0
 		},
 		{
 			"id": "wild",
@@ -473,7 +477,9 @@
 				"feral",
 				"savage"
 			],
-			"flat_modifiers": {},
+			"flat_modifiers": {
+
+			},
 			"mult_modifiers": {
 				"atk": 1.18,
 				"accuracy": 0.86
@@ -481,11 +487,11 @@
 			"status_effects_on_hit": [],
 			"status_effects_on_turn_start": [],
 			"post_fight_modifiers": [],
-			"difficulty": 3,
+			"difficulty": 3.0,
 			"element_override": null,
 			"behavior_flags": [],
 			"stackable": false,
-			"rarity_weight": 7
+			"rarity_weight": 7.0
 		},
 		{
 			"id": "trained",
@@ -507,7 +513,9 @@
 				"disciplined",
 				"skilled"
 			],
-			"flat_modifiers": {},
+			"flat_modifiers": {
+
+			},
 			"mult_modifiers": {
 				"accuracy": 1.1,
 				"atk": 1.06
@@ -515,11 +523,11 @@
 			"status_effects_on_hit": [],
 			"status_effects_on_turn_start": [],
 			"post_fight_modifiers": [],
-			"difficulty": 2,
+			"difficulty": 2.0,
 			"element_override": null,
 			"behavior_flags": [],
 			"stackable": false,
-			"rarity_weight": 7
+			"rarity_weight": 7.0
 		},
 		{
 			"id": "bloated",
@@ -540,7 +548,9 @@
 				"swollen",
 				"inflated"
 			],
-			"flat_modifiers": {},
+			"flat_modifiers": {
+
+			},
 			"mult_modifiers": {
 				"hp": 1.22,
 				"atk": 0.9
@@ -548,11 +558,11 @@
 			"status_effects_on_hit": [],
 			"status_effects_on_turn_start": [],
 			"post_fight_modifiers": [],
-			"difficulty": 2,
+			"difficulty": 2.0,
 			"element_override": null,
 			"behavior_flags": [],
 			"stackable": false,
-			"rarity_weight": 6
+			"rarity_weight": 6.0
 		},
 		{
 			"id": "diseased",
@@ -574,7 +584,9 @@
 				"plagued",
 				"infected"
 			],
-			"flat_modifiers": {},
+			"flat_modifiers": {
+
+			},
 			"mult_modifiers": {
 				"hp": 0.9,
 				"atk": 0.88
@@ -590,11 +602,11 @@
 				}
 			],
 			"post_fight_modifiers": [],
-			"difficulty": 2,
+			"difficulty": 2.0,
 			"element_override": null,
 			"behavior_flags": [],
 			"stackable": false,
-			"rarity_weight": 5
+			"rarity_weight": 5.0
 		},
 		{
 			"id": "elite",
@@ -616,7 +628,9 @@
 				"champion",
 				"legendary"
 			],
-			"flat_modifiers": {},
+			"flat_modifiers": {
+
+			},
 			"mult_modifiers": {
 				"hp": 1.1,
 				"atk": 1.12,
@@ -626,11 +640,11 @@
 			"status_effects_on_hit": [],
 			"status_effects_on_turn_start": [],
 			"post_fight_modifiers": [],
-			"difficulty": 4,
+			"difficulty": 4.0,
 			"element_override": null,
 			"behavior_flags": [],
 			"stackable": false,
-			"rarity_weight": 4
+			"rarity_weight": 4.0
 		},
 		{
 			"id": "plain",

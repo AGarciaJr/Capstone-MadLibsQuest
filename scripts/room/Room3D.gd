@@ -27,6 +27,12 @@ var _gate_mesh: Mesh
 var _gate_tex: Texture2D
 var _atlas_tex: Texture2D
 
+func _exit_tree() -> void:
+	if is_instance_valid(map_overlay) and map_overlay.visible:
+		MouseModeStack.pop(map_overlay)
+		InputBlocker.pop(map_overlay)
+
+
 func _ready() -> void:
 	_gate_mesh = load("res://assets/Art/Envoirnment/3D-CubeMaps/gate.obj")
 	_gate_tex  = load("res://assets/Art/Envoirnment/3D-CubeMaps/gate.png")

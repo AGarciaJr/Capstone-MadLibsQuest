@@ -103,8 +103,7 @@ var _enemy_hit_sound_pool: Array[AudioStream] = []
 
 func _ready() -> void:
 	AudioPlayer.play_music_battle()
-	
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	MouseModeStack.set_default_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	fade.color = Color(0, 0, 0, 1)
 	rng.randomize()
 	submit_button.pressed.connect(_on_submit_pressed)

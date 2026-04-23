@@ -40,6 +40,8 @@ func _on_resume_button_pressed():
 	resume_game()
 
 func _on_return_base_pressed():
+	MouseModeStack.pop(self)
+	InputBlocker.pop(self)
 	get_tree().paused = false
 	get_tree().change_scene_to_file(Scenes.INTRO)
 
@@ -48,6 +50,8 @@ func _on_main_menu_pressed():
 		_tips_overlay.queue_free()
 	_tips_overlay = null
 	$PanelContainer.show()
+	MouseModeStack.pop(self)
+	InputBlocker.pop(self)
 	get_tree().paused = false
 	get_tree().change_scene_to_file(Scenes.MAIN_MENU)
 
