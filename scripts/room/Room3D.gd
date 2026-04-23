@@ -16,6 +16,7 @@ extends Node3D
 )
 @export var door_radius: float = .75
 
+
 const DOOR_SCENE := preload("res://Scenes/Rooms/DoorInteractable.tscn")
 
 var sensitivity := 0.003
@@ -50,27 +51,30 @@ func _ready() -> void:
 	_apply_3d_assets()
 
 func _input(event):
+	# Opening map
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_M:
+			_toggle_map_overlay()
+			return
+	
+	if InputBlocker.is_blocked():
+		return
+	
 	# looking
 	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		camera.rotate_y(-event.relative.x * sensitivity)
-	
+
 	# Door click
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		if completion_center.visible or _is_transitioning or map_overlay.visible:
+		if completion_center.visible or _is_transitioning:
 			return
 		
 		var door := _get_targeted_door()
 		if door != null:
 			door.interact()
 	
-	# Opening map
-	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode == KEY_M:
-			_toggle_map_overlay()
-			return
-
 func _process(_delta: float) -> void:
-	if completion_center.visible or _is_transitioning or map_overlay.visible:
+	if completion_center.visible or _is_transitioning or InputBlocker.is_blocked():
 		_set_hovered_door(null)
 		return
 	
@@ -272,19 +276,24 @@ func _update_map_overlay() -> void:
 	map_view.set_map_data(Run.map, Run.current_id)
 	
 func _toggle_map_overlay() ->void:
-	if completion_center.visible or _is_transitioning:
+	# Closing overlay
+	if map_overlay.visible:
+		map_overlay.visible = false
+		MouseModeStack.pop(map_overlay)
+		InputBlocker.pop(map_overlay)
+		crosshair.visible = true
 		return
 	
-	map_overlay.visible = not map_overlay.visible
+	if InputBlocker.is_blocked() or completion_center.visible or _is_transitioning:
+		return
 	
-	if map_overlay.visible:
-		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-		crosshair.visible = false
-		_set_hovered_door(null)
-		_update_map_overlay()
-	else:
-		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-		crosshair.visible = true
+	# opening overlay
+	map_overlay.visible = true
+	MouseModeStack.push(map_overlay, Input.MOUSE_MODE_VISIBLE)
+	InputBlocker.push(map_overlay)
+	crosshair.visible = false
+	_set_hovered_door(null)
+	_update_map_overlay()
 
 func _find_node_position(node_id: int, map: Dictionary) -> Dictionary:
 	var not_found := {"layer": -1, "row": -1, "layer_size": -1}
