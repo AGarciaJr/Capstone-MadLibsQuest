@@ -11,16 +11,16 @@ process_mode = 3
 script = ExtResource("1_4ylis")
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1826520914]
-custom_minimum_size = Vector2(250, 290)
+custom_minimum_size = Vector2(250, 352)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -125.0
-offset_top = -145.0
+offset_top = -176.0
 offset_right = 125.0
-offset_bottom = 145.0
+offset_bottom = 176.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_p1mel")
@@ -48,6 +48,15 @@ theme_override_fonts/font = ExtResource("3_ydkpc")
 theme_override_font_sizes/font_size = 21
 text = "Resume"
 
+[node name="BattleTips" type="Button" parent="PanelContainer/VBoxContainer" unique_id=975483880]
+custom_minimum_size = Vector2(200, 44)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7529412, 0.7529412, 0.7529412, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_ydkpc")
+theme_override_font_sizes/font_size = 21
+text = "Battle tips"
+
 [node name="MainMenu" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1264553918]
 custom_minimum_size = Vector2(200, 44)
 layout_mode = 2
@@ -58,4 +67,5 @@ theme_override_font_sizes/font_size = 21
 text = "Main Menu"
 
 [connection signal="pressed" from="PanelContainer/VBoxContainer/Resume" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/BattleTips" to="." method="_on_battle_tips_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/MainMenu" to="." method="_on_main_menu_pressed"]

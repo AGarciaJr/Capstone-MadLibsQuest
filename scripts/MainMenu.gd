@@ -4,6 +4,7 @@ extends Control
 @onready var continue_button: Button = $VBoxContainer/Continue
 
 func _ready():
+	MouseModeStack.set_default_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	AudioPlayer.play_music_title()
 	Engine.time_scale = 1.0
 	mode_modal.visible = false

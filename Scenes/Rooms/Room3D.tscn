@@ -3,8 +3,8 @@
 
 [ext_resource type="Script" uid="uid://cwh0iyo32lve3" path="res://scripts/room/Room3D.gd" id="1_ycg17"]
 [ext_resource type="Script" uid="uid://by0l5vrov16w2" path="res://scripts/room/Map.gd" id="2_x8ju2"]
-[ext_resource type="PackedScene" uid="uid://crpx8kcdgmlp1" path="res://scenes/LetterNotebook.tscn" id="3_qb10a"]
-[ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://scenes/CanvasLayer.tscn" id="4_ip6ky"]
+[ext_resource type="PackedScene" uid="uid://crpx8kcdgmlp1" path="res://Scenes/LetterNotebook.tscn" id="3_qb10a"]
+[ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://Scenes/CanvasLayer.tscn" id="4_ip6ky"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_swdye"]
 

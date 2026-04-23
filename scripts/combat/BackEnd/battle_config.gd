@@ -15,7 +15,6 @@ static func build(encounter: Dictionary) -> Dictionary:
 
 	var cfg: Dictionary = {
 		"enemy_max_hp": 30,
-		"player_max_hp": 100,
 		"enemy_name": "Enemy",
 		"template_line": "The hero faced a fearsome ___, chose to ___, and won with ___ force!",
 		"blanks": [
@@ -52,5 +51,8 @@ static func build(encounter: Dictionary) -> Dictionary:
 				cfg.blanks        = enemy.templates[0].get("blanks", cfg.blanks)
 			cfg["defeat_message"] = enemy.defeat_message
 			enemy.free()
+
+	if encounter.has("player_max_hp"):
+		cfg["player_max_hp"] = int(encounter["player_max_hp"])
 
 	return cfg

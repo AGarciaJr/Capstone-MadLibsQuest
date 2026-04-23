@@ -1,396 +1,687 @@
 {
-  "modifiers": [
-	{
-		"id": "cursed",
-		"display_name": "Cursed",
-		"definition": "The foe is cursed and takes 10% of their max HP as damage each turn, but has a higher chance to land critical hits.",
-		"semantic_hints": [
-			"cursed",
-			"hexed",
-			"haunted", 
-			"doomed", 
-			"unholy", 
-			"blighted",
-			"evil",
-			"demonic",
-			"greedy",
-			"selfish"
-		],
-		"forced_words": [
-			"cursed", 
-            "hexed"
-		],
-		"flat_modifiers": {},
-		"mult_modifiers": { 
-			"crit_chance": 2.0
-		},
-		"status_effects_on_turn_start": [
-			{ "id": "self_damage", "params": { "percent": 0.10, "source": "curse" } }
-		],
-		"difficulty": 1,
-		"post_fight_modifiers": [],
-		"element_override": "spooky",
-		"behavior_flags": ["reckless"],
-		"stackable": false,
-		"rarity_weight": 6
-	},
-	{
-		"id": "big",
-		"display_name": "Big",
-		"definition": "A larger-than-normal foe: tougher and harder to bring down.",
-		"semantic_hints": [
-			"big",
-			"large",
-			"huge",
-			"massive",
-			"giant",
-			"colossal",
-			"hulking",
-			"towering",
-			"oversized",
-			"bulky",
-			"heavy",
-			"thick",
-            "muscular"
-		],
-		"forced_words": [
-			"big",
-			"giant",
-			"huge",
-			"massive",
-            "colossal"
-		],
+	"modifiers": [
+		{
+			"id": "cursed",
+			"display_name": "Cursed",
+			"definition": "The foe is cursed and takes 10% of their max HP as damage each turn, but has a higher chance to land critical hits.",
+			"semantic_hints": [
+				"cursed",
+				"hexed",
+				"haunted",
+				"doomed",
+				"unholy",
+				"blighted",
+				"evil",
+				"demonic",
+				"greedy",
+				"selfish"
+			],
+			"forced_words": [
+				"cursed",
+				"hexed"
+			],
+			"flat_modifiers": {
 
-		"flat_modifiers": {
-			"hp": 10
+			},
+			"mult_modifiers": {
+				"crit_chance": 2.0
+			},
+			"status_effects_on_turn_start": [
+				{
+					"id": "self_damage",
+					"params": {
+						"percent": 0.1,
+						"source": "curse"
+					}
+				}
+			],
+			"difficulty": 1.0,
+			"post_fight_modifiers": [],
+			"element_override": "spooky",
+			"behavior_flags": [
+				"reckless"
+			],
+			"stackable": false,
+			"rarity_weight": 6.0
 		},
-		"mult_modifiers": {
-			"hp": 1.35
+		{
+			"id": "big",
+			"display_name": "Big",
+			"definition": "A larger-than-normal foe: tougher and harder to bring down.",
+			"semantic_hints": [
+				"big",
+				"large",
+				"huge",
+				"massive",
+				"giant",
+				"colossal",
+				"hulking",
+				"towering",
+				"oversized",
+				"bulky",
+				"heavy",
+				"thick",
+				"muscular"
+			],
+			"forced_words": [
+				"big",
+				"giant",
+				"huge",
+				"massive",
+				"colossal"
+			],
+			"flat_modifiers": {
+				"hp": 10.0
+			},
+			"mult_modifiers": {
+				"hp": 1.35
+			},
+			"status_effects_on_hit": [],
+			"status_effects_on_turn_start": [],
+			"post_fight_modifiers": [],
+			"difficulty": 3.0,
+			"element_override": null,
+			"behavior_flags": [
+				"slow_but_tanky"
+			],
+			"stackable": false,
+			"rarity_weight": 10.0
 		},
-		"status_effects_on_hit": [],
-		"status_effects_on_turn_start": [],
-		"post_fight_modifiers": [],
-		"difficulty": 3,
-		"element_override": null,
-		"behavior_flags": ["slow_but_tanky"],
-		"stackable": false,
-		"rarity_weight": 10
-	},
-	{
-		"id": "small",
-		"display_name": "Small",
-		"definition": "A smaller-than-normal foe: fragile, but quicker to fell.",
-		"semantic_hints": [
-			"small",
-			"tiny",
-			"little",
-			"mini",
-			"minuscule",
-			"petite",
-			"compact",
-			"slight",
-			"short",
-			"puny",
-			"shrimp",
-			"pocket",
-            "skinny"
-		],
-		"forced_words": [
-			"small",
-			"tiny",
-			"mini",
-            "minuscule"
-		],
+		{
+			"id": "small",
+			"display_name": "Small",
+			"definition": "A smaller-than-normal foe: fragile, but quicker to fell.",
+			"semantic_hints": [
+				"small",
+				"tiny",
+				"little",
+				"mini",
+				"minuscule",
+				"petite",
+				"compact",
+				"slight",
+				"short",
+				"puny",
+				"shrimp",
+				"pocket",
+				"skinny"
+			],
+			"forced_words": [
+				"small",
+				"tiny",
+				"mini",
+				"minuscule"
+			],
+			"flat_modifiers": {
 
-		"flat_modifiers": {},
-		"mult_modifiers": {
-			"hp": 0.85
+			},
+			"mult_modifiers": {
+				"hp": 0.85
+			},
+			"status_effects_on_hit": [],
+			"status_effects_on_turn_start": [],
+			"post_fight_modifiers": [],
+			"difficulty": 1.0,
+			"element_override": null,
+			"behavior_flags": [
+				"fast_but_fragile"
+			],
+			"stackable": false,
+			"rarity_weight": 10.0
 		},
-		"status_effects_on_hit": [],
-		"status_effects_on_turn_start": [],
-		"post_fight_modifiers": [],
-		"difficulty": 1,
-		"element_override": null,
-		"behavior_flags": ["fast_but_fragile"],
-		"stackable": false,
-		"rarity_weight": 10
-	},
-	{
-		"id": "weak",
-		"display_name": "Weak",
-		"definition": "This foe looks worn down or out of shape: it has a bit less health and does not hit as hard.",
-		"semantic_hints": [
-			"weak",
-			"feeble",
-			"frail",
-			"sickly",
-			"exhausted",
-			"battered",
-			"powerless",
-			"pathetic",
-			"wimpy",
-			"soft"
-		],
-		"forced_words": [
-			"weak",
-			"feeble",
-			"frail"
-		],
-		"flat_modifiers": {},
-		"mult_modifiers": {
-			"hp": 0.88,
-			"atk": 0.82
+		{
+			"id": "weak",
+			"display_name": "Weak",
+			"definition": "This foe looks worn down or out of shape: it has a bit less health and does not hit as hard.",
+			"semantic_hints": [
+				"weak",
+				"feeble",
+				"frail",
+				"sickly",
+				"exhausted",
+				"battered",
+				"powerless",
+				"pathetic",
+				"wimpy",
+				"soft"
+			],
+			"forced_words": [
+				"weak",
+				"feeble",
+				"frail"
+			],
+			"flat_modifiers": {
+
+			},
+			"mult_modifiers": {
+				"hp": 0.88,
+				"atk": 0.82
+			},
+			"status_effects_on_hit": [],
+			"status_effects_on_turn_start": [],
+			"post_fight_modifiers": [],
+			"difficulty": 1.0,
+			"element_override": null,
+			"behavior_flags": [],
+			"stackable": false,
+			"rarity_weight": 8.0
 		},
-		"status_effects_on_hit": [],
-		"status_effects_on_turn_start": [],
-		"post_fight_modifiers": [],
-		"difficulty": 1,
-		"element_override": null,
-		"behavior_flags": [],
-		"stackable": false,
-		"rarity_weight": 8
-	},
-	{
-		"id": "strong",
-		"display_name": "Strong",
-		"definition": "A fit or determined foe: more health and harder-hitting attacks.",
-		"semantic_hints": [
-			"strong",
-			"mighty",
-			"powerful",
-			"brawny",
-			"burly",
-			"ripped",
-			"beefy",
-			"strapping",
-			"forceful",
-			"intense"
-		],
-		"forced_words": [
-			"strong",
-			"mighty",
-			"powerful"
-		],
-		"flat_modifiers": {},
-		"mult_modifiers": {
-			"hp": 1.1,
-			"atk": 1.2
+		{
+			"id": "strong",
+			"display_name": "Strong",
+			"definition": "A fit or determined foe: more health and harder-hitting attacks.",
+			"semantic_hints": [
+				"strong",
+				"mighty",
+				"powerful",
+				"brawny",
+				"burly",
+				"ripped",
+				"beefy",
+				"strapping",
+				"forceful",
+				"intense"
+			],
+			"forced_words": [
+				"strong",
+				"mighty",
+				"powerful"
+			],
+			"flat_modifiers": {
+
+			},
+			"mult_modifiers": {
+				"hp": 1.1,
+				"atk": 1.2
+			},
+			"status_effects_on_hit": [],
+			"status_effects_on_turn_start": [],
+			"post_fight_modifiers": [],
+			"difficulty": 4.0,
+			"element_override": null,
+			"behavior_flags": [],
+			"stackable": false,
+			"rarity_weight": 8.0
 		},
-		"status_effects_on_hit": [],
-		"status_effects_on_turn_start": [],
-		"post_fight_modifiers": [],
-		"difficulty": 4,
-		"element_override": null,
-		"behavior_flags": [],
-		"stackable": false,
-		"rarity_weight": 8
-	},
-	{
-		"id": "scary",
-		"display_name": "Scary",
-		"definition": "An unsettling foe: it leans toward spooky energy and is a little more likely to land a critical hit.",
-		"semantic_hints": [
-			"scary",
-			"frightening",
-			"spooky",
-			"creepy",
-			"ominous",
-			"menacing",
-			"eerie",
-			"terrifying",
-			"haunting",
-			"startling",
-			"unnerving"
-		],
-		"forced_words": [
-			"scary",
-			"frightening",
-			"terrifying"
-		],
-		"flat_modifiers": {},
-		"mult_modifiers": {
-			"crit_chance": 1.2
+		{
+			"id": "scary",
+			"display_name": "Scary",
+			"definition": "An unsettling foe: it leans toward spooky energy and is a little more likely to land a critical hit.",
+			"semantic_hints": [
+				"scary",
+				"frightening",
+				"spooky",
+				"creepy",
+				"ominous",
+				"menacing",
+				"eerie",
+				"terrifying",
+				"haunting",
+				"startling",
+				"unnerving"
+			],
+			"forced_words": [
+				"scary",
+				"frightening",
+				"terrifying"
+			],
+			"flat_modifiers": {
+
+			},
+			"mult_modifiers": {
+				"crit_chance": 1.2
+			},
+			"status_effects_on_hit": [],
+			"status_effects_on_turn_start": [],
+			"post_fight_modifiers": [],
+			"difficulty": 2.0,
+			"element_override": "spooky",
+			"behavior_flags": [],
+			"stackable": false,
+			"rarity_weight": 7.0
 		},
-		"status_effects_on_hit": [],
-		"status_effects_on_turn_start": [],
-		"post_fight_modifiers": [],
-		"difficulty": 2,
-		"element_override": "spooky",
-		"behavior_flags": [],
-		"stackable": false,
-		"rarity_weight": 7
-	},
-	{
-		"id": "clumsy",
-		"display_name": "Clumsy",
-		"definition": "Heavy-footed and imprecise: its attacks miss a bit more often.",
-		"semantic_hints": [
-			"clumsy",
-			"oafish",
-			"blundering",
-			"uncoordinated",
-			"awkward",
-			"bumbling",
-			"inept",
-			"flailing"
-		],
-		"forced_words": [
-			"clumsy",
-			"awkward"
-		],
-		"flat_modifiers": {},
-		"mult_modifiers": {
-			"accuracy": 0.82
+		{
+			"id": "clumsy",
+			"display_name": "Clumsy",
+			"definition": "Heavy-footed and imprecise: its attacks miss a bit more often.",
+			"semantic_hints": [
+				"clumsy",
+				"oafish",
+				"blundering",
+				"uncoordinated",
+				"awkward",
+				"bumbling",
+				"inept",
+				"flailing"
+			],
+			"forced_words": [
+				"clumsy",
+				"awkward"
+			],
+			"flat_modifiers": {
+
+			},
+			"mult_modifiers": {
+				"accuracy": 0.82
+			},
+			"status_effects_on_hit": [],
+			"status_effects_on_turn_start": [],
+			"post_fight_modifiers": [],
+			"difficulty": 1.0,
+			"element_override": null,
+			"behavior_flags": [],
+			"stackable": false,
+			"rarity_weight": 6.0
 		},
-		"status_effects_on_hit": [],
-		"status_effects_on_turn_start": [],
-		"post_fight_modifiers": [],
-		"difficulty": 1,
-		"element_override": null,
-		"behavior_flags": [],
-		"stackable": false,
-		"rarity_weight": 6
-	},
-	{
-		"id": "sturdy",
-		"display_name": "Sturdy",
-		"definition": "Built to take hits: higher defense and a little more health.",
-		"semantic_hints": [
-			"sturdy",
-			"stocky",
-			"solid",
-			"tough",
-			"durable",
-			"hardy",
-			"resilient",
-			"rugged",
-			"stalwart",
-			"ironclad"
-		],
-		"forced_words": [
-			"sturdy",
-			"durable",
-			"hardy"
-		],
-		"flat_modifiers": {
-			"def": 2,
-			"armor": 1
+		{
+			"id": "sturdy",
+			"display_name": "Sturdy",
+			"definition": "Built to take hits: higher defense and a little more health.",
+			"semantic_hints": [
+				"sturdy",
+				"stocky",
+				"solid",
+				"tough",
+				"durable",
+				"hardy",
+				"resilient",
+				"rugged",
+				"stalwart",
+				"ironclad"
+			],
+			"forced_words": [
+				"sturdy",
+				"durable",
+				"hardy"
+			],
+			"flat_modifiers": {
+				"def": 2.0,
+				"armor": 1.0
+			},
+			"mult_modifiers": {
+				"hp": 1.06
+			},
+			"status_effects_on_hit": [],
+			"status_effects_on_turn_start": [],
+			"post_fight_modifiers": [],
+			"difficulty": 3.0,
+			"element_override": null,
+			"behavior_flags": [],
+			"stackable": false,
+			"rarity_weight": 7.0
 		},
-		"mult_modifiers": {
-			"hp": 1.06
+		{
+			"id": "nimble",
+			"display_name": "Nimble",
+			"definition": "Quick on its feet: slightly more accurate and a sharper striker, but a little easier to knock out.",
+			"semantic_hints": [
+				"nimble",
+				"agile",
+				"quick",
+				"swift",
+				"fleet",
+				"spry",
+				"lithe",
+				"graceful",
+				"lightfooted",
+				"deft"
+			],
+			"forced_words": [
+				"nimble",
+				"agile",
+				"swift"
+			],
+			"flat_modifiers": {
+
+			},
+			"mult_modifiers": {
+				"hp": 0.94,
+				"atk": 1.08,
+				"accuracy": 1.08
+			},
+			"status_effects_on_hit": [],
+			"status_effects_on_turn_start": [],
+			"post_fight_modifiers": [],
+			"difficulty": 2.0,
+			"element_override": null,
+			"behavior_flags": [],
+			"stackable": false,
+			"rarity_weight": 7.0
 		},
-		"status_effects_on_hit": [],
-		"status_effects_on_turn_start": [],
-		"post_fight_modifiers": [],
-		"difficulty": 3,
-		"element_override": null,
-		"behavior_flags": [],
-		"stackable": false,
-		"rarity_weight": 7
-	},
-	{
-		"id": "nimble",
-		"display_name": "Nimble",
-		"definition": "Quick on its feet: slightly more accurate and a sharper striker, but a little easier to knock out.",
-		"semantic_hints": [
-			"nimble",
-			"agile",
-			"quick",
-			"swift",
-			"fleet",
-			"spry",
-			"lithe",
-			"graceful",
-			"lightfooted",
-			"deft"
-		],
-		"forced_words": [
-			"nimble",
-			"agile",
-			"swift"
-		],
-		"flat_modifiers": {},
-		"mult_modifiers": {
-			"hp": 0.94,
-			"atk": 1.08,
-			"accuracy": 1.08
+		{
+			"id": "timid",
+			"display_name": "Timid",
+			"definition": "Hesitant in a fight: holds back on damage and sometimes misjudges its swings.",
+			"semantic_hints": [
+				"timid",
+				"cowardly",
+				"shy",
+				"nervous",
+				"hesitant",
+				"meek",
+				"fearful",
+				"bashful",
+				"sheepish",
+				"unconfident"
+			],
+			"forced_words": [
+				"timid",
+				"cowardly",
+				"meek"
+			],
+			"flat_modifiers": {
+
+			},
+			"mult_modifiers": {
+				"atk": 0.88,
+				"accuracy": 0.92
+			},
+			"status_effects_on_hit": [],
+			"status_effects_on_turn_start": [],
+			"post_fight_modifiers": [],
+			"difficulty": 1.0,
+			"element_override": null,
+			"behavior_flags": [],
+			"stackable": false,
+			"rarity_weight": 6.0
 		},
-		"status_effects_on_hit": [],
-		"status_effects_on_turn_start": [],
-		"post_fight_modifiers": [],
-		"difficulty": 2,
-		"element_override": null,
-		"behavior_flags": [],
-		"stackable": false,
-		"rarity_weight": 7
-	},
-	{
-		"id": "timid",
-		"display_name": "Timid",
-		"definition": "Hesitant in a fight: holds back on damage and sometimes misjudges its swings.",
-		"semantic_hints": [
-			"timid",
-			"cowardly",
-			"shy",
-			"nervous",
-			"hesitant",
-			"meek",
-			"fearful",
-			"bashful",
-			"sheepish",
-			"unconfident"
-		],
-		"forced_words": [
-			"timid",
-			"cowardly",
-			"meek"
-		],
-		"flat_modifiers": {},
-		"mult_modifiers": {
-			"atk": 0.88,
-			"accuracy": 0.92
+		{
+			"id": "brittle",
+			"display_name": "Brittle",
+			"definition": "Cracks under pressure: lower health and softer defenses, so the fight ends faster if you keep up the pressure.",
+			"semantic_hints": [
+				"brittle",
+				"fragile",
+				"delicate",
+				"crumbly",
+				"breakable",
+				"shatterable",
+				"thin",
+				"flimsy",
+				"crispy",
+				"weakened"
+			],
+			"forced_words": [
+				"brittle",
+				"fragile",
+				"delicate"
+			],
+			"flat_modifiers": {
+
+			},
+			"mult_modifiers": {
+				"hp": 0.78,
+				"def": 0.88
+			},
+			"status_effects_on_hit": [],
+			"status_effects_on_turn_start": [],
+			"post_fight_modifiers": [],
+			"difficulty": 1.0,
+			"element_override": null,
+			"behavior_flags": [],
+			"stackable": false,
+			"rarity_weight": 7.0
 		},
-		"status_effects_on_hit": [],
-		"status_effects_on_turn_start": [],
-		"post_fight_modifiers": [],
-		"difficulty": 1,
-		"element_override": null,
-		"behavior_flags": [],
-		"stackable": false,
-		"rarity_weight": 6
-	},
-	{
-		"id": "plain",
-		"display_name": "Plain",
-		"definition": "A normal foe with no unusual traits. No stat changes are applied.",
-		"semantic_hints": [
-			"plain",
-			"normal",
-			"regular",
-			"standard",
-			"ordinary",
-			"basic",
-			"typical",
-			"average",
-			"generic",
-			"common",
-            "john"
-		],
-		"forced_words": [
-			"plain",
-			"normal",
-            "regular"
-		],
-		"flat_modifiers": {},
-		"mult_modifiers": {},
-		"status_effects_on_hit": [],
-		"status_effects_on_turn_start": [],
-		"post_fight_modifiers": [],
-		"difficulty": 3,
-		"element_override": null,
-		"behavior_flags": [],
-		"stackable": false,
-		"rarity_weight": 0
-	}
-  ]
+		{
+			"id": "lucky",
+			"display_name": "Lucky",
+			"definition": "Seems favored by fortune: more critical hits and slightly meaner crit damage.",
+			"semantic_hints": [
+				"lucky",
+				"fortunate",
+				"blessed",
+				"charmed",
+				"favored",
+				"golden",
+				"serendipitous",
+				"auspicious"
+			],
+			"forced_words": [
+				"lucky",
+				"fortunate",
+				"blessed"
+			],
+			"flat_modifiers": {
+
+			},
+			"mult_modifiers": {
+				"crit_chance": 1.28,
+				"crit_mult": 1.06
+			},
+			"status_effects_on_hit": [],
+			"status_effects_on_turn_start": [],
+			"post_fight_modifiers": [],
+			"difficulty": 2.0,
+			"element_override": null,
+			"behavior_flags": [],
+			"stackable": false,
+			"rarity_weight": 7.0
+		},
+		{
+			"id": "wild",
+			"display_name": "Wild",
+			"definition": "Fights like it has nothing to lose: harder hits, but wilder swings that miss more often.",
+			"semantic_hints": [
+				"wild",
+				"feral",
+				"untamed",
+				"savage",
+				"berserk",
+				"unhinged",
+				"chaotic",
+				"rampaging",
+				"frenzied"
+			],
+			"forced_words": [
+				"wild",
+				"feral",
+				"savage"
+			],
+			"flat_modifiers": {
+
+			},
+			"mult_modifiers": {
+				"atk": 1.18,
+				"accuracy": 0.86
+			},
+			"status_effects_on_hit": [],
+			"status_effects_on_turn_start": [],
+			"post_fight_modifiers": [],
+			"difficulty": 3.0,
+			"element_override": null,
+			"behavior_flags": [],
+			"stackable": false,
+			"rarity_weight": 7.0
+		},
+		{
+			"id": "trained",
+			"display_name": "Trained",
+			"definition": "Disciplined fighter: steadier aim and a bit more punch, without a huge health swing.",
+			"semantic_hints": [
+				"trained",
+				"disciplined",
+				"skilled",
+				"practiced",
+				"veteran",
+				"professional",
+				"seasoned",
+				"expert",
+				"precise"
+			],
+			"forced_words": [
+				"trained",
+				"disciplined",
+				"skilled"
+			],
+			"flat_modifiers": {
+
+			},
+			"mult_modifiers": {
+				"accuracy": 1.1,
+				"atk": 1.06
+			},
+			"status_effects_on_hit": [],
+			"status_effects_on_turn_start": [],
+			"post_fight_modifiers": [],
+			"difficulty": 2.0,
+			"element_override": null,
+			"behavior_flags": [],
+			"stackable": false,
+			"rarity_weight": 7.0
+		},
+		{
+			"id": "bloated",
+			"display_name": "Bloated",
+			"definition": "Slow and overstuffed: a much larger health pool, but it does not strike as hard.",
+			"semantic_hints": [
+				"bloated",
+				"puffy",
+				"swollen",
+				"inflated",
+				"overfed",
+				"bulging",
+				"corpulent",
+				"rotund"
+			],
+			"forced_words": [
+				"bloated",
+				"swollen",
+				"inflated"
+			],
+			"flat_modifiers": {
+
+			},
+			"mult_modifiers": {
+				"hp": 1.22,
+				"atk": 0.9
+			},
+			"status_effects_on_hit": [],
+			"status_effects_on_turn_start": [],
+			"post_fight_modifiers": [],
+			"difficulty": 2.0,
+			"element_override": null,
+			"behavior_flags": [],
+			"stackable": false,
+			"rarity_weight": 6.0
+		},
+		{
+			"id": "diseased",
+			"display_name": "Diseased",
+			"definition": "Wasting away: weaker stats and a lingering rot that chips away at its health each turn.",
+			"semantic_hints": [
+				"diseased",
+				"plagued",
+				"pestilent",
+				"infected",
+				"rotting",
+				"contagious",
+				"septic",
+				"festering",
+				"malignant"
+			],
+			"forced_words": [
+				"diseased",
+				"plagued",
+				"infected"
+			],
+			"flat_modifiers": {
+
+			},
+			"mult_modifiers": {
+				"hp": 0.9,
+				"atk": 0.88
+			},
+			"status_effects_on_hit": [],
+			"status_effects_on_turn_start": [
+				{
+					"id": "self_damage",
+					"params": {
+						"percent": 0.04,
+						"source": "disease"
+					}
+				}
+			],
+			"post_fight_modifiers": [],
+			"difficulty": 2.0,
+			"element_override": null,
+			"behavior_flags": [],
+			"stackable": false,
+			"rarity_weight": 5.0
+		},
+		{
+			"id": "elite",
+			"display_name": "Elite",
+			"definition": "A cut above the usual rabble: tougher, hit harder, and harder to shake off — expect better loot if you win.",
+			"semantic_hints": [
+				"elite",
+				"champion",
+				"bosslike",
+				"legendary",
+				"masterful",
+				"supreme",
+				"paramount",
+				"apex",
+				"premier"
+			],
+			"forced_words": [
+				"elite",
+				"champion",
+				"legendary"
+			],
+			"flat_modifiers": {
+
+			},
+			"mult_modifiers": {
+				"hp": 1.1,
+				"atk": 1.12,
+				"def": 1.08,
+				"accuracy": 1.05
+			},
+			"status_effects_on_hit": [],
+			"status_effects_on_turn_start": [],
+			"post_fight_modifiers": [],
+			"difficulty": 4.0,
+			"element_override": null,
+			"behavior_flags": [],
+			"stackable": false,
+			"rarity_weight": 4.0
+		},
+		{
+			"id": "plain",
+			"display_name": "Plain",
+			"definition": "A normal foe with no unusual traits. No stat changes are applied.",
+			"semantic_hints": [
+				"plain",
+				"normal",
+				"regular",
+				"standard",
+				"ordinary",
+				"basic",
+				"typical",
+				"average",
+				"generic",
+				"common",
+				"john"
+			],
+			"forced_words": [
+				"plain",
+				"normal",
+				"regular"
+			],
+			"flat_modifiers": {
+
+			},
+			"mult_modifiers": {
+
+			},
+			"status_effects_on_hit": [],
+			"status_effects_on_turn_start": [],
+			"post_fight_modifiers": [],
+			"difficulty": 0.0,
+			"element_override": null,
+			"behavior_flags": [],
+			"stackable": false,
+			"rarity_weight": 0.0
+		}
+	]
 }

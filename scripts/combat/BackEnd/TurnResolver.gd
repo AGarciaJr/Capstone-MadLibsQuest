@@ -17,7 +17,32 @@ const _SCRABBLE: Dictionary = {
 ## Added per letter in the word that matches a player letter (testing mode).
 const _PLAYER_LETTER_MULT_PER_HIT: float = 0.25
 
+## Per prior use of the same word this encounter, damage is reduced by this fraction (additive stacks).
+const REPEAT_WORD_DAMAGE_PENALTY_PER_PRIOR := 0.15
+
+## Battle UI uses RichTextLabel BBCode for player crit styling.
+const _PLAYER_CRIT_COLOR := "#e64545"
+
 var _status_effects := StatusEffects.new()
+
+
+func _apply_repeat_word_damage_penalty(damage: int, prior_uses: int, damage_messages: Array) -> int:
+	if prior_uses <= 0:
+		return damage
+	var mult: float = maxf(0.05, 1.0 - REPEAT_WORD_DAMAGE_PENALTY_PER_PRIOR * float(prior_uses))
+	var pct: int = int(round(float(prior_uses) * 100.0 * REPEAT_WORD_DAMAGE_PENALTY_PER_PRIOR))
+	damage_messages.append(
+		"Repeat word — this hit dealt %d%% less damage due to repeat word usage." % pct
+	)
+	return maxi(0, int(round(float(damage) * mult)))
+
+
+func _format_player_strike_damage_line(damage: int, is_crit: bool) -> String:
+	## Same line as non-crit (default RichTextLabel color). Crit appends only ` (crit)` in red.
+	var line := "You dealt: %d damage." % damage
+	if is_crit:
+		line += "[color=%s] (crit)[/color]" % _PLAYER_CRIT_COLOR
+	return line
 
 ## Full turn in one call when player_attacks_per_turn is 1 (single word for the round).
 func resolve_valid_turn(ctx: Dictionary) -> Dictionary:
@@ -58,10 +83,14 @@ func _resolve(ctx: Dictionary, include_player_attacks: bool) -> Dictionary:
 					"Oh no — you missed! You didn't use any of your player letters."
 				)
 			elif current_enemy_hp > 0:
+				var prior_rw: int = int(ctx.get("repeat_word_prior_uses", 0))
 				var sd: Dictionary = _compute_scrabble_damage(sw, pl)
-				var total_player_damage: int = int(sd["damage"])
+				var pre_repeat: int = int(sd["damage"])
+				var total_player_damage: int = _apply_repeat_word_damage_penalty(
+					pre_repeat, prior_rw, damage_messages
+				)
 				current_enemy_hp = CombatEngine.apply_damage(current_enemy_hp, total_player_damage)
-				_append_scrabble_player_messages(damage_messages, sw, pl, sd, total_player_damage)
+				_append_scrabble_player_messages(damage_messages, sw, pl, sd, pre_repeat, total_player_damage)
 			else:
 				damage_messages.append("You dealt: 0 damage.")
 		else:
@@ -71,6 +100,7 @@ func _resolve(ctx: Dictionary, include_player_attacks: bool) -> Dictionary:
 					"Oh no — you missed! You didn't use any of your player letters."
 				)
 			elif current_enemy_hp > 0:
+				var prior_rw2: int = int(ctx.get("repeat_word_prior_uses", 0))
 				var player_move := {
 					"base_damage": 5,
 					"scaling": freq_scaling,
@@ -78,9 +108,14 @@ func _resolve(ctx: Dictionary, include_player_attacks: bool) -> Dictionary:
 					"accuracy": 1.0,
 				}
 				var outcome := CombatEngine.compute_attack(player_stats, enemy_stats, player_move, rng)
-				var total_player_damage: int = int(outcome.damage)
+				var raw_player_damage: int = int(outcome.damage)
+				var total_player_damage: int = _apply_repeat_word_damage_penalty(
+					raw_player_damage, prior_rw2, damage_messages
+				)
 				current_enemy_hp = CombatEngine.apply_damage(current_enemy_hp, total_player_damage)
-				damage_messages.append("You dealt: %d damage." % total_player_damage)
+				damage_messages.append(
+					_format_player_strike_damage_line(total_player_damage, bool(outcome.get("is_crit", false)))
+				)
 			else:
 				damage_messages.append("You dealt: 0 damage.")
 
@@ -155,10 +190,12 @@ func resolve_single_player_attack(ctx: Dictionary) -> Dictionary:
 				"Oh no — you missed! You didn't use any of your player letters."
 			)
 		elif current_enemy_hp > 0:
+			var prior_rw3: int = int(ctx.get("repeat_word_prior_uses", 0))
 			var sd: Dictionary = _compute_scrabble_damage(sw, pl)
-			var dmg: int = int(sd["damage"])
+			var pre_repeat_s: int = int(sd["damage"])
+			var dmg: int = _apply_repeat_word_damage_penalty(pre_repeat_s, prior_rw3, damage_messages)
 			current_enemy_hp = CombatEngine.apply_damage(current_enemy_hp, dmg)
-			_append_scrabble_player_messages(damage_messages, sw, pl, sd, dmg)
+			_append_scrabble_player_messages(damage_messages, sw, pl, sd, pre_repeat_s, dmg)
 		else:
 			damage_messages.append("You dealt: 0 damage.")
 	else:
@@ -167,6 +204,7 @@ func resolve_single_player_attack(ctx: Dictionary) -> Dictionary:
 				"Oh no — you missed! You didn't use any of your player letters."
 			)
 		elif current_enemy_hp > 0:
+			var prior_rw4: int = int(ctx.get("repeat_word_prior_uses", 0))
 			var player_move := {
 				"base_damage": 5,
 				"scaling": freq_scaling,
@@ -174,9 +212,10 @@ func resolve_single_player_attack(ctx: Dictionary) -> Dictionary:
 				"accuracy": 1.0,
 			}
 			var outcome := CombatEngine.compute_attack(player_stats, enemy_stats, player_move, rng)
-			var dmg: int = int(outcome.damage)
+			var raw_dmg: int = int(outcome.damage)
+			var dmg: int = _apply_repeat_word_damage_penalty(raw_dmg, prior_rw4, damage_messages)
 			current_enemy_hp = CombatEngine.apply_damage(current_enemy_hp, dmg)
-			damage_messages.append("You dealt: %d damage." % dmg)
+			damage_messages.append(_format_player_strike_damage_line(dmg, bool(outcome.get("is_crit", false))))
 		else:
 			damage_messages.append("You dealt: 0 damage.")
 
@@ -319,7 +358,8 @@ func _append_scrabble_player_messages(
 	word: String,
 	player_letters: PackedStringArray,
 	sd: Dictionary,
-	total_damage: int,
+	pre_repeat_damage: int,
+	final_damage: int = -1,
 ) -> void:
 	damage_messages.append(_format_scrabble_tile_line(word))
 	var hits: int = int(sd.get("hits", 0))
@@ -338,6 +378,7 @@ func _append_scrabble_player_messages(
 		]
 	damage_messages.append(mult_explain)
 	damage_messages.append(
-		"Damage: round(%d × %s) = %d." % [base, _scrabble_float_str(mult), total_damage]
+		"Damage: round(%d × %s) = %d." % [base, _scrabble_float_str(mult), pre_repeat_damage]
 	)
-	damage_messages.append("You dealt %d damage." % total_damage)
+	var dealt: int = pre_repeat_damage if final_damage < 0 else final_damage
+	damage_messages.append("You dealt %d damage." % dealt)

@@ -18,6 +18,8 @@ var blanks: Array = []
 var enemy_hp: int
 var blank_index: int = 0
 var collected_words: Array[String] = []
+## Normalized duplicate of every word that resolved a player attack this encounter (main + bonus strikes).
+var _attack_words_this_encounter: Array[String] = []
 var templates: Array = []
 var current_sentence_index: int = 0
 var _sprite_idle_animation: String = ""
@@ -83,11 +85,11 @@ var _strike_round_pos_display: String = "noun"
 @onready var prompt_label: Label = $BottomPanel/TextBoxBg/VBoxContainer/PromptLabel
 @onready var word_input: LineEdit = $BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer/WordInput
 @onready var submit_button: Button = $BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer/SubmitButton
-@onready var result_label: Label = $BottomPanel/TextBoxBg/VBoxContainer/ResultLabel
+@onready var result_label: RichTextLabel = $BottomPanel/TextBoxBg/VBoxContainer/ResultLabel
 
 @onready var battle_log_button: Button = $BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer/BattleLogButton
 @onready var battle_log_panel: Control = $BattleLogPanel
-@onready var battle_log_content: Label = $BattleLogPanel/ScrollContainer/LogContent
+@onready var battle_log_content: RichTextLabel = $BattleLogPanel/ScrollContainer/LogContent
 
 @onready var player_hit_sound: AudioStreamPlayer = $PlayerPanel/PlayerHitSound
 @onready var enemy_hit_sound: AudioStreamPlayer = $EnemyPanel/EnemyHitSound
@@ -101,8 +103,7 @@ var _enemy_hit_sound_pool: Array[AudioStream] = []
 
 func _ready() -> void:
 	AudioPlayer.play_music_battle()
-	
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	MouseModeStack.set_default_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	fade.color = Color(0, 0, 0, 1)
 	rng.randomize()
 	submit_button.pressed.connect(_on_submit_pressed)
@@ -313,7 +314,8 @@ func _start_battle() -> void:
 	battle_log_panel.visible = false
 	
 	_all_words_used.clear()
-	
+	_attack_words_this_encounter.clear()
+
 	_total_damage_dealt = 0
 
 	_sprite_idle_animation = str(cfg.get("sprite_animation_name", ""))
@@ -511,7 +513,8 @@ func _resolve_turn(word: String, freq_scaling: float) -> void:
 	var letter_mult := PlayerState.letter_bonus_multiplier_for_word(word)
 	var ctx_attack := _build_turn_context(freq_scaling, letter_mult, word)
 	var result: Dictionary = _turn_resolver.resolve_single_player_attack(ctx_attack)
-	
+	_register_attack_word_this_encounter(word)
+
 	var hp_before_attack := enemy_hp
 	enemy_hp = int(result["enemy_hp"])
 	var player_damage_dealt: int = maxi(0, hp_before_attack - enemy_hp)
@@ -567,6 +570,7 @@ func _resolve_turn(word: String, freq_scaling: float) -> void:
 func _resolve_multi_strike_turn_first_word(word: String, freq_scaling: float) -> void:
 	var ctx := _build_turn_context(freq_scaling, PlayerState.letter_bonus_multiplier_for_word(word), word)
 	var result: Dictionary = _turn_resolver.resolve_single_player_attack(ctx)
+	_register_attack_word_this_encounter(word)
 
 	var hp_before_attack := enemy_hp
 	enemy_hp = int(result["enemy_hp"])
@@ -611,6 +615,7 @@ func _submit_bonus_strike_word(word: String) -> void:
 
 	var ctx := _build_turn_context(S, PlayerState.letter_bonus_multiplier_for_word(word), word)
 	var result: Dictionary = _turn_resolver.resolve_single_player_attack(ctx)
+	_register_attack_word_this_encounter(word)
 
 	var hp_before_attack := enemy_hp
 	enemy_hp = int(result["enemy_hp"])
@@ -689,7 +694,25 @@ func _build_turn_context(freq_scaling: float, letter_bonus_mult: float, strike_w
 	if strike_word != "":
 		ctx["strike_word"] = strike_word
 		ctx["uses_player_letters"] = _word_uses_any_player_letter(strike_word)
+		ctx["repeat_word_prior_uses"] = _attack_word_repeat_prior_count(strike_word)
 	return ctx
+
+
+func _normalize_attack_word_for_repeat(word: String) -> String:
+	return word.strip_edges().to_lower()
+
+
+func _attack_word_repeat_prior_count(word: String) -> int:
+	var key := _normalize_attack_word_for_repeat(word)
+	var n := 0
+	for w in _attack_words_this_encounter:
+		if _normalize_attack_word_for_repeat(w) == key:
+			n += 1
+	return n
+
+
+func _register_attack_word_this_encounter(word: String) -> void:
+	_attack_words_this_encounter.append(word)
 
 
 ## True if the word contains at least one player letter (or there are none — strike always counts).
@@ -774,7 +797,10 @@ func _finish_battle() -> void:
 		"battle_score": battle_score,
 	}
 
-	var items = ItemSystem.get_random_choices(3)
+	var reward_difficulty: int = 0
+	if _encounter_modifier != null:
+		reward_difficulty = _encounter_modifier.difficulty
+	var items: Array[Dictionary] = ItemSystem.get_random_choices(3, reward_difficulty)
 	
 	var tween := create_tween()
 	tween.tween_property(fade, "color", Color(0,0,0,1), 0.35)
@@ -782,31 +808,31 @@ func _finish_battle() -> void:
 	
 	EncounterSceneTransition.transition_to_recap(recap, items)
 
+# teir the player damage so that the vfx's scale correctly 
+func _player_hit_tier_index(damage: int) -> int:
+	if damage > 20:
+		return 2
+	if damage > 10:
+		return 1
+	return 0
+
+
 func _play_enemy_hit_smoke(damage: int) -> void:
 	if damage <= 0:
 		return
 	var anim_name: String
-	if damage > 15:
+	if damage > 20:
 		anim_name = "Smoke 2"
-	elif damage > 5:
+	elif damage > 10:
 		anim_name = "Smoke 1"
 	else:
-		anim_name = "Smoke 3"
+		anim_name = "Smoke 8"
 	var frames := damage_effects.sprite_frames
 	if frames == null or not frames.has_animation(anim_name):
 		return
 	damage_effects.visible = true
 	damage_effects.play(anim_name)
 	_play_player_hit_sfx_for_damage(damage)
-
-
-func _player_hit_tier_index(damage: int) -> int:
-	if damage > 15:
-		return 2
-	if damage > 5:
-		return 1
-	return 0
-
 
 func _rebuild_hit_sound_pools() -> void:
 	_enemy_hit_sound_pool.clear()
