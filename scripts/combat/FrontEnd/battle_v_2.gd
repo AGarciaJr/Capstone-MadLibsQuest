@@ -76,6 +76,7 @@ var _strike_round_pos_display: String = "noun"
 @onready var player_hp_label: Label = $PlayerPanel/VBoxContainer/PlayerHP
 @onready var player_hp_bar: ProgressBar = $PlayerPanel/VBoxContainer/PlayerHPBar
 @onready var letters_label: Label = $PlayerPanel/VBoxContainer/LettersLabel
+@onready var letter_limit_label: Label = $PlayerPanel/VBoxContainer/LetterLimit
 @onready var letter_bonus_number_label: Label = $PlayerPanel/VBoxContainer/LetterBonusNumber
 @onready var current_bonus_multiplier_label: Label = $PlayerPanel/VBoxContainer/CurrentBonusMultiplier
 
