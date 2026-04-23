@@ -21,6 +21,7 @@ var items: Array[Dictionary] = [
 		"category": "Base Stats",
 		"name": "Jimmy's Juice",
 		"description": "Increase Max HP, Attack, Defense, and Critical hit chance by a moderate amount.",
+		"icon": "res://assets/Art/Items/heart.png",
 		"effect_type": "boost_stats",
 		"rarity": 1,
 		"params": {
@@ -53,7 +54,8 @@ var items: Array[Dictionary] = [
 		"reward_pool": REWARD_POOL_LETTER_ACQUISITION,
 		"category": "Power Boost",
 		"name": "Glyph of Many Letters",
-		"description": "Adds 2 random player letters.",
+		"description": "Adds 2 random letters, or grants XP to ones you already own.",
+		"icon": "res://assets/Art/Items/scroll.png",
 		"effect_type": "add_random_player_letters",
 		"rarity": 1,
 		"params": {
@@ -66,6 +68,7 @@ var items: Array[Dictionary] = [
 		"category": "Power Boost",
 		"name": "Character Chakram",
 		"description": "Increases letter bonus damage.",
+		"icon": "res://assets/Art/Items/ink.png",
 		"effect_type": "improve_letter_bonus",
 		"rarity": 0,
 		"params": {
@@ -115,6 +118,7 @@ var items: Array[Dictionary] = [
 		"category": "Base Stats",
 		"name": "Apple",
 		"description": "Restores HP after battle.",
+		"icon": "res://assets/Art/Items/apple.png",
 		"effect_type": "heal",
 		"rarity": 0,
 		"params": {
@@ -127,6 +131,7 @@ var items: Array[Dictionary] = [
 		"category": "Base Stats",
 		"name": "Bandage",
 		"description": "Restores HP after battle.",
+		"icon": "res://assets/Art/Items/potion.png",
 		"effect_type": "heal",
 		"rarity": 1,
 		"params": {
@@ -139,13 +144,14 @@ var items: Array[Dictionary] = [
 		"category": "Base Stats",
 		"name": "Scroll of healing",
 		"description": "Restores HP after battle.",
+		"icon": "res://assets/Art/Items/scroll.png",
 		"effect_type": "heal",
 		"rarity": 2,
 		"params": {
 			"amount": 100
 		}
 	},
-	
+
 ]
 
 
@@ -226,7 +232,8 @@ func _get_pooled_random_choices_3(reward_difficulty: int = 0) -> Array[Dictionar
 			"reward_pool": REWARD_POOL_LETTER_ACQUISITION,
 			"category": "Letters recruitment",
 			"name": "Letter %s" % letter,
-			"description": "Adds '%s' as a player letter. If you already have it, doubles the damage bonus for that letter!" % letter,
+			"description": "Adds '%s' as a player letter, or grants bonus XP if you already have it!" % letter,
+			"icon": "res://assets/Art/Items/ink.png",
 			"effect_type": "add_player_letter",
 			"rarity": 0,
 			"params": {"letter": letter}
@@ -254,7 +261,8 @@ func _get_random_choices_legacy(n: int, reward_difficulty: int = 0) -> Array[Dic
 			"id": "letter_%s" % letter,
 			"category": "Letters recruitment",
 			"name": "Letter %s" % letter,
-			"description": "Adds '%s' as a player letter. If you already have it, doubles the damage bonus for that letter!" % letter,
+			"description": "Adds '%s' as a player letter, or grants bonus XP if you already have it!" % letter,
+			"icon": "res://assets/Art/Items/ink.png",
 			"effect_type": "add_player_letter",
 			"rarity": 0,
 			"params": {"letter": letter}

@@ -100,6 +100,12 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="ItemIcon" type="TextureRect" parent="ItemNodeOriginContainer/DetailsRow/ItemChoice1" unique_id=701000001]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+stretch_mode = 5
+
 [node name="ItemName" type="Label" parent="ItemNodeOriginContainer/DetailsRow/ItemChoice1" unique_id=290381069]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -137,6 +143,12 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
+[node name="ItemIcon" type="TextureRect" parent="ItemNodeOriginContainer/DetailsRow/ItemChoice2" unique_id=701000002]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+stretch_mode = 5
+
 [node name="ItemName" type="Label" parent="ItemNodeOriginContainer/DetailsRow/ItemChoice2" unique_id=1702349602]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
@@ -173,6 +185,12 @@ custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="ItemIcon" type="TextureRect" parent="ItemNodeOriginContainer/DetailsRow/ItemChoice3" unique_id=701000003]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+stretch_mode = 5
 
 [node name="ItemName" type="Label" parent="ItemNodeOriginContainer/DetailsRow/ItemChoice3" unique_id=217927833]
 custom_minimum_size = Vector2(100, 0)

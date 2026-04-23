@@ -83,7 +83,6 @@ var _strike_round_pos_display: String = "noun"
 @onready var current_bonus_multiplier_label: Label = $PlayerPanel/VBoxContainer/CurrentBonusMultiplier
 
 @onready var prompt_label: Label = $BottomPanel/TextBoxBg/VBoxContainer/PromptLabel
-@onready var line_preview: Label = $BottomPanel/TextBoxBg/VBoxContainer/LinePreview
 @onready var word_input: LineEdit = $BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer/WordInput
 @onready var submit_button: Button = $BottomPanel/TextBoxBg/VBoxContainer/MarginContainer/HBoxContainer/SubmitButton
 @onready var result_label: RichTextLabel = $BottomPanel/TextBoxBg/VBoxContainer/ResultLabel
@@ -95,10 +94,16 @@ var _strike_round_pos_display: String = "noun"
 @onready var player_hit_sound: AudioStreamPlayer = $PlayerPanel/PlayerHitSound
 @onready var enemy_hit_sound: AudioStreamPlayer = $EnemyPanel/EnemyHitSound
 
+@onready var line_preview_before: Label = $BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer/LinePreviewBefore
+@onready var line_preview_blank: Label = $BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer/LinePreviewBlank
+@onready var line_preview_after: Label = $BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer/LinePreviewAfter
+
 var _enemy_hit_sound_pool: Array[AudioStream] = []
 
 
 func _ready() -> void:
+	AudioPlayer.play_music_battle()
+	
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	fade.color = Color(0, 0, 0, 1)
 	rng.randomize()
@@ -111,8 +116,13 @@ func _ready() -> void:
 		battle_log_panel.visible = false
 		_refocus_input()
 	)
+	
 	if not PlayerState.player_letters_changed.is_connected(_update_letters_label):
 		PlayerState.player_letters_changed.connect(_update_letters_label)
+		
+	if not PlayerState.letter_leveled_up.is_connected(_on_letter_leveled_up):
+		PlayerState.letter_leveled_up.connect(_on_letter_leveled_up)
+	
 	_start_battle()
 	_rebuild_hit_sound_pools()
 	var tween := create_tween()
@@ -130,15 +140,16 @@ func _refocus_input() -> void:
 func _exit_tree() -> void:
 	if PlayerState.player_letters_changed.is_connected(_update_letters_label):
 		PlayerState.player_letters_changed.disconnect(_update_letters_label)
+	
+	if not PlayerState.letter_leveled_up.is_connected(_on_letter_leveled_up):
+		PlayerState.letter_leveled_up.disconnect(_on_letter_leveled_up)
 
 
 func _update_letters_label(_letters: PackedStringArray = PackedStringArray()) -> void:
 	if letters_label == null:
 		return
-	var sorted = Array(PlayerState.player_letters)
-	sorted.sort()
 	
-	letters_label.text = "Player letters: %s" % ", ".join(sorted)
+	letters_label.text = "Player letters: %s" % PlayerState.format_player_letters_with_levels()
 	_update_letter_bonus_number_label()
 	_update_current_bonus_multiplier_label()
 
@@ -330,7 +341,7 @@ func _start_battle() -> void:
 	submit_button.disabled = false
 	word_input.editable = true
 
-	line_preview.text = template_line
+	_update_line_preview()
 	_update_letters_label()
 	_apply_letter_limit_ui()
 
@@ -396,11 +407,22 @@ func _update_prompt_ui() -> void:
 		prompt_label.text = "The Bard needs a %s — %s." % [display, hint]
 	else:
 		prompt_label.text = "The Bard needs a %s!" % display
-	line_preview.text = _render_preview_line()
+	_update_line_preview()
 
 
 func _advance_sentence() -> void:
-	_completed_sentences.append(_render_preview_line())
+	# Show completed sentence before moving on
+	var completed := _render_preview_line()
+	line_preview_before.text = completed
+	line_preview_before.visible = true
+	line_preview_blank.visible = false
+	line_preview_after.visible = false
+	
+	word_input.editable = false
+	await get_tree().create_timer(2.0).timeout
+	word_input.editable = true
+	
+	_completed_sentences.append(completed)
 	
 	current_sentence_index += 1
 	if current_sentence_index >= templates.size():
@@ -414,7 +436,7 @@ func _advance_sentence() -> void:
 	_all_words_used.append_array(collected_words)
 	collected_words.clear()
 
-	line_preview.text = template_line
+	_update_line_preview()
 	word_input.text   = ""
 	_reset_current_bonus_multiplier_preview()
 	_refocus_input()
@@ -462,6 +484,8 @@ func _submit_word(raw: String) -> void:
 		var msg := hint if hint != "" else ("That doesn't look like %s %s." % [_get_article(expected_pos), expected_pos])
 		await _apply_invalid_turn(msg)
 		return
+		
+	_add_xp_for_word(word)
 
 	collected_words.append(word)
 	_strike_round_expected_pos = expected_pos
@@ -582,6 +606,8 @@ func _submit_bonus_strike_word(word: String) -> void:
 		var msg := hint if hint != "" else ("That doesn't look like %s %s." % [_get_article(expected_pos), expected_pos])
 		await _apply_invalid_turn(msg)
 		return
+		
+	_add_xp_for_word(word)
 
 	var S: float = _get_word_freq_scaling(word)
 	if use_element_system and not use_scrabble_test_damage:
@@ -907,3 +933,48 @@ func _handle_player_defeat() -> void:
 	$DefeatPanel.visible = false
 	if _death_screen:
 		_death_screen.show_death_screen()
+		
+func _update_line_preview() -> void:
+	var rendered := template_line
+	for w in collected_words:
+		rendered = _replace_first(rendered, "___", w)
+		
+	var blank_pos := rendered.find("___")
+	if blank_pos == -1:
+		line_preview_before.text = rendered
+		line_preview_before.visible = true
+		line_preview_blank.visible = false
+		line_preview_after.visible = false
+		return
+
+	var before := rendered.substr(0, blank_pos)
+	var after := rendered.substr(blank_pos + 3)
+
+	line_preview_before.visible = not before.is_empty()
+	line_preview_before.text = before
+
+	line_preview_blank.visible = true
+	var display : String = blanks[blank_index].get("display", "___") if blank_index < blanks.size() else "___"
+	line_preview_blank.text = "[ %s ]" % display
+
+	line_preview_after.visible = not after.is_empty()
+	line_preview_after.text = after
+
+func _add_xp_for_word(word: String) -> void:
+	if PlayerState.player_letters.is_empty():
+		return
+	
+	var counts := {}
+	var upper := word.to_upper()
+	for ch in upper:
+		counts[ch] = counts.get(ch, 0) + 1
+	
+	for letter in PlayerState.player_letters:
+		if counts.has(letter):
+			PlayerState.add_letter_xp(letter, counts[letter])
+
+func _on_letter_leveled_up(letter: String, new_level: int) -> void:
+	var msg := "Letter %s reached level %d!" % [letter, new_level]
+	_append_log(msg)
+	result_label.text = msg
+	_update_letters_label()

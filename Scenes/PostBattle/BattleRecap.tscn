@@ -72,6 +72,9 @@ size_flags_vertical = 3
 
 [node name="SentencesLabel" type="Label" parent="ColorRect/CenterContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=26784168]
 layout_mode = 2
+text = "this is a long piece of text to see if this works properly, I really hope this works properly but it might not so lets see"
+horizontal_alignment = 1
+autowrap_mode = 2
 
 [node name="HSeparator2" type="HSeparator" parent="ColorRect/CenterContainer/Panel/MarginContainer/VBoxContainer" unique_id=214887445]
 layout_mode = 2
