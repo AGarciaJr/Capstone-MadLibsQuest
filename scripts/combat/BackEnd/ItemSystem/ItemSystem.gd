@@ -19,7 +19,7 @@ var items: Array[Dictionary] = [
 		"id": "hp_and_stats_boost",
 		"reward_pool": REWARD_POOL_BASE_STATS,
 		"category": "Base Stats",
-		"name": "Hanma's Hand",
+		"name": "Jimmy's Juice",
 		"description": "Increase Max HP, Attack, Defense, and Critical hit chance by a moderate amount.",
 		"effect_type": "boost_stats",
 		"rarity": 1,
@@ -30,6 +30,24 @@ var items: Array[Dictionary] = [
 			"crit_chance_flat": 0.1
 		}
 	},
+	{
+		"id": "hp_and_stats_boost",
+		"reward_pool": REWARD_POOL_BASE_STATS,
+		"category": "Base Stats",
+		"name": "Hanma's Hand",
+		"description": "Increase Max HP, Attack, Defense, and Critical hit chance by a massive amount.",
+		"effect_type": "boost_stats",
+		"rarity": 2,
+		"params": {
+			"max_hp_flat": 25,
+			"atk_flat": 10,
+			"def_flat": 10,
+			"crit_chance_flat": 0.3
+		}
+	},
+	## adding an item that prevents death once on 1 hp 
+	## adding an item that is like leftovers from pokemon 1/8 hp per turn heal 
+	## adding 
 	{
 		"id": "add_bonus_letters_2",
 		"reward_pool": REWARD_POOL_LETTER_ACQUISITION,
