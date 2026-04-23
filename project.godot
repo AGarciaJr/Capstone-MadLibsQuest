@@ -35,6 +35,7 @@ EnemyModifierDB="*uid://dgarlludqnkf7"
 SceneTransition="*res://scripts/autoloads/SceneTransition.tscn"
 Scenes="*uid://xwp80yc533f6"
 SaveManager="*uid://cp40fvkh56vk6"
+MouseModeStack="*uid://bqavvxj2bqdof"
 
 [display]
 

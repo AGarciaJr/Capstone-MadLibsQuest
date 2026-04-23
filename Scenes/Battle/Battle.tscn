@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://scenes/CanvasLayer.tscn" id="5_vn0yc"]
 [ext_resource type="PackedScene" uid="uid://wdlitqgfnt17" path="res://scenes/YouDiedScreen.tscn" id="7_8ftua"]
 [ext_resource type="AudioStream" uid="uid://emi3y03p3dbd" path="res://assets/Art/BattleMusic.mp3" id="7_dcr6b"]
+[ext_resource type="PackedScene" uid="uid://crpx8kcdgmlp1" path="res://scenes/LetterNotebook.tscn" id="14_alxtf"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_textbox"]
 bg_color = Color(0.07, 0.05, 0.03, 0.94)
@@ -356,3 +357,6 @@ visible = false
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=624657916]
 stream = ExtResource("7_dcr6b")
 autoplay = true
+
+[node name="LetterNotebook" parent="." unique_id=385097229 instance=ExtResource("14_alxtf")]
+layout_mode = 1
