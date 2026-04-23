@@ -16,11 +16,13 @@ func pause_game():
 	show()
 	get_tree().paused = true
 	MouseModeStack.push(self, Input.MOUSE_MODE_VISIBLE)
+	InputBlocker.push(self)
 
 func resume_game():
 	get_tree().paused = false
 	hide()
 	MouseModeStack.pop(self)
+	InputBlocker.pop(self)
 
 func _on_resume_button_pressed():
 	resume_game()

@@ -1,6 +1,6 @@
 extends Control
 
-@onready var close_button: Button = $NotebookPanel/MarginContainer/CloseButton
+@onready var close_button: Button = $NotebookPanel/MarginContainer/VBoxContainer/HeaderRow/CloseButton
 @onready var letter_label: Label = $NotebookPanel/MarginContainer/VBoxContainer/PortraitPlaceholder/LetterLabel
 @onready var level_label: Label = $NotebookPanel/MarginContainer/VBoxContainer/StatsContainer/LevelLabel
 @onready var xp_bar: ProgressBar = $NotebookPanel/MarginContainer/VBoxContainer/StatsContainer/XPBar
@@ -18,7 +18,11 @@ func _ready() -> void:
 	close_button.pressed.connect(hide_notebook)
 	prev_button.pressed.connect(_on_prev_pressed)
 	next_button.pressed.connect(_on_next_pressed)
-	
+
+func _exit_tree() -> void:
+	MouseModeStack.pop(self)
+	InputBlocker.pop(self)
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_F1:
@@ -32,6 +36,9 @@ func toggle() -> void:
 		show_notebook()
 
 func show_notebook() -> void:
+	if InputBlocker.is_blocked():
+		return
+	
 	_rebuild_letter_list()
 	if _sorted_letters.is_empty():
 		return
@@ -39,11 +46,13 @@ func show_notebook() -> void:
 	_current_page = clampi(_current_page, 1, _sorted_letters.size())
 	_refresh_page()
 	MouseModeStack.push(self, Input.MOUSE_MODE_VISIBLE)
+	InputBlocker.push(self)
 	visible = true
 
 func hide_notebook() -> void:
 	visible = false
 	MouseModeStack.pop(self)
+	InputBlocker.pop(self)
 
 func _rebuild_letter_list() -> void:
 	_sorted_letters = Array(PlayerState.player_letters)
