@@ -1,10 +1,9 @@
 [gd_scene format=3 uid="uid://cwtitldoo8dvx"]
 
-
 [ext_resource type="Script" uid="uid://cwh0iyo32lve3" path="res://scripts/room/Room3D.gd" id="1_ycg17"]
 [ext_resource type="Script" uid="uid://by0l5vrov16w2" path="res://scripts/room/Map.gd" id="2_x8ju2"]
-[ext_resource type="PackedScene" uid="uid://crpx8kcdgmlp1" path="res://Scenes/LetterNotebook.tscn" id="3_qb10a"]
-[ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://Scenes/CanvasLayer.tscn" id="4_ip6ky"]
+[ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://scenes/CanvasLayer.tscn" id="4_ip6ky"]
+[ext_resource type="PackedScene" uid="uid://vjvpjwdnojlk" path="res://scenes/LetterRoster.tscn" id="4_x8ju2"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_swdye"]
 
@@ -48,6 +47,28 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="RoomHUD" type="VBoxContainer" parent="CanvasLayer/UIRoot" unique_id=1833878919]
+layout_mode = 1
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 56.0
+offset_bottom = 56.0
+mouse_filter = 2
+
+[node name="PlayerHP" type="Label" parent="CanvasLayer/UIRoot/RoomHUD" unique_id=207498593]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.91627353, 0.89624393, 0.785777, 1)
+theme_override_font_sizes/font_size = 20
+text = "hello"
+
+[node name="PlayerHPBar" type="ProgressBar" parent="CanvasLayer/UIRoot/RoomHUD" unique_id=353285859]
+custom_minimum_size = Vector2(200, 12)
+layout_mode = 2
+show_percentage = false
+
+[node name="LetterRoster" parent="CanvasLayer/UIRoot/RoomHUD" unique_id=1889394267 instance=ExtResource("4_x8ju2")]
+layout_mode = 2
 
 [node name="BottomCenter" type="CenterContainer" parent="CanvasLayer/UIRoot" unique_id=545550981]
 layout_mode = 1
@@ -203,8 +224,18 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
-[node name="LetterNotebook" parent="CanvasLayer/UIRoot" unique_id=385097229 instance=ExtResource("3_qb10a")]
+[node name="ScoreLabel" type="Label" parent="CanvasLayer/UIRoot" unique_id=39748914]
 layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -56.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 39.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0.9804042, 0.9309246, 0.7220274, 1)
+theme_override_font_sizes/font_size = 20
 
 [node name="DoorsRoot" type="Node3D" parent="." unique_id=1457464861]
 

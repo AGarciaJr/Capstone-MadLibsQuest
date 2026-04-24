@@ -77,7 +77,7 @@ var _strike_round_pos_display: String = "noun"
 @onready var player_name: Label = $PlayerPanel/VBoxContainer/PlayerName
 @onready var player_hp_label: Label = $PlayerPanel/VBoxContainer/PlayerHP
 @onready var player_hp_bar: ProgressBar = $PlayerPanel/VBoxContainer/PlayerHPBar
-@onready var letters_label: Label = $PlayerPanel/VBoxContainer/LettersLabel
+@onready var letter_roster: GridContainer = $PlayerPanel/VBoxContainer/LetterRoster
 @onready var letter_limit_label: Label = $PlayerPanel/VBoxContainer/LetterLimit
 @onready var letter_bonus_number_label: Label = $PlayerPanel/VBoxContainer/LetterBonusNumber
 @onready var current_bonus_multiplier_label: Label = $PlayerPanel/VBoxContainer/CurrentBonusMultiplier
@@ -145,10 +145,6 @@ func _exit_tree() -> void:
 
 
 func _update_letters_label(_letters: PackedStringArray = PackedStringArray()) -> void:
-	if letters_label == null:
-		return
-	
-	letters_label.text = "Player letters: %s" % PlayerState.format_player_letters_with_levels()
 	_update_letter_bonus_number_label()
 	_update_current_bonus_multiplier_label()
 
@@ -167,6 +163,8 @@ func _update_letter_bonus_number_label() -> void:
 
 func _on_word_input_text_changed(new_text: String) -> void:
 	_refresh_current_bonus_multiplier_label(new_text)
+	if letter_roster and letter_roster.has_method("update_highlights"):
+		letter_roster.update_highlights(new_text)
 
 
 func _update_current_bonus_multiplier_label() -> void:
@@ -216,6 +214,8 @@ func _letter_coverage_tier_color(ratio: float) -> Color:
 
 func _reset_current_bonus_multiplier_preview() -> void:
 	_refresh_current_bonus_multiplier_label("")
+	if letter_roster and letter_roster.has_method("update_highlights"):
+		letter_roster.update_highlights("")
 
 
 func _format_letter_mult_for_label(mult: float) -> String:
@@ -976,4 +976,3 @@ func _on_letter_leveled_up(letter: String, new_level: int) -> void:
 	var msg := "Letter %s reached level %d!" % [letter, new_level]
 	_append_log(msg)
 	result_label.text = msg
-	_update_letters_label()

@@ -10,10 +10,9 @@
 [ext_resource type="AudioStream" uid="uid://bmlydj3nxvg52" path="res://assets/Audio/MediumDamageSoundEffect.mp3" id="4_dnfe4"]
 [ext_resource type="FontFile" uid="uid://xrdaqecbc33" path="res://assets/Fonts/MorrisRomanAlternate-Black.ttf" id="4_g8wve"]
 [ext_resource type="AudioStream" uid="uid://py3y7vd88rsa" path="res://assets/Audio/BigDamageSoundEffect.mp3" id="4_u8i6w"]
-[ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://Scenes/CanvasLayer.tscn" id="5_vn0yc"]
-[ext_resource type="PackedScene" uid="uid://wdlitqgfnt17" path="res://Scenes/YouDiedScreen.tscn" id="7_8ftua"]
-[ext_resource type="AudioStream" uid="uid://emi3y03p3dbd" path="res://assets/Art/BattleMusic.mp3" id="7_dcr6b"]
-[ext_resource type="PackedScene" uid="uid://crpx8kcdgmlp1" path="res://Scenes/LetterNotebook.tscn" id="14_alxtf"]
+[ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://scenes/CanvasLayer.tscn" id="5_vn0yc"]
+[ext_resource type="PackedScene" uid="uid://wdlitqgfnt17" path="res://scenes/YouDiedScreen.tscn" id="7_8ftua"]
+[ext_resource type="PackedScene" uid="uid://vjvpjwdnojlk" path="res://scenes/LetterRoster.tscn" id="7_alxtf"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_textbox"]
 bg_color = Color(0.07, 0.05, 0.03, 0.94)
@@ -128,10 +127,8 @@ layout_mode = 2
 value = 100.0
 show_percentage = false
 
-[node name="LettersLabel" type="Label" parent="PlayerPanel/VBoxContainer" unique_id=370220454]
+[node name="LetterRoster" parent="PlayerPanel/VBoxContainer" unique_id=1889394267 instance=ExtResource("7_alxtf")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Player letters: A, E, S, T"
 
 [node name="LetterBonusNumber" type="Label" parent="PlayerPanel/VBoxContainer" unique_id=2100456123]
 layout_mode = 2
@@ -177,16 +174,15 @@ theme_override_constants/separation = 15
 
 [node name="ResultLabel" type="RichTextLabel" parent="BottomPanel/TextBoxBg/VBoxContainer" unique_id=1234699025]
 layout_mode = 2
-bbcode_enabled = true
-fit_content = true
-scroll_active = false
 theme_override_colors/default_color = Color(1, 0.9, 0.5, 1)
 theme_override_fonts/normal_font = ExtResource("3_ydegg")
 theme_override_font_sizes/normal_font_size = 22
+bbcode_enabled = true
 text = "Type a word and press Enter!"
+fit_content = true
+scroll_active = false
 horizontal_alignment = 1
 vertical_alignment = 1
-autowrap_mode = 3
 
 [node name="LinePreviewContainer" type="VBoxContainer" parent="BottomPanel/TextBoxBg/VBoxContainer" unique_id=100626632]
 layout_mode = 2
@@ -337,11 +333,10 @@ offset_bottom = 236.0
 [node name="LogContent" type="RichTextLabel" parent="BattleLogPanel/ScrollContainer" unique_id=2015320866]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 9
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
-theme_override_font_sizes/normal_font_size = 9
-autowrap_mode = 3
 
 [node name="Fade" type="ColorRect" parent="." unique_id=684147215]
 layout_mode = 1
@@ -359,7 +354,3 @@ visible = false
 
 [node name="YouDiedScreen" parent="." unique_id=156634254 instance=ExtResource("7_8ftua")]
 visible = false
-
-[node name="LetterNotebook" parent="." unique_id=385097229 instance=ExtResource("14_alxtf")]
-layout_mode = 1
-

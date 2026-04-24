@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://vjvpjwdnojlk"]
+
+[ext_resource type="Script" uid="uid://0e77wuekrp4t" path="res://scenes/LetterRoster.gd" id="1_61kay"]
+
+[node name="LetterRoster" type="GridContainer" unique_id=1889394267]
+script = ExtResource("1_61kay")

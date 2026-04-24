@@ -14,6 +14,11 @@ extends Node3D
 @onready var main_menu_button: Button = (
 	$CanvasLayer/UIRoot/CompletionCenter/CompletionPanel/CompletionVBox/HBoxContainer/MainMenuButton
 )
+
+@onready var room_hp_label: Label = $CanvasLayer/UIRoot/RoomHUD/PlayerHP
+@onready var room_hp_bar: ProgressBar = $CanvasLayer/UIRoot/RoomHUD/PlayerHPBar
+@onready var score_label: Label = $CanvasLayer/UIRoot/ScoreLabel
+
 @export var door_radius: float = .75
 
 
@@ -55,6 +60,7 @@ func _ready() -> void:
 	_rebuild_doors()
 	_refresh_ui()
 	_apply_3d_assets()
+	_update_room_hud()
 
 func _input(event):
 	# Opening map
@@ -415,3 +421,23 @@ func _setup_dungeon_environment() -> void:
 	var world_env := WorldEnvironment.new()
 	world_env.environment = env
 	add_child(world_env)
+
+func _update_room_hud() -> void:
+	room_hp_label.text = "HP: %d / %d" % [PlayerState.current_hp, PlayerState.max_hp]
+	room_hp_bar.max_value = PlayerState.max_hp
+	room_hp_bar.value = PlayerState.current_hp
+	_update_room_hp_bar_color()
+	score_label.text = "Score: %d" % PlayerState.current_run_score
+
+func _update_room_hp_bar_color() -> void:
+	var percent := float(PlayerState.current_hp) / float(PlayerState.max_hp)
+	var color: Color
+	if percent > 0.5:
+		color = Color(0.2, 0.8, 0.2)
+	elif percent > 0.1:
+		color = Color(0.9, 0.8, 0.1)
+	else:
+		color = Color(0.9, 0.1, 0.1)
+	var style := StyleBoxFlat.new()
+	style.bg_color = color
+	room_hp_bar.add_theme_stylebox_override("fill", style)

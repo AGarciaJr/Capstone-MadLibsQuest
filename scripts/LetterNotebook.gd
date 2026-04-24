@@ -24,10 +24,13 @@ func _exit_tree() -> void:
 	InputBlocker.pop(self)
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo:
-		if event.keycode == KEY_F1:
-			toggle()
-			get_viewport().set_input_as_handled()
+	pass
+	# Tabled for now, may add the notebook back in later: when players click a letter portrait, bring up
+	# detailed stats in the notebook
+	#if event is InputEventKey and event.pressed and not event.echo:
+		#if event.keycode == KEY_F1:
+			#toggle()
+			#get_viewport().set_input_as_handled()
 		
 func toggle() -> void:
 	if visible:
