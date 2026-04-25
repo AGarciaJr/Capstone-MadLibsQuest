@@ -13,6 +13,7 @@ signal intro_completed
 @onready var hint_label: Label = $VBoxContainer/HintLabel
 @onready var continue_label: Label = $VBoxContainer/ContinueLabel
 @onready var typewriter_timer: Timer = $TypewriterTimer
+@onready var skip_button: Button = $MarginContainer/SkipButton
 
 # The Bard instance (created in code since this is text-only)
 var bard: Bard
@@ -57,6 +58,7 @@ func _ready() -> void:
 	# Connect signals
 	typewriter_timer.timeout.connect(_on_typewriter_tick)
 	word_input.text_submitted.connect(_on_word_submitted)
+	skip_button.pressed.connect(_on_skip_pressed)
 	
 	# Hide input initially
 	input_container.visible = false
@@ -336,3 +338,6 @@ func _get_article(word: String) -> String:
 	if first_letter in ["a", "e", "i", "o", "u"]:
 		return "an"
 	return "a"
+
+func _on_skip_pressed() -> void:
+	SceneTransition.change_scene(Scenes.LETTER_SELECT, 0.5)

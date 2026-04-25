@@ -30,16 +30,18 @@ func _on_start_pressed() -> void:
 func _on_tutorial_pressed() -> void:
 	mode_modal.visible = false
 	PlayerState.reset_to_defaults()
+	PlayerState.player_name = "Hero"
+	PlayerState.set_initial_player_letters(PackedStringArray(["A", "E", "S", "T", "X"]))
 	Run.run_mode = RunManager.RunMode.TUTORIAL
 	Run.start_run()
-	get_tree().change_scene_to_file(Scenes.INTRO)
+	get_tree().change_scene_to_file(Scenes.ROOM)
 
 func _on_new_run_pressed() -> void:
 	mode_modal.visible = false
 	PlayerState.reset_to_defaults()
 	Run.run_mode = RunManager.RunMode.GENERATED
 	Run.start_run()
-	get_tree().change_scene_to_file(Scenes.LETTER_SELECT)
+	get_tree().change_scene_to_file(Scenes.INTRO)
 
 func _on_modal_back_pressed() -> void:
 	mode_modal.visible = false
