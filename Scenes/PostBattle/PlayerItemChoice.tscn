@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://b3ngh1tx3dcpc"]
 
+[ext_resource type="Texture2D" uid="uid://dpemvqgrsk0fb" path="res://assets/Art/Item_back.jpg" id="2_6mvd8"]
 [ext_resource type="FontFile" uid="uid://6ycjknowso32" path="res://assets/Fonts/Montserrat Fonts/Montserrat-ExtraBold.ttf" id="2_jo0uh"]
 [ext_resource type="FontFile" uid="uid://dppulj7gfoex6" path="res://assets/Fonts/Montserrat Fonts/Montserrat-Black.ttf" id="3_03u8h"]
 [ext_resource type="FontFile" uid="uid://c6ty4nsegylvr" path="res://assets/Fonts/Montserrat Fonts/Montserrat-SemiBold.otf" id="3_er8fn"]
@@ -14,6 +15,16 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("4_script")
 metadata/_edit_lock_ = true
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1133424922]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_6mvd8")
+expand_mode = 1
 
 [node name="ItemNodeOriginContainer" type="VBoxContainer" parent="." unique_id=516770831]
 layout_mode = 1
