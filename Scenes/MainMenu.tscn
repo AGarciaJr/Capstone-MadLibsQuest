@@ -1,9 +1,8 @@
 [gd_scene format=3 uid="uid://mhf2f8rk8kse"]
 
 [ext_resource type="Script" uid="uid://du1gp7iq1a0ca" path="res://scripts/MainMenu.gd" id="1_ow34m"]
-[ext_resource type="Texture2D" uid="uid://dfbignak050jf" path="res://assets/Art/TitleBackground.png" id="2_l72w3"]
+[ext_resource type="Texture2D" uid="uid://ch35jsw08podh" path="res://assets/Art/Wordwoven Cover Art.png" id="2_8saeu"]
 [ext_resource type="FontFile" uid="uid://dl2x675iiclpr" path="res://assets/Fonts/PlayfairDisplay-Black.ttf" id="3_ghw46"]
-[ext_resource type="FontFile" uid="uid://caqk3gmdt5r4e" path="res://assets/Fonts/PlayfairDisplay-Bold.ttf" id="4_df05h"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cqjrg"]
 bg_color = Color(0.101960786, 0.039215688, 0.18039216, 1)
@@ -25,9 +24,15 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -92.0
+offset_top = -59.0
+offset_right = 76.0
+offset_bottom = 67.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_l72w3")
+texture = ExtResource("2_8saeu")
+expand_mode = 1
+stretch_mode = 6
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1612962419]
 custom_minimum_size = Vector2(200, 48)
@@ -67,19 +72,6 @@ theme_override_fonts/font = ExtResource("3_ghw46")
 theme_override_font_sizes/font_size = 42
 theme_override_styles/normal = SubResource("StyleBoxFlat_e2xy7")
 text = "Credits"
-
-[node name="GameTitle" type="Label" parent="." unique_id=618499384]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = 7.0
-offset_bottom = 121.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.9607843, 0.84705883, 0.47843137, 1)
-theme_override_fonts/font = ExtResource("4_df05h")
-theme_override_font_sizes/font_size = 85
-text = "WordWoven"
-horizontal_alignment = 1
 
 [node name="ModeModal" type="PanelContainer" parent="." unique_id=1238681689]
 layout_mode = 1
