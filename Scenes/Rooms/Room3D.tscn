@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://cwh0iyo32lve3" path="res://scripts/room/Room3D.gd" id="1_ycg17"]
 [ext_resource type="Script" uid="uid://by0l5vrov16w2" path="res://scripts/room/Map.gd" id="2_x8ju2"]
 [ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://scenes/CanvasLayer.tscn" id="4_ip6ky"]
+[ext_resource type="PackedScene" uid="uid://dw7n21ln31r4b" path="res://scenes/TutorialOverlay.tscn" id="4_qb10a"]
 [ext_resource type="PackedScene" uid="uid://vjvpjwdnojlk" path="res://scenes/LetterRoster.tscn" id="4_x8ju2"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_swdye"]
@@ -236,6 +237,10 @@ offset_bottom = 39.0
 grow_horizontal = 0
 theme_override_colors/font_color = Color(0.9804042, 0.9309246, 0.7220274, 1)
 theme_override_font_sizes/font_size = 20
+
+[node name="TutorialOverlay" parent="CanvasLayer/UIRoot" unique_id=1509159488 instance=ExtResource("4_qb10a")]
+layout_mode = 1
+scene_name = "room"
 
 [node name="DoorsRoot" type="Node3D" parent="." unique_id=1457464861]
 

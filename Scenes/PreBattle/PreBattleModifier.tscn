@@ -3,6 +3,7 @@
 [ext_resource type="Theme" uid="uid://cd024qap737m8" path="res://assets/Themes/Default_UI_Theme.tres" id="1_ixufq"]
 [ext_resource type="FontFile" uid="uid://c6ty4nsegylvr" path="res://assets/Fonts/Montserrat Fonts/Montserrat-SemiBold.otf" id="2_ux6d3"]
 [ext_resource type="Script" uid="uid://d3w5iy4nioeul" path="res://scripts/combat/BackEnd/EnemySystems/PreBattleModifier.gd" id="3_script"]
+[ext_resource type="PackedScene" uid="uid://dw7n21ln31r4b" path="res://scenes/TutorialOverlay.tscn" id="4_gba8l"]
 
 [node name="PreBattleModifier" type="Control" unique_id=2100343089]
 layout_mode = 3
@@ -77,3 +78,7 @@ offset_right = 0.3199768
 offset_bottom = 0.11999512
 text = "Continue"
 metadata/_edit_use_anchors_ = true
+
+[node name="TutorialOverlay" parent="." unique_id=1509159488 instance=ExtResource("4_gba8l")]
+layout_mode = 1
+scene_name = "prebattle"

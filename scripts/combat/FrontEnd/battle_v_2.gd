@@ -2,6 +2,8 @@ extends Control
 
 const _TurnResolverScript = preload("res://scripts/combat/BackEnd/TurnResolver.gd")
 
+signal word_submitted(word: String)
+
 # Config (pulled mostly from BattleConfigFactory and PlayerState at runtime)
 @export var use_element_system: bool = true
 @export var player_attacks_per_turn: int = 1
@@ -485,6 +487,7 @@ func _submit_word(raw: String) -> void:
 		return
 		
 	_add_xp_for_word(word)
+	word_submitted.emit(word)
 
 	collected_words.append(word)
 	_strike_round_expected_pos = expected_pos
@@ -607,6 +610,7 @@ func _submit_bonus_strike_word(word: String) -> void:
 		return
 		
 	_add_xp_for_word(word)
+	word_submitted.emit(word)
 
 	var S: float = _get_word_freq_scaling(word)
 	if use_element_system and not use_scrabble_test_damage:

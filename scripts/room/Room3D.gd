@@ -252,15 +252,18 @@ func _refresh_ui() -> void:
 		return
 		
 	completion_center.visible = false
-	hint_label.visible = not _is_transitioning
 	crosshair.visible = not _is_transitioning
 	
-	var hint: String = curr.get("hint", "")
-	if hint != "":
-		hint_label.text = hint
+	if Run.run_mode == RunManager.RunMode.TUTORIAL:
+		hint_label.visible = false
 	else:
-		hint_label.text = "Click a door to continue."
-	_update_map_overlay()
+		hint_label.visible = not _is_transitioning
+		var hint: String = curr.get("hint", "")
+		if hint != "":
+			hint_label.text = hint
+		else:
+			hint_label.text = "Click a door to continue."
+		_update_map_overlay()
 
 func _on_begin_run_pressed():
 	var saved_name := PlayerState.player_name
