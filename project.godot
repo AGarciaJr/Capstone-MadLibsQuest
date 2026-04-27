@@ -37,6 +37,7 @@ AudioPlayer="*res://Scenes/audio_player.tscn"
 SaveManager="*uid://cp40fvkh56vk6"
 MouseModeStack="*res://scripts/autoloads/MouseModeStack.gd"
 InputBlocker="*res://scripts/autoloads/InputBlocker.gd"
+TutorialState="*uid://cigngvv2ibocy"
 
 [display]
 

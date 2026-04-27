@@ -10,6 +10,7 @@
 [ext_resource type="AudioStream" uid="uid://bmlydj3nxvg52" path="res://assets/Audio/MediumDamageSoundEffect.mp3" id="4_dnfe4"]
 [ext_resource type="FontFile" uid="uid://xrdaqecbc33" path="res://assets/Fonts/MorrisRomanAlternate-Black.ttf" id="4_g8wve"]
 [ext_resource type="AudioStream" uid="uid://py3y7vd88rsa" path="res://assets/Audio/BigDamageSoundEffect.mp3" id="4_u8i6w"]
+[ext_resource type="PackedScene" uid="uid://dw7n21ln31r4b" path="res://scenes/TutorialOverlay.tscn" id="5_alxtf"]
 [ext_resource type="PackedScene" uid="uid://dnrim6tbs70o" path="res://scenes/CanvasLayer.tscn" id="5_vn0yc"]
 [ext_resource type="PackedScene" uid="uid://wdlitqgfnt17" path="res://scenes/YouDiedScreen.tscn" id="7_8ftua"]
 [ext_resource type="PackedScene" uid="uid://vjvpjwdnojlk" path="res://scenes/LetterRoster.tscn" id="7_alxtf"]
@@ -251,6 +252,10 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("3_ydegg")
 theme_override_font_sizes/font_size = 21
 text = "Battle Log"
+
+[node name="TutorialOverlay" parent="." unique_id=1509159488 instance=ExtResource("5_alxtf")]
+layout_mode = 1
+scene_name = "battle"
 
 [node name="DefeatPanel" type="Control" parent="." unique_id=355079481]
 visible = false

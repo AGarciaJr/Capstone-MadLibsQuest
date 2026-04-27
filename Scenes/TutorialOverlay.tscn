@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://dw7n21ln31r4b"]
+
+[ext_resource type="Script" uid="uid://b41osgres8mhh" path="res://scripts/TutorialOverlay.gd" id="1_c84ul"]
+
+[node name="TutorialOverlay" type="Control" unique_id=1509159488]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_c84ul")
+
+[node name="Backdrop" type="ColorRect" parent="." unique_id=3025162]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.3)
+
+[node name="PopupPanel" type="PanelContainer" parent="." unique_id=9786241]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -58.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PopupPanel" unique_id=1028574629]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PopupPanel/MarginContainer" unique_id=98343405]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="MessageLabel" type="Label" parent="PopupPanel/MarginContainer/VBoxContainer" unique_id=1778073226]
+layout_mode = 2
+size_flags_vertical = 6
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ContinueButton" type="Button" parent="PopupPanel/MarginContainer/VBoxContainer" unique_id=486463075]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+text = "Continue"

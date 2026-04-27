@@ -5,6 +5,7 @@
 [ext_resource type="FontFile" uid="uid://dppulj7gfoex6" path="res://assets/Fonts/Montserrat Fonts/Montserrat-Black.ttf" id="3_03u8h"]
 [ext_resource type="FontFile" uid="uid://c6ty4nsegylvr" path="res://assets/Fonts/Montserrat Fonts/Montserrat-SemiBold.otf" id="3_er8fn"]
 [ext_resource type="Script" uid="uid://dfl3iot7nwkg6" path="res://scripts/combat/BackEnd/ItemSystem/PlayerItemChoice.gd" id="4_script"]
+[ext_resource type="PackedScene" uid="uid://dw7n21ln31r4b" path="res://scenes/TutorialOverlay.tscn" id="6_a0d5l"]
 
 [node name="ItemChoice" type="Control" unique_id=1618093229]
 layout_mode = 3
@@ -254,3 +255,7 @@ theme_override_font_sizes/font_size = 30
 text = "Choose an Item"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="TutorialOverlay" parent="." unique_id=1509159488 instance=ExtResource("6_a0d5l")]
+layout_mode = 1
+scene_name = "postbattle"
