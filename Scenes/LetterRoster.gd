@@ -125,6 +125,6 @@ func update_highlights(word: String) -> void:
 		if bg == null:
 			continue
 		if letter != "" and letter in upper:
-			bg.color = Color(0.3, 0.5, 1.0, 0.25)
+			bg.color = LetterGroupBonuses.highlight_color_for_bonus_letter(letter)
 		else:
 			bg.color = Color(0, 0, 0, 0)
