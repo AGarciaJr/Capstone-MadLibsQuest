@@ -146,6 +146,7 @@ size_flags_vertical = 3
 [node name="Button" type="Button" parent="ItemNodeOriginContainer/DetailsRow/ItemChoice1" unique_id=1101779858]
 custom_minimum_size = Vector2(50, 30)
 layout_mode = 2
+theme_override_font_sizes/font_size = 30
 text = "Select"
 
 [node name="ItemChoice2" type="VBoxContainer" parent="ItemNodeOriginContainer/DetailsRow" unique_id=1326729742]
@@ -189,6 +190,7 @@ size_flags_vertical = 3
 [node name="Button" type="Button" parent="ItemNodeOriginContainer/DetailsRow/ItemChoice2" unique_id=574333059]
 custom_minimum_size = Vector2(50, 30)
 layout_mode = 2
+theme_override_font_sizes/font_size = 30
 text = "Select"
 
 [node name="ItemChoice3" type="VBoxContainer" parent="ItemNodeOriginContainer/DetailsRow" unique_id=1051740337]
@@ -232,6 +234,7 @@ size_flags_vertical = 3
 [node name="Button" type="Button" parent="ItemNodeOriginContainer/DetailsRow/ItemChoice3" unique_id=1241336081]
 custom_minimum_size = Vector2(50, 30)
 layout_mode = 2
+theme_override_font_sizes/font_size = 30
 text = "Select"
 
 [node name="TitleCard" type="Label" parent="." unique_id=1703987879]
