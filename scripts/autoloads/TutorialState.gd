@@ -13,8 +13,9 @@ var steps: Array = [
 		{"scene": "prebattle", "text": "Type an adjective and press Submit. Try something like 'weak' or 'small' for an easier fight!", "wait_for": "click"},
 		# Battle scene first fight
 		{"scene": "battle", "text": "Time to fight! The story has blanks you fill in with words. The prompt tells you what type of word to use.", "wait_for": "click"},
-		{"scene": "battle", "text": "Your letters are shown on the left. Words containing your letters deal bonus damage!", "wait_for": "click"},
-		{"scene": "battle", "text": "Type a word and press Enter or click Submit. Try it now!", "wait_for": "word_submit"},
+		{"scene": "battle", "text": "Your letters are shown on the left. The more letters you use, the more damage!", "wait_for": "click"},
+		{"scene": "battle", "text": "Type a word and press Enter or click Submit. Try it now!", "wait_for": "click"},
+		{"scene": "battle", "text": "", "wait_for": "word_submit"},
 		{"scene": "battle", "text": "Nice! Watch the letter portraits — they highlight when your word uses those letters.", "wait_for": "click"},
 		{"scene": "battle", "text": "Keep going! Fill in all the blanks to complete the sentence and damage the enemy.", "wait_for": "click"},
 		# rewards
