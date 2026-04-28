@@ -1,6 +1,22 @@
 [gd_scene format=3 uid="uid://dw7n21ln31r4b"]
 
 [ext_resource type="Script" uid="uid://b41osgres8mhh" path="res://scripts/TutorialOverlay.gd" id="1_c84ul"]
+[ext_resource type="FontFile" uid="uid://bqm5yq0e5w8cx" path="res://assets/Fonts/PlayfairDisplay-Italic.ttf" id="2_jc0cb"]
+[ext_resource type="FontFile" uid="uid://caqk3gmdt5r4e" path="res://assets/Fonts/PlayfairDisplay-Bold.ttf" id="3_wxwcf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nxns2"]
+bg_color = Color(0.42358288, 0.38109186, 0.3133042, 0.080000006)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.86504203, 0.7483791, 0.46135613, 0.5)
+expand_margin_left = 12.0
+expand_margin_top = 4.0
+expand_margin_right = 12.0
+expand_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jc0cb"]
 
 [node name="TutorialOverlay" type="Control" unique_id=1509159488]
 layout_mode = 3
@@ -9,10 +25,29 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
 script = ExtResource("1_c84ul")
 
-[node name="Backdrop" type="ColorRect" parent="." unique_id=3025162]
+[node name="PopupPanel" type="Control" parent="." unique_id=262807937]
+clip_contents = true
+layout_mode = 1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -130.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Background" type="ColorRect" parent="PopupPanel" unique_id=1768818104]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.24780053, 0.24780053, 0.24780053, 0.94900006)
+
+[node name="MarginContainer" type="MarginContainer" parent="PopupPanel" unique_id=1028574629]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,35 +55,34 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0, 0, 0, 0.3)
-
-[node name="PopupPanel" type="PanelContainer" parent="." unique_id=9786241]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -58.0
-grow_horizontal = 2
-grow_vertical = 0
-mouse_filter = 2
-
-[node name="MarginContainer" type="MarginContainer" parent="PopupPanel" unique_id=1028574629]
-layout_mode = 2
-mouse_filter = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PopupPanel/MarginContainer" unique_id=98343405]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="MessageLabel" type="Label" parent="PopupPanel/MarginContainer/VBoxContainer" unique_id=1778073226]
+[node name="MessageLabel" type="RichTextLabel" parent="PopupPanel/MarginContainer/VBoxContainer" unique_id=1914379120]
+custom_minimum_size = Vector2(0, 75.175)
 layout_mode = 2
-size_flags_vertical = 6
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.9639762, 0.9452769, 0.8808251, 1)
+theme_override_fonts/normal_font = ExtResource("2_jc0cb")
+theme_override_font_sizes/normal_font_size = 20
+scroll_active = false
 horizontal_alignment = 1
-autowrap_mode = 2
+vertical_alignment = 1
 
 [node name="ContinueButton" type="Button" parent="PopupPanel/MarginContainer/VBoxContainer" unique_id=486463075]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.91775256, 0.89827347, 0.785777, 1)
+theme_override_fonts/font = ExtResource("3_wxwcf")
+theme_override_styles/normal = SubResource("StyleBoxFlat_nxns2")
+theme_override_styles/hover = SubResource("StyleBoxFlat_nxns2")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_jc0cb")
 text = "Continue"
