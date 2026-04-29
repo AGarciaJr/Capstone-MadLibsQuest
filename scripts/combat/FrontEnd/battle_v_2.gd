@@ -26,7 +26,7 @@ var templates: Array = []
 var current_sentence_index: int = 0
 var _sprite_idle_animation: String = ""
 var _battle_log: Array[String] = []
-var _completed_sentences: Array[String] = []
+var _completed_sentences: Array[String] = [] 
 var _all_words_used: Array[String] = []
 var _defeat_message: String = ""
 var _total_damage_dealt: int = 0
@@ -51,6 +51,7 @@ var _bonus_strikes_remaining: int = 0
 ## Part of speech for bonus strikes — same blank type as the word played before enemy phase.
 var _strike_round_expected_pos: String = "noun"
 var _strike_round_pos_display: String = "noun"
+var _letters_data_snapshot = {}
 
 @export var use_standalone_postbattle_rewards: bool = true
 
@@ -96,9 +97,9 @@ var _strike_round_pos_display: String = "noun"
 @onready var player_hit_sound: AudioStreamPlayer = $PlayerPanel/PlayerHitSound
 @onready var enemy_hit_sound: AudioStreamPlayer = $EnemyPanel/EnemyHitSound
 
-@onready var line_preview_before: Label = $BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer/LinePreviewBefore
-@onready var line_preview_blank: Label = $BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer/LinePreviewBlank
-@onready var line_preview_after: Label = $BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer/LinePreviewAfter
+@onready var line_preview_before: RichTextLabel = $BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer/LinePreviewBefore
+@onready var line_preview_blank: RichTextLabel = $BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer/LinePreviewBlank
+@onready var line_preview_after: RichTextLabel = $BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer/LinePreviewAfter
 
 var _enemy_hit_sound_pool: Array[AudioStream] = []
 
@@ -262,6 +263,7 @@ func _apply_letter_limit_ui() -> void:
 
 
 func _start_battle() -> void:
+	_letters_data_snapshot = PlayerState.letters_data.duplicate(true)
 	var enc = EncounterSceneTransition.current_encounter
 	var cfg := BattleConfigFactory.build(enc)
 
@@ -447,7 +449,7 @@ func _advance_sentence() -> void:
 func _render_preview_line() -> String:
 	var text := template_line
 	for w in collected_words:
-		text = _replace_first(text, "___", w)
+		text = _replace_first(text, "___", "[b][color=#e6a82e]%s[/color][/b]" % w)
 	return text
 
 
@@ -733,6 +735,7 @@ func _word_uses_any_player_letter(word: String) -> bool:
 func _apply_invalid_turn(message: String) -> void:
 	_bonus_strikes_remaining = 0
 	var ctx := _build_turn_context(0.0, 1.0)
+	ctx["enemy_damage_scale"] = 0.25 # Enemies attack at quarter strength with invalid words
 	var result: Dictionary = _turn_resolver.resolve_invalid_turn(ctx)
 
 	var hp_before := PlayerState.current_hp
@@ -929,6 +932,7 @@ func _get_article(word: String) -> String:
 func _handle_player_defeat() -> void:
 	word_input.editable = false
 	submit_button.disabled = true
+	PlayerState.letters_data = _letters_data_snapshot.duplicate(true)
 	SaveManager.delete_save()
 	$DefeatPanel/DefeatMessage.text = _defeat_message
 	$DefeatPanel.visible = true

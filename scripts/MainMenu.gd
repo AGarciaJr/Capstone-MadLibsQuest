@@ -33,6 +33,7 @@ func _on_tutorial_pressed() -> void:
 	PlayerState.player_name = "Hero"
 	PlayerState.set_initial_player_letters(PackedStringArray(["A", "E", "S", "T", "X"]))
 	Run.run_mode = RunManager.RunMode.TUTORIAL
+	TutorialState.reset()
 	Run.start_run()
 	get_tree().change_scene_to_file(Scenes.ROOM)
 

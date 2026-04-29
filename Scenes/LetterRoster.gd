@@ -1,7 +1,7 @@
 extends GridContainer
 
 
-const PORTRAIT_SIZE := Vector2(40, 40)
+const PORTRAIT_SIZE := Vector2(60, 60)
 const CARD_WIDTH := 50
 
 

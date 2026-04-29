@@ -134,11 +134,12 @@ func _resolve(ctx: Dictionary, include_player_attacks: bool) -> Dictionary:
 			if current_player_hp <= 0:
 				break
 	else:
+		var enemy_damage_scale: float = float(ctx.get("enemy_damage_scale", 1.0))
 		for j in enemy_attacks_per_turn:
 			if current_player_hp <= 0:
 				break
 			var outcome := CombatEngine.compute_attack(enemy_stats, player_stats, enemy_move, rng)
-			var edmg: int = int(outcome.damage)
+			var edmg: int = int(round(float(outcome.damage) * enemy_damage_scale))
 			total_enemy_damage += edmg
 			current_player_hp = max(0, current_player_hp - edmg)
 			if current_player_hp <= 0:

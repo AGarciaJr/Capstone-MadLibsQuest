@@ -2,7 +2,7 @@ extends Control
 
 @onready var title_label: Label = $ColorRect/CenterContainer/Panel/MarginContainer/VBoxContainer/TitleLabel
 @onready var enemy_label: Label = $ColorRect/CenterContainer/Panel/MarginContainer/VBoxContainer/EnemyLabel
-@onready var sentences_label: Label = $ColorRect/CenterContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/SentencesLabel
+@onready var sentences_label: RichTextLabel = $ColorRect/CenterContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer/SentencesLabel
 @onready var stats_label: Label = $ColorRect/CenterContainer/Panel/MarginContainer/VBoxContainer/StatsLabel
 @onready var continue_button: Button = $ColorRect/CenterContainer/Panel/MarginContainer/VBoxContainer/ContinueButton
 

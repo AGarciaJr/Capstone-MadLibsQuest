@@ -47,3 +47,7 @@ func advance() -> void:
 func complete() -> void:
 	tutorial_completed = true
 	current_step = -1
+
+func reset() -> void:
+	current_step = 0
+	tutorial_completed = false

@@ -54,5 +54,11 @@ static func build(encounter: Dictionary) -> Dictionary:
 
 	if encounter.has("player_max_hp"):
 		cfg["player_max_hp"] = int(encounter["player_max_hp"])
+		
+	# Make tutorial enemies easier
+	if Run.run_mode == RunManager.RunMode.TUTORIAL:
+		cfg.enemy_max_hp = int(cfg.enemy_max_hp * 0.5)
+		if cfg.enemy_move.has("base_damage"):
+			cfg.enemy_move["base_damage"] = int(cfg.enemy_move["base_damage"] * 0.5)
 
 	return cfg
