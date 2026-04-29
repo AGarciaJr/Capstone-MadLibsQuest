@@ -105,12 +105,49 @@ func _on_continue_pressed() -> void:
 func _dismiss_and_advance() -> void:
 	visible = false
 	_waiting_for_word = false
-	InputBlocker.pop(self)
-	MouseModeStack.pop(self)
 	TutorialState.advance()
 
 	if TutorialState.has_step_for_scene(scene_name):
-		_show_current_step()
+		# Next step is for this scene — show without popping (avoids mouse mode toggle)
+		var next_step := TutorialState.get_current_step()
+		var next_wait_for: String = next_step.get("wait_for", "click")
+		if next_wait_for == "word_submit":
+			# Silent waiting step — pop now since we're not showing UI
+			InputBlocker.pop(self)
+			MouseModeStack.pop(self)
+			_waiting_for_word = true
+		else:
+			# Stay pushed, just refresh the visible content
+			_show_current_step_no_push()
+	else:
+		# No more steps in this scene, fully release
+		InputBlocker.pop(self)
+		MouseModeStack.pop(self)
+
+
+func _show_current_step_no_push() -> void:
+	var step := TutorialState.get_current_step()
+	if step.is_empty():
+		return
+	
+	var wait_for: String = step.get("wait_for", "click")
+	
+	if wait_for == "word_submit":
+		_waiting_for_word = true
+		visible = false
+		return
+	
+	message_label.text = ""
+	message_label.append_text("[center]%s[/center]" % step["text"])
+	
+	if wait_for == "click":
+		continue_button.visible = true
+	else:
+		continue_button.visible = false
+	
+	visible = true
+	if continue_button.visible:
+		continue_button.grab_focus()
 
 
 func _dismiss_and_advance_no_pop() -> void:

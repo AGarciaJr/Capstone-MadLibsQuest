@@ -26,6 +26,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_c84ul")
+scene_name = null
 
 [node name="Backdrop" type="ColorRect" parent="." unique_id=309310850]
 layout_mode = 1
