@@ -786,10 +786,21 @@ func _finish_battle() -> void:
 		if w.length() > longest_word.length():
 			longest_word = w
 	
+	var count_words_with_letters = 0
+	for w in _all_words_used:
+		if _word_uses_any_player_letter(w):
+			count_words_with_letters += 1
+			
+	# speed bonus to reward finishing the fight in fewer words
+	var speed_score: int = maxi(0, 200 - (_all_words_used.size() * 15))
+	
 	var battle_score: int = (
-		_total_damage_dealt + (_all_words_used.size() * 10) 
-		+ (longest_word.length() * 15) + (PlayerState.current_hp * 2)
+		_total_damage_dealt
+		+ (count_words_with_letters * 20)
+		+ (longest_word.length() * 15) 
+		+ (PlayerState.current_hp * 3)
 		+ (_completed_sentences.size() * 5)
+		+ speed_score
 	)
 	
 	PlayerState.current_run_score += battle_score

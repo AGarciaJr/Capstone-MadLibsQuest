@@ -8,6 +8,7 @@ extends Control
 @onready var main_menu_button: Button = $CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer/MainMenuButton
 
 func _ready() -> void:
+	MouseModeStack.set_default_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	SaveManager.delete_save()
 	title_label.text = "Run Complete!"
 	player_label.text = "Well done, %s!" % PlayerState.player_name
@@ -18,7 +19,12 @@ func _ready() -> void:
 	stat_parts.append("Letters collected: %s" % PlayerState.format_player_letters_with_levels())
 	stats_label.text = "\n".join(stat_parts)
 	
-	play_again_button.pressed.connect(_on_play_again_pressed)
+	if Run.run_mode == RunManager.RunMode.TUTORIAL:
+		title_label.text = "Tutorial Complete!"
+		play_again_button.visible = false
+	else:
+		play_again_button.pressed.connect(_on_play_again_pressed)
+		
 	main_menu_button.pressed.connect(_on_main_menu_pressed)
 	
 func _on_play_again_pressed() -> void:

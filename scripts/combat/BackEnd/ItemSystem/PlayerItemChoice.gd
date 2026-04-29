@@ -21,8 +21,6 @@ var _reward_items: Array[Dictionary] = []
 @onready var choice_3_name: Label = $ItemNodeOriginContainer/DetailsRow/ItemChoice3/ItemName
 @onready var choice_3_desc: Label = $ItemNodeOriginContainer/DetailsRow/ItemChoice3/ItemDescription
 @onready var choice_3_btn: Button = $ItemNodeOriginContainer/DetailsRow/ItemChoice3/Button
-@onready var letters_label: Label = $ItemNodeOriginContainer/LettersLabel
-
 
 func _ready() -> void:
 	choice_1_btn.pressed.connect(_on_choice_pressed.bind(0))
@@ -36,7 +34,6 @@ func _ready() -> void:
 			_reward_items.append(it_any as Dictionary)
 	set_items(_reward_items)
 	
-	letters_label.text = "Your letters: %s" % PlayerState.format_player_letters_with_levels()
 	item_chosen.connect(_on_item_chosen)
 
 

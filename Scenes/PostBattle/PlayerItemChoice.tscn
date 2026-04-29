@@ -4,6 +4,7 @@
 [ext_resource type="FontFile" uid="uid://6ycjknowso32" path="res://assets/Fonts/Montserrat Fonts/Montserrat-ExtraBold.ttf" id="2_jo0uh"]
 [ext_resource type="FontFile" uid="uid://dppulj7gfoex6" path="res://assets/Fonts/Montserrat Fonts/Montserrat-Black.ttf" id="3_03u8h"]
 [ext_resource type="FontFile" uid="uid://c6ty4nsegylvr" path="res://assets/Fonts/Montserrat Fonts/Montserrat-SemiBold.otf" id="3_er8fn"]
+[ext_resource type="PackedScene" uid="uid://vjvpjwdnojlk" path="res://scenes/LetterRoster.tscn" id="3_kdh7l"]
 [ext_resource type="Script" uid="uid://dfl3iot7nwkg6" path="res://scripts/combat/BackEnd/ItemSystem/PlayerItemChoice.gd" id="4_script"]
 [ext_resource type="PackedScene" uid="uid://dw7n21ln31r4b" path="res://scenes/TutorialOverlay.tscn" id="6_a0d5l"]
 
@@ -43,11 +44,9 @@ grow_vertical = 2
 theme_override_constants/separation = 16
 metadata/_edit_use_anchors_ = true
 
-[node name="LettersLabel" type="Label" parent="ItemNodeOriginContainer" unique_id=986682557]
+[node name="LetterRoster" parent="ItemNodeOriginContainer" unique_id=1889394267 instance=ExtResource("3_kdh7l")]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "placeholder"
-horizontal_alignment = 1
+max_columns = 13
 
 [node name="CategoryRow" type="HBoxContainer" parent="ItemNodeOriginContainer" unique_id=518000001]
 layout_mode = 2
