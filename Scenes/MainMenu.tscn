@@ -73,6 +73,13 @@ theme_override_font_sizes/font_size = 42
 theme_override_styles/normal = SubResource("StyleBoxFlat_e2xy7")
 text = "Credits"
 
+[node name="QuitToDesktop" type="Button" parent="VBoxContainer" unique_id=165303616]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_ghw46")
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = SubResource("StyleBoxFlat_cqjrg")
+text = "Quit To Desktop"
+
 [node name="ModeModal" type="PanelContainer" parent="." unique_id=1238681689]
 layout_mode = 1
 anchors_preset = 8
@@ -125,6 +132,7 @@ text = "Cancel"
 [connection signal="pressed" from="VBoxContainer/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="VBoxContainer/Continue" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="VBoxContainer/Credit" to="." method="_on_credit_pressed"]
+[connection signal="pressed" from="VBoxContainer/QuitToDesktop" to="." method="_on_quit_to_desktop_pressed"]
 [connection signal="pressed" from="ModeModal/CenterContainer/VBoxContainer/HBoxContainer/TutorialButton" to="." method="_on_tutorial_pressed"]
 [connection signal="pressed" from="ModeModal/CenterContainer/VBoxContainer/HBoxContainer/NewRunButton" to="." method="_on_new_run_pressed"]
 [connection signal="pressed" from="ModeModal/CenterContainer/VBoxContainer/BackButton" to="." method="_on_modal_back_pressed"]

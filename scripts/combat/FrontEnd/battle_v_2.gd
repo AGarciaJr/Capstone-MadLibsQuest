@@ -53,6 +53,8 @@ var _strike_round_expected_pos: String = "noun"
 var _strike_round_pos_display: String = "noun"
 var _letters_data_snapshot = {}
 
+var _enemy_defeated_finishing_sentence: bool = false
+
 @export var use_standalone_postbattle_rewards: bool = true
 
 ## When false: no max word length (LineEdit unlimited) and LetterLimit label is hidden. Set in Inspector for testing.
@@ -472,7 +474,11 @@ func _submit_word(raw: String) -> void:
 	var word := raw.strip_edges()
 	if word == "":
 		return
-
+		
+	if _enemy_defeated_finishing_sentence:
+		await _submit_victory_lap_word(word)
+		return
+	
 	if _bonus_strikes_remaining > 0:
 		await _submit_bonus_strike_word(word)
 		return
@@ -531,7 +537,8 @@ func _resolve_turn(word: String, freq_scaling: float) -> void:
 	await _present_damage_messages(result["damage_messages"])
 
 	if result["enemy_defeated"]:
-		_finish_battle()
+		if not _try_enter_victory_lap():
+			_finish_battle()
 		return
 
 	var sentence_just_completed := blank_index >= blanks.size()
@@ -588,7 +595,8 @@ func _resolve_multi_strike_turn_first_word(word: String, freq_scaling: float) ->
 	await _present_damage_messages(result["damage_messages"])
 
 	if result["enemy_defeated"]:
-		_finish_battle()
+		if not _try_enter_victory_lap():
+			_finish_battle()
 		return
 
 	_bonus_strikes_remaining = player_attacks_per_turn - 1
@@ -635,7 +643,8 @@ func _submit_bonus_strike_word(word: String) -> void:
 
 	if result["enemy_defeated"]:
 		_bonus_strikes_remaining = 0
-		_finish_battle()
+		if not _try_enter_victory_lap():
+			_finish_battle()
 		return
 
 	_bonus_strikes_remaining -= 1
@@ -666,7 +675,8 @@ func _finish_player_round_after_strikes() -> void:
 	await _present_damage_messages(result["damage_messages"])
 
 	if result["enemy_defeated"]:
-		_finish_battle()
+		if not _try_enter_victory_lap():
+			_finish_battle()
 		return
 	if result["player_defeated"]:
 		await _handle_player_defeat()
@@ -749,7 +759,8 @@ func _apply_invalid_turn(message: String) -> void:
 	var damage_messages: Array = result["damage_messages"]
 	if result["enemy_defeated"]:
 		await _present_damage_messages(damage_messages)
-		_finish_battle()
+		if not _try_enter_victory_lap():
+			_finish_battle()
 		return
 
 	_append_log(message)
@@ -995,3 +1006,46 @@ func _on_letter_leveled_up(letter: String, new_level: int) -> void:
 	var msg := "Letter %s reached level %d!" % [letter, new_level]
 	_append_log(msg)
 	result_label.text = msg
+
+func _try_enter_victory_lap() -> bool:
+	if blank_index >= blanks.size():
+		return false
+	_enemy_defeated_finishing_sentence = true
+	enemy_hp = 0
+	_update_hp_ui()
+	result_label.text = "Enemy defeated! Finish your tale..."
+	word_input.text = ""
+	_reset_current_bonus_multiplier_preview()
+	_refocus_input()
+	_update_prompt_ui()
+	return true
+
+func _submit_victory_lap_word(word: String) -> void:
+	if blank_index >= blanks.size():
+		return
+	
+	var blank_entry: Dictionary = blanks[blank_index]
+	var expected_pos: String = str(blank_entry.get("type", "noun"))
+	if not _validate_pos_if_possible(word, expected_pos):
+		var hint := _get_pos_hint_if_possible(word, expected_pos)
+		var msg := hint if hint != "" else ("That doesn't look like %s %s." % [_get_article(expected_pos), expected_pos])
+		result_label.text = msg
+		word_input.text = ""
+		_refocus_input()
+		return
+
+	_add_xp_for_word(word)
+	word_submitted.emit(word)
+	collected_words.append(word)
+	blank_index += 1
+
+	if blank_index >= blanks.size():
+		# Sentence complete — now finish the battle
+		_finish_battle()
+		return
+
+	result_label.text = "Keep going — finish the tale!"
+	word_input.text = ""
+	_reset_current_bonus_multiplier_preview()
+	_refocus_input()
+	_update_prompt_ui()

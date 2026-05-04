@@ -2,6 +2,7 @@ extends Node
 
 signal player_letters_changed(letters: PackedStringArray)
 signal letter_leveled_up(letter: String, new_level: int)
+signal letter_xp_changed(letter: String)
 
 const XP_PER_LEVEL: int = 10
 const MAX_LETTER_LEVEL: int = 5
@@ -174,6 +175,8 @@ func add_letter_xp(letter: String, amount: int = 1) -> void:
 		return
 	
 	letter_data["xp"] = int(letter_data["xp"]) + amount
+	letter_xp_changed.emit(upper)
+	
 	while int(letter_data["xp"]) >= XP_PER_LEVEL and int(letter_data["level"]) < MAX_LETTER_LEVEL:
 		letter_data["xp"] = int(letter_data["xp"]) - XP_PER_LEVEL
 		letter_data["level"] = int(letter_data["level"]) + 1

@@ -74,3 +74,6 @@ func _on_battle_tips_pressed() -> void:
 func _on_tips_overlay_closed() -> void:
 	$PanelContainer.show()
 	_tips_overlay = null
+
+func _on_quit_to_desktop_pressed() -> void:
+	get_tree().quit()

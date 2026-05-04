@@ -15,6 +15,8 @@ func _ready() -> void:
 		PlayerState.player_letters_changed.connect(rebuild)
 	if not PlayerState.letter_leveled_up.is_connected(_on_level_up):
 		PlayerState.letter_leveled_up.connect(_on_level_up)
+	if not PlayerState.letter_xp_changed.is_connected(_on_xp_changed):
+		PlayerState.letter_xp_changed.connect(_on_xp_changed)
 
 	rebuild()
 	
@@ -24,6 +26,8 @@ func _exit_tree() -> void:
 		PlayerState.player_letters_changed.disconnect(rebuild)
 	if PlayerState.letter_leveled_up.is_connected(_on_level_up):
 		PlayerState.letter_leveled_up.disconnect(_on_level_up)
+	if PlayerState.letter_xp_changed.is_connected(_on_xp_changed):
+		PlayerState.letter_xp_changed.disconnect(_on_xp_changed)
 
 
 func _on_level_up(_letter: String, _new_level: int) -> void:
@@ -152,3 +156,6 @@ func _all_descendants(node: Node) -> Array:
 		out.append(child)
 		out.append_array(_all_descendants(child))
 	return out
+
+func _on_xp_changed(_letter: String) -> void:
+	rebuild()

@@ -66,6 +66,16 @@ theme_override_fonts/font = ExtResource("3_ydkpc")
 theme_override_font_sizes/font_size = 21
 text = "Main Menu"
 
+[node name="QuitToDesktop" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1059615017]
+custom_minimum_size = Vector2(200, 44)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7529412, 0.7529412, 0.7529412, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_ydkpc")
+theme_override_font_sizes/font_size = 21
+text = "Quit to Desktop"
+
 [connection signal="pressed" from="PanelContainer/VBoxContainer/Resume" to="." method="_on_resume_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/BattleTips" to="." method="_on_battle_tips_pressed"]
 [connection signal="pressed" from="PanelContainer/VBoxContainer/MainMenu" to="." method="_on_main_menu_pressed"]
+[connection signal="pressed" from="PanelContainer/VBoxContainer/QuitToDesktop" to="." method="_on_quit_to_desktop_pressed"]

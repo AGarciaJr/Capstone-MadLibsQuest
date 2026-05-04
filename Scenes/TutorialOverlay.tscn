@@ -92,6 +92,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.91775256, 0.89827347, 0.785777, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("3_wxwcf")
 theme_override_styles/normal = SubResource("StyleBoxFlat_nxns2")
 theme_override_styles/hover = SubResource("StyleBoxFlat_nxns2")

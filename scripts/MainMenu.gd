@@ -52,3 +52,6 @@ func _on_continue_pressed() -> void:
 		get_tree().change_scene_to_file(Scenes.ROOM)
 	else:
 		continue_button.visible = false
+
+func _on_quit_to_desktop_pressed() -> void:
+	get_tree().quit()
