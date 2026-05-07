@@ -50,6 +50,8 @@ func _build_card(letter: String) -> PanelContainer:
 	
 	var card := PanelContainer.new()
 	card.set_meta("letter", letter)
+	var tooltip := _letter_buff_blurb(letter)
+	card.tooltip_text = tooltip
 	card.custom_minimum_size = Vector2(CARD_WIDTH, 0)
 	card.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	
@@ -128,8 +130,22 @@ func _build_card(letter: String) -> PanelContainer:
 		xp_bar.value = xp
 	
 	inner.add_child(xp_bar)
+	_apply_tooltip_recursive(card, tooltip)
 	
 	return card
+
+
+func _letter_buff_blurb(letter: String) -> String:
+	var u := letter.to_upper()
+	if LetterGroupBonuses.VOWELS.contains(u):
+		return "Jesters heal max health"
+	if LetterGroupBonuses.COMMON_KNIGHTS.contains(u):
+		return "Knights add flat damage"
+	if LetterGroupBonuses.RARE_SCHOLARS.contains(u):
+		return "Scholars deal max-health damage"
+	if LetterGroupBonuses.VERY_RARE_ROYALTY.contains(u):
+		return "Royalty adds massive damage"
+	return "Boosts your strike power"
 
 func update_highlights(word: String) -> void:
 	var upper := word.to_upper()
@@ -156,6 +172,13 @@ func _all_descendants(node: Node) -> Array:
 		out.append(child)
 		out.append_array(_all_descendants(child))
 	return out
+
+
+func _apply_tooltip_recursive(root: Node, tooltip: String) -> void:
+	if root is Control:
+		(root as Control).tooltip_text = tooltip
+	for child in root.get_children():
+		_apply_tooltip_recursive(child, tooltip)
 
 func _on_xp_changed(_letter: String) -> void:
 	rebuild()
