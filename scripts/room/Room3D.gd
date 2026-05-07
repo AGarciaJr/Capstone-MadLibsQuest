@@ -2,7 +2,6 @@ extends Node3D
 
 @onready var camera: Camera3D = $Camera3D
 @onready var hint_label: Label = $CanvasLayer/UIRoot/BottomCenter/HintLabel
-@onready var completion_center: Control = $CanvasLayer/UIRoot/CompletionCenter
 @onready var begin_run_button: Button = (
 	$CanvasLayer/UIRoot/CompletionCenter/CompletionPanel/CompletionVBox/HBoxContainer/BeginRunButton
 )
@@ -45,13 +44,6 @@ func _ready() -> void:
 	
 	MouseModeStack.set_default_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
-	if not begin_run_button.pressed.is_connected(_on_begin_run_pressed):	
-		begin_run_button.pressed.connect(_on_begin_run_pressed)
-		
-	if not main_menu_button.pressed.is_connected(_on_main_menu_pressed):	
-		main_menu_button.pressed.connect(_on_main_menu_pressed)
-	
-	completion_center.visible = false
 	map_overlay.visible = false
 	fade.color = Color( 0, 0, 0, 0)
 	fade.visible = true
@@ -78,7 +70,7 @@ func _input(event):
 
 	# Door click
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		if completion_center.visible or _is_transitioning:
+		if _is_transitioning:
 			return
 		
 		var door := _get_targeted_door()
@@ -86,7 +78,7 @@ func _input(event):
 			door.interact()
 	
 func _process(_delta: float) -> void:
-	if completion_center.visible or _is_transitioning or InputBlocker.is_blocked():
+	if _is_transitioning or InputBlocker.is_blocked():
 		_set_hovered_door(null)
 		return
 	
@@ -233,14 +225,7 @@ func _refresh_ui() -> void:
 		and boss_cleared
 	)
 	
-	if run_complete and Run.run_mode == RunManager.RunMode.TUTORIAL:
-		completion_center.visible = not _is_transitioning
-		hint_label.visible = false
-		crosshair.visible = false
-		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-		return
-	
-	if run_complete and Run.run_mode == RunManager.RunMode.GENERATED and not _is_transitioning:
+	if run_complete and not _is_transitioning:
 		_is_transitioning = true
 		crosshair.visible = false
 		hint_label.visible = false
@@ -251,7 +236,6 @@ func _refresh_ui() -> void:
 		get_tree().change_scene_to_file(Scenes.RUN_COMPLETE)
 		return
 		
-	completion_center.visible = false
 	crosshair.visible = not _is_transitioning
 	
 	if Run.run_mode == RunManager.RunMode.TUTORIAL:
@@ -265,28 +249,6 @@ func _refresh_ui() -> void:
 			hint_label.text = "Click a door to continue."
 		_update_map_overlay()
 
-func _on_begin_run_pressed():
-	var saved_name := PlayerState.player_name
-	PlayerState.reset_to_defaults()
-	PlayerState.player_name = saved_name
-	
-	# Reset run state
-	Run.run_mode = RunManager.RunMode.GENERATED
-	Run.start_run()
-	# Reset progress manager
-	Progress.reset_progress()
-	
-	EncounterSceneTransition.clear()
-	
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	get_tree().change_scene_to_file(Scenes.ROOM)
-
-func _on_main_menu_pressed() -> void:
-	PlayerState.reset_to_defaults()
-	Progress.reset_progress()
-	EncounterSceneTransition.clear()
-	get_tree().change_scene_to_file(Scenes.MAIN_MENU)
-
 func _update_map_overlay() -> void:
 	map_view.set_map_data(Run.map, Run.current_id)
 	
@@ -299,7 +261,7 @@ func _toggle_map_overlay() ->void:
 		crosshair.visible = true
 		return
 	
-	if InputBlocker.is_blocked() or completion_center.visible or _is_transitioning:
+	if InputBlocker.is_blocked() or _is_transitioning:
 		return
 	
 	# opening overlay

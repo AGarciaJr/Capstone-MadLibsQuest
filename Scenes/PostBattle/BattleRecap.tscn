@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://dqlx4cqfithdr"]
 
 [ext_resource type="Script" uid="uid://07o6ykn8j7kq" path="res://scripts/combat/FrontEnd/BattleRecap.gd" id="1_h6vxw"]
+[ext_resource type="FontFile" uid="uid://dl2x675iiclpr" path="res://assets/Fonts/PlayfairDisplay-Black.ttf" id="2_nt5m8"]
+[ext_resource type="FontFile" uid="uid://caqk3gmdt5r4e" path="res://assets/Fonts/PlayfairDisplay-Bold.ttf" id="3_astgt"]
+[ext_resource type="FontFile" uid="uid://bqm5yq0e5w8cx" path="res://assets/Fonts/PlayfairDisplay-Italic.ttf" id="4_5asm0"]
 
 [node name="Control" type="Control" unique_id=1455255875]
 layout_mode = 3
@@ -45,11 +48,16 @@ theme_override_constants/separation = 20
 
 [node name="TitleLabel" type="Label" parent="ColorRect/CenterContainer/Panel/MarginContainer/VBoxContainer" unique_id=1315678068]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.9804042, 0.92947316, 0.7220274, 1)
+theme_override_fonts/font = ExtResource("2_nt5m8")
+theme_override_font_sizes/font_size = 36
 text = "Victory!"
 horizontal_alignment = 1
 
 [node name="EnemyLabel" type="Label" parent="ColorRect/CenterContainer/Panel/MarginContainer/VBoxContainer" unique_id=1196747505]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_astgt")
+theme_override_font_sizes/font_size = 22
 text = "You defeated the Gobiln!"
 horizontal_alignment = 1
 
@@ -58,6 +66,8 @@ layout_mode = 2
 
 [node name="StoryLabel" type="Label" parent="ColorRect/CenterContainer/Panel/MarginContainer/VBoxContainer" unique_id=445602533]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_astgt")
+theme_override_font_sizes/font_size = 20
 text = "Your tale:"
 horizontal_alignment = 1
 
@@ -70,20 +80,27 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="SentencesLabel" type="Label" parent="ColorRect/CenterContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=26784168]
+[node name="SentencesLabel" type="RichTextLabel" parent="ColorRect/CenterContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer/VBoxContainer" unique_id=926516027]
 layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("4_5asm0")
+theme_override_font_sizes/normal_font_size = 18
+bbcode_enabled = true
 text = "this is a long piece of text to see if this works properly, I really hope this works properly but it might not so lets see"
-horizontal_alignment = 1
+fit_content = true
+scroll_active = false
 autowrap_mode = 2
+horizontal_alignment = 1
 
 [node name="HSeparator2" type="HSeparator" parent="ColorRect/CenterContainer/Panel/MarginContainer/VBoxContainer" unique_id=214887445]
 layout_mode = 2
 
 [node name="StatsLabel" type="Label" parent="ColorRect/CenterContainer/Panel/MarginContainer/VBoxContainer" unique_id=1266615203]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_5asm0")
 
 [node name="ContinueButton" type="Button" parent="ColorRect/CenterContainer/Panel/MarginContainer/VBoxContainer" unique_id=1341771280]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("3_astgt")
 text = "Claim your reward"

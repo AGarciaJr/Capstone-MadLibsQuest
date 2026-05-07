@@ -1,12 +1,13 @@
 extends GridContainer
 
 
-const PORTRAIT_SIZE := Vector2(40, 40)
+const PORTRAIT_SIZE := Vector2(60, 60)
 const CARD_WIDTH := 50
 
+@export var max_columns: int = 5
 
 func _ready() -> void:
-	columns = 5
+	columns = max_columns
 	add_theme_constant_override("h_separation", 6)
 	add_theme_constant_override("v_separation", 4)
 
@@ -14,6 +15,8 @@ func _ready() -> void:
 		PlayerState.player_letters_changed.connect(rebuild)
 	if not PlayerState.letter_leveled_up.is_connected(_on_level_up):
 		PlayerState.letter_leveled_up.connect(_on_level_up)
+	if not PlayerState.letter_xp_changed.is_connected(_on_xp_changed):
+		PlayerState.letter_xp_changed.connect(_on_xp_changed)
 
 	rebuild()
 	
@@ -23,6 +26,8 @@ func _exit_tree() -> void:
 		PlayerState.player_letters_changed.disconnect(rebuild)
 	if PlayerState.letter_leveled_up.is_connected(_on_level_up):
 		PlayerState.letter_leveled_up.disconnect(_on_level_up)
+	if PlayerState.letter_xp_changed.is_connected(_on_xp_changed):
+		PlayerState.letter_xp_changed.disconnect(_on_xp_changed)
 
 
 func _on_level_up(_letter: String, _new_level: int) -> void:
@@ -38,16 +43,32 @@ func rebuild(_letters: PackedStringArray = PackedStringArray()) -> void:
 	for letter in sorted:
 		add_child(_build_card(letter))
 
-func _build_card(letter: String) -> VBoxContainer:
+func _build_card(letter: String) -> PanelContainer:
 	var data: Dictionary = PlayerState.letters_data.get(letter, {})
 	var level := PlayerState.get_letter_level(letter)
 	var xp := int(data.get("xp", 0))
 	
-	var card := VBoxContainer.new()
+	var card := PanelContainer.new()
 	card.set_meta("letter", letter)
 	card.custom_minimum_size = Vector2(CARD_WIDTH, 0)
-	card.add_theme_constant_override("separation", 1)
 	card.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	
+	var card_bg := StyleBoxFlat.new()
+	card_bg.bg_color = Color(0.05, 0.05, 0.05, 0.7)
+	card_bg.bg_color = Color(0.05, 0.05, 0.05, 0.7)
+	card_bg.corner_radius_top_left = 4
+	card_bg.corner_radius_top_right = 4
+	card_bg.corner_radius_bottom_left = 4
+	card_bg.corner_radius_bottom_right = 4
+	card_bg.content_margin_left = 4
+	card_bg.content_margin_right = 4
+	card_bg.content_margin_top = 4
+	card_bg.content_margin_bottom = 4
+	card.add_theme_stylebox_override("panel", card_bg)
+	
+	var inner := VBoxContainer.new()
+	inner.add_theme_constant_override("separation", 1)
+	card.add_child(inner)
 	
 	# Letter portrait and background
 	var portrait_bg := ColorRect.new()
@@ -66,7 +87,7 @@ func _build_card(letter: String) -> VBoxContainer:
 		portrait.texture = texture
 		
 	portrait_bg.add_child(portrait)
-	card.add_child(portrait_bg)
+	inner.add_child(portrait_bg)
 	
 	# Letter level
 	var level_label := Label.new()
@@ -77,7 +98,7 @@ func _build_card(letter: String) -> VBoxContainer:
 	level_label.add_theme_font_size_override("font_size", 12)
 	level_label.add_theme_color_override("font_color", Color(0.82, 0.78, 0.58))
 	level_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	card.add_child(level_label)
+	inner.add_child(level_label)
 	
 	# Letter XP bar
 	var xp_bar := ProgressBar.new()
@@ -85,7 +106,7 @@ func _build_card(letter: String) -> VBoxContainer:
 	xp_bar.show_percentage = false
 	
 	var bar_bg := StyleBoxFlat.new()
-	bar_bg.bg_color = Color(0.15, 0.12, 0.08)
+	bar_bg.bg_color = Color(0.4, 0.35, 0.25, 0.8)
 	bar_bg.corner_radius_top_left = 4
 	bar_bg.corner_radius_top_right = 4
 	bar_bg.corner_radius_bottom_left = 4
@@ -106,21 +127,20 @@ func _build_card(letter: String) -> VBoxContainer:
 		xp_bar.max_value = PlayerState.XP_PER_LEVEL
 		xp_bar.value = xp
 	
-	card.add_child(xp_bar)
+	inner.add_child(xp_bar)
 	
 	return card
 
 func update_highlights(word: String) -> void:
 	var upper := word.to_upper()
 	for card in get_children():
-		if not card is VBoxContainer:
+		var letter: String = card.get_meta("letter", "")
+		if letter == "":
 			continue
-		
-		var letter : String = card.get_meta("letter", "")
 		var bg: ColorRect = null
-		for child in card.get_children():
-			if child.has_meta("highlight_bg"):
-				bg = child
+		for descendant in _all_descendants(card):
+			if descendant.has_meta("highlight_bg"):
+				bg = descendant
 				break
 		if bg == null:
 			continue
@@ -128,3 +148,14 @@ func update_highlights(word: String) -> void:
 			bg.color = LetterGroupBonuses.highlight_color_for_bonus_letter(letter)
 		else:
 			bg.color = Color(0, 0, 0, 0)
+
+
+func _all_descendants(node: Node) -> Array:
+	var out := []
+	for child in node.get_children():
+		out.append(child)
+		out.append_array(_all_descendants(child))
+	return out
+
+func _on_xp_changed(_letter: String) -> void:
+	rebuild()

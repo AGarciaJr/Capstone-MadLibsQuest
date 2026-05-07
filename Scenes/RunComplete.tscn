@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://beca0fumkfjwi"]
 
 [ext_resource type="Script" uid="uid://fj0aoe2rgkjb" path="res://scripts/RunComplete.gd" id="1_r8i87"]
+[ext_resource type="FontFile" uid="uid://dl2x675iiclpr" path="res://assets/Fonts/PlayfairDisplay-Black.ttf" id="2_gbxlh"]
+[ext_resource type="FontFile" uid="uid://caqk3gmdt5r4e" path="res://assets/Fonts/PlayfairDisplay-Bold.ttf" id="3_qinb6"]
+[ext_resource type="FontFile" uid="uid://bqm5yq0e5w8cx" path="res://assets/Fonts/PlayfairDisplay-Italic.ttf" id="4_5q0n5"]
 
 [node name="RunComplete" type="Control" unique_id=479124569]
 layout_mode = 3
@@ -45,11 +48,16 @@ theme_override_constants/separation = 20
 
 [node name="TitleLabel" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer" unique_id=1871774997]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.9822071, 0.9309246, 0.7220274, 1)
+theme_override_fonts/font = ExtResource("2_gbxlh")
+theme_override_font_sizes/font_size = 32
 text = "Run Complete!"
 horizontal_alignment = 1
 
 [node name="PlayerLabel" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer" unique_id=1903642536]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_qinb6")
+theme_override_font_sizes/font_size = 22
 text = "Well done, player!"
 horizontal_alignment = 1
 
@@ -58,11 +66,15 @@ layout_mode = 2
 
 [node name="ScoreLabel" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer" unique_id=1939449691]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_gbxlh")
+theme_override_font_sizes/font_size = 28
 text = "Total Score:"
 horizontal_alignment = 1
 
 [node name="StatsLabel" type="Label" parent="CenterContainer/Panel/MarginContainer/VBoxContainer" unique_id=1821538544]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_5q0n5")
+theme_override_font_sizes/font_size = 18
 
 [node name="HSeparator2" type="HSeparator" parent="CenterContainer/Panel/MarginContainer/VBoxContainer" unique_id=389878116]
 layout_mode = 2
@@ -75,9 +87,13 @@ theme_override_constants/separation = 20
 [node name="PlayAgainButton" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1261698934]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_qinb6")
+theme_override_font_sizes/font_size = 22
 text = "Play Again"
 
 [node name="MainMenuButton" type="Button" parent="CenterContainer/Panel/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1054738587]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_qinb6")
+theme_override_font_sizes/font_size = 22
 text = "Main Menu"

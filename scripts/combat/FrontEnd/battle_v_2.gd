@@ -26,7 +26,7 @@ var templates: Array = []
 var current_sentence_index: int = 0
 var _sprite_idle_animation: String = ""
 var _battle_log: Array[String] = []
-var _completed_sentences: Array[String] = []
+var _completed_sentences: Array[String] = [] 
 var _all_words_used: Array[String] = []
 var _defeat_message: String = ""
 var _total_damage_dealt: int = 0
@@ -51,6 +51,9 @@ var _bonus_strikes_remaining: int = 0
 ## Part of speech for bonus strikes — same blank type as the word played before enemy phase.
 var _strike_round_expected_pos: String = "noun"
 var _strike_round_pos_display: String = "noun"
+var _letters_data_snapshot = {}
+
+var _enemy_defeated_finishing_sentence: bool = false
 
 @export var use_standalone_postbattle_rewards: bool = true
 
@@ -96,9 +99,9 @@ var _strike_round_pos_display: String = "noun"
 @onready var player_hit_sound: AudioStreamPlayer = $PlayerPanel/PlayerHitSound
 @onready var enemy_hit_sound: AudioStreamPlayer = $EnemyPanel/EnemyHitSound
 
-@onready var line_preview_before: Label = $BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer/LinePreviewBefore
-@onready var line_preview_blank: Label = $BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer/LinePreviewBlank
-@onready var line_preview_after: Label = $BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer/LinePreviewAfter
+@onready var line_preview_before: RichTextLabel = $BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer/LinePreviewBefore
+@onready var line_preview_blank: RichTextLabel = $BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer/LinePreviewBlank
+@onready var line_preview_after: RichTextLabel = $BottomPanel/TextBoxBg/VBoxContainer/LinePreviewContainer/LinePreviewAfter
 
 var _enemy_hit_sound_pool: Array[AudioStream] = []
 
@@ -262,6 +265,7 @@ func _apply_letter_limit_ui() -> void:
 
 
 func _start_battle() -> void:
+	_letters_data_snapshot = PlayerState.letters_data.duplicate(true)
 	var enc = EncounterSceneTransition.current_encounter
 	var cfg := BattleConfigFactory.build(enc)
 
@@ -447,7 +451,7 @@ func _advance_sentence() -> void:
 func _render_preview_line() -> String:
 	var text := template_line
 	for w in collected_words:
-		text = _replace_first(text, "___", w)
+		text = _replace_first(text, "___", "[b][color=#e6a82e]%s[/color][/b]" % w)
 	return text
 
 
@@ -470,7 +474,11 @@ func _submit_word(raw: String) -> void:
 	var word := raw.strip_edges()
 	if word == "":
 		return
-
+		
+	if _enemy_defeated_finishing_sentence:
+		await _submit_victory_lap_word(word)
+		return
+	
 	if _bonus_strikes_remaining > 0:
 		await _submit_bonus_strike_word(word)
 		return
@@ -529,7 +537,8 @@ func _resolve_turn(word: String, freq_scaling: float) -> void:
 	await _present_damage_messages(result["damage_messages"])
 
 	if result["enemy_defeated"]:
-		_finish_battle()
+		if not _try_enter_victory_lap():
+			_finish_battle()
 		return
 
 	var sentence_just_completed := blank_index >= blanks.size()
@@ -586,7 +595,8 @@ func _resolve_multi_strike_turn_first_word(word: String, freq_scaling: float) ->
 	await _present_damage_messages(result["damage_messages"])
 
 	if result["enemy_defeated"]:
-		_finish_battle()
+		if not _try_enter_victory_lap():
+			_finish_battle()
 		return
 
 	_bonus_strikes_remaining = player_attacks_per_turn - 1
@@ -633,7 +643,8 @@ func _submit_bonus_strike_word(word: String) -> void:
 
 	if result["enemy_defeated"]:
 		_bonus_strikes_remaining = 0
-		_finish_battle()
+		if not _try_enter_victory_lap():
+			_finish_battle()
 		return
 
 	_bonus_strikes_remaining -= 1
@@ -664,7 +675,8 @@ func _finish_player_round_after_strikes() -> void:
 	await _present_damage_messages(result["damage_messages"])
 
 	if result["enemy_defeated"]:
-		_finish_battle()
+		if not _try_enter_victory_lap():
+			_finish_battle()
 		return
 	if result["player_defeated"]:
 		await _handle_player_defeat()
@@ -734,6 +746,7 @@ func _word_uses_any_player_letter(word: String) -> bool:
 func _apply_invalid_turn(message: String) -> void:
 	_bonus_strikes_remaining = 0
 	var ctx := _build_turn_context(0.0, 1.0)
+	ctx["enemy_damage_scale"] = 0.25 # Enemies attack at quarter strength with invalid words
 	var result: Dictionary = _turn_resolver.resolve_invalid_turn(ctx)
 
 	var hp_before := PlayerState.current_hp
@@ -747,7 +760,8 @@ func _apply_invalid_turn(message: String) -> void:
 	var damage_messages: Array = result["damage_messages"]
 	if result["enemy_defeated"]:
 		await _present_damage_messages(damage_messages)
-		_finish_battle()
+		if not _try_enter_victory_lap():
+			_finish_battle()
 		return
 
 	_append_log(message)
@@ -784,10 +798,21 @@ func _finish_battle() -> void:
 		if w.length() > longest_word.length():
 			longest_word = w
 	
+	var count_words_with_letters = 0
+	for w in _all_words_used:
+		if _word_uses_any_player_letter(w):
+			count_words_with_letters += 1
+			
+	# speed bonus to reward finishing the fight in fewer words
+	var speed_score: int = maxi(0, 200 - (_all_words_used.size() * 15))
+	
 	var battle_score: int = (
-		_total_damage_dealt + (_all_words_used.size() * 10) 
-		+ (longest_word.length() * 15) + (PlayerState.current_hp * 2)
+		_total_damage_dealt
+		+ (count_words_with_letters * 20)
+		+ (longest_word.length() * 15) 
+		+ (PlayerState.current_hp * 3)
 		+ (_completed_sentences.size() * 5)
+		+ speed_score
 	)
 	
 	PlayerState.current_run_score += battle_score
@@ -930,6 +955,7 @@ func _get_article(word: String) -> String:
 func _handle_player_defeat() -> void:
 	word_input.editable = false
 	submit_button.disabled = true
+	PlayerState.letters_data = _letters_data_snapshot.duplicate(true)
 	SaveManager.delete_save()
 	$DefeatPanel/DefeatMessage.text = _defeat_message
 	$DefeatPanel.visible = true
@@ -981,3 +1007,46 @@ func _on_letter_leveled_up(letter: String, new_level: int) -> void:
 	var msg := "Letter %s reached level %d!" % [letter, new_level]
 	_append_log(msg)
 	result_label.text = msg
+
+func _try_enter_victory_lap() -> bool:
+	if blank_index >= blanks.size():
+		return false
+	_enemy_defeated_finishing_sentence = true
+	enemy_hp = 0
+	_update_hp_ui()
+	result_label.text = "Enemy defeated! Finish your tale..."
+	word_input.text = ""
+	_reset_current_bonus_multiplier_preview()
+	_refocus_input()
+	_update_prompt_ui()
+	return true
+
+func _submit_victory_lap_word(word: String) -> void:
+	if blank_index >= blanks.size():
+		return
+	
+	var blank_entry: Dictionary = blanks[blank_index]
+	var expected_pos: String = str(blank_entry.get("type", "noun"))
+	if not _validate_pos_if_possible(word, expected_pos):
+		var hint := _get_pos_hint_if_possible(word, expected_pos)
+		var msg := hint if hint != "" else ("That doesn't look like %s %s." % [_get_article(expected_pos), expected_pos])
+		result_label.text = msg
+		word_input.text = ""
+		_refocus_input()
+		return
+
+	_add_xp_for_word(word)
+	word_submitted.emit(word)
+	collected_words.append(word)
+	blank_index += 1
+
+	if blank_index >= blanks.size():
+		# Sentence complete — now finish the battle
+		_finish_battle()
+		return
+
+	result_label.text = "Keep going — finish the tale!"
+	word_input.text = ""
+	_reset_current_bonus_multiplier_preview()
+	_refocus_input()
+	_update_prompt_ui()

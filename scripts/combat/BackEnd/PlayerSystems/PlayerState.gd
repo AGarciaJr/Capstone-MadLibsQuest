@@ -2,6 +2,7 @@ extends Node
 
 signal player_letters_changed(letters: PackedStringArray)
 signal letter_leveled_up(letter: String, new_level: int)
+signal letter_xp_changed(letter: String)
 
 const XP_PER_LEVEL: int = 10
 const MAX_LETTER_LEVEL: int = 5
@@ -130,18 +131,23 @@ func modify_letter_bonus_power(extra_per_match: float) -> void:
 func letter_bonus_multiplier_for_word(word: String) -> float:
 	if player_letters.is_empty():
 		return 1.0
-	var w := word.to_upper()
-	var match_count := 0
+	
+	var counts := {}
+	for ch in word.to_upper():
+		counts[ch] = counts.get(ch, 0) + 1
+		
+	var distinct_match_count := 0
 	var bonus = 0.0
 	
 	for letter in player_letters:
-		if w.contains(letter):
-			match_count += 1
+		var occurrences: int = counts.get(letter, 0)
+		if occurrences > 0:
+			distinct_match_count += 1
 			var level := get_letter_level(letter)
 			var level_mult := 1.0 + float(level - 1) * PER_LEVEL_BONUS
-			bonus += letter_bonus_per_match * level_mult
+			bonus += letter_bonus_per_match * level_mult * float(occurrences)
 	
-	if match_count == player_letters.size():
+	if distinct_match_count == player_letters.size():
 		bonus += letter_bonus_all_letters_extra
 	bonus = clampf(bonus, 0.0, letter_bonus_cap)
 	return 1.0 + bonus
@@ -169,6 +175,8 @@ func add_letter_xp(letter: String, amount: int = 1) -> void:
 		return
 	
 	letter_data["xp"] = int(letter_data["xp"]) + amount
+	letter_xp_changed.emit(upper)
+	
 	while int(letter_data["xp"]) >= XP_PER_LEVEL and int(letter_data["level"]) < MAX_LETTER_LEVEL:
 		letter_data["xp"] = int(letter_data["xp"]) - XP_PER_LEVEL
 		letter_data["level"] = int(letter_data["level"]) + 1

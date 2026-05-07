@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://cu41gsvqwuar8"]
 
+[ext_resource type="Texture2D" uid="uid://dpemvqgrsk0fb" path="res://assets/Art/Item_back.jpg" id="1_hotbt"]
+
 [sub_resource type="GDScript" id="GDScript_story_intro"]
 script/source = "extends Control
 
@@ -149,14 +151,15 @@ grow_horizontal = 2
 grow_vertical = 2
 script = SubResource("GDScript_story_intro")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=1720104694]
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1073803241]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.1, 0.1, 0.15, 1)
+texture = ExtResource("1_hotbt")
+expand_mode = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1664153670]
 layout_mode = 1
