@@ -693,6 +693,7 @@ func _build_turn_context(freq_scaling: float, letter_bonus_mult: float, strike_w
 	var ctx := {
 		"enemy_hp": enemy_hp,
 		"enemy_max_hp": enemy_max_hp,
+		"player_max_hp": PlayerState.max_hp,
 		"player_hp": PlayerState.current_hp,
 		"player_stats": PlayerState.stats,
 		"enemy_stats": enemy_stats,

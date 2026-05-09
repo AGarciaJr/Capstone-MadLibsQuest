@@ -74,50 +74,20 @@ func _resolve(ctx: Dictionary, include_player_attacks: bool) -> Dictionary:
 
 	# One player attack per resolve call (one word). Extra strikes = extra resolve_single_player_attack calls from UI.
 	if include_player_attacks:
-		if use_scrabble:
-			var sw: String = str(ctx.get("strike_word", ""))
-			var pl := ctx.get("player_letters", PackedStringArray()) as PackedStringArray
-			var uses_player_letters: bool = bool(ctx.get("uses_player_letters", ctx.get("uses_bonus_letters", true)))
-			if not uses_player_letters:
-				damage_messages.append(
-					"Oh no — you missed! You didn't use any of your player letters."
-				)
-			elif current_enemy_hp > 0:
-				var prior_rw: int = int(ctx.get("repeat_word_prior_uses", 0))
-				var sd: Dictionary = _compute_scrabble_damage(sw, pl)
-				var pre_repeat: int = int(sd["damage"])
-				var total_player_damage: int = _apply_repeat_word_damage_penalty(
-					pre_repeat, prior_rw, damage_messages
-				)
-				current_enemy_hp = CombatEngine.apply_damage(current_enemy_hp, total_player_damage)
-				_append_scrabble_player_messages(damage_messages, sw, pl, sd, pre_repeat, total_player_damage)
-			else:
-				damage_messages.append("You dealt: 0 damage.")
-		else:
-			var uses_player_letters: bool = bool(ctx.get("uses_player_letters", ctx.get("uses_bonus_letters", true)))
-			if not uses_player_letters:
-				damage_messages.append(
-					"Oh no — you missed! You didn't use any of your player letters."
-				)
-			elif current_enemy_hp > 0:
-				var prior_rw2: int = int(ctx.get("repeat_word_prior_uses", 0))
-				var player_move := {
-					"base_damage": 5,
-					"scaling": freq_scaling,
-					"coefficient": 1.2 * letter_bonus_mult,
-					"accuracy": 1.0,
-				}
-				var outcome := CombatEngine.compute_attack(player_stats, enemy_stats, player_move, rng)
-				var raw_player_damage: int = int(outcome.damage)
-				var total_player_damage: int = _apply_repeat_word_damage_penalty(
-					raw_player_damage, prior_rw2, damage_messages
-				)
-				current_enemy_hp = CombatEngine.apply_damage(current_enemy_hp, total_player_damage)
-				damage_messages.append(
-					_format_player_strike_damage_line(total_player_damage, bool(outcome.get("is_crit", false)))
-				)
-			else:
-				damage_messages.append("You dealt: 0 damage.")
+		var strike_res: Dictionary = _player_strike_with_word(
+			ctx,
+			damage_messages,
+			current_enemy_hp,
+			current_player_hp,
+			use_scrabble,
+			freq_scaling,
+			letter_bonus_mult,
+			player_stats,
+			enemy_stats,
+			rng,
+		)
+		current_enemy_hp = int(strike_res["enemy_hp"])
+		current_player_hp = int(strike_res["player_hp"])
 
 		if current_enemy_hp <= 0:
 			return _make_result(damage_messages, current_enemy_hp, current_player_hp)
@@ -181,46 +151,132 @@ func resolve_single_player_attack(ctx: Dictionary) -> Dictionary:
 		rng.randomize()
 
 	var use_scrabble: bool = bool(ctx.get("use_scrabble_test_damage", false))
-	var uses_player_letters: bool = bool(ctx.get("uses_player_letters", ctx.get("uses_bonus_letters", true)))
-
-	if use_scrabble:
-		var sw: String = str(ctx.get("strike_word", ""))
-		var pl := ctx.get("player_letters", PackedStringArray()) as PackedStringArray
-		if not uses_player_letters:
-			damage_messages.append(
-				"Oh no — you missed! You didn't use any of your player letters."
-			)
-		elif current_enemy_hp > 0:
-			var prior_rw3: int = int(ctx.get("repeat_word_prior_uses", 0))
-			var sd: Dictionary = _compute_scrabble_damage(sw, pl)
-			var pre_repeat_s: int = int(sd["damage"])
-			var dmg: int = _apply_repeat_word_damage_penalty(pre_repeat_s, prior_rw3, damage_messages)
-			current_enemy_hp = CombatEngine.apply_damage(current_enemy_hp, dmg)
-			_append_scrabble_player_messages(damage_messages, sw, pl, sd, pre_repeat_s, dmg)
-		else:
-			damage_messages.append("You dealt: 0 damage.")
-	else:
-		if not uses_player_letters:
-			damage_messages.append(
-				"Oh no — you missed! You didn't use any of your player letters."
-			)
-		elif current_enemy_hp > 0:
-			var prior_rw4: int = int(ctx.get("repeat_word_prior_uses", 0))
-			var player_move := {
-				"base_damage": 5,
-				"scaling": freq_scaling,
-				"coefficient": 1.2 * letter_bonus_mult,
-				"accuracy": 1.0,
-			}
-			var outcome := CombatEngine.compute_attack(player_stats, enemy_stats, player_move, rng)
-			var raw_dmg: int = int(outcome.damage)
-			var dmg: int = _apply_repeat_word_damage_penalty(raw_dmg, prior_rw4, damage_messages)
-			current_enemy_hp = CombatEngine.apply_damage(current_enemy_hp, dmg)
-			damage_messages.append(_format_player_strike_damage_line(dmg, bool(outcome.get("is_crit", false))))
-		else:
-			damage_messages.append("You dealt: 0 damage.")
+	var strike_res: Dictionary = _player_strike_with_word(
+		ctx,
+		damage_messages,
+		current_enemy_hp,
+		current_player_hp,
+		use_scrabble,
+		freq_scaling,
+		letter_bonus_mult,
+		player_stats,
+		enemy_stats,
+		rng,
+	)
+	current_enemy_hp = int(strike_res["enemy_hp"])
+	current_player_hp = int(strike_res["player_hp"])
 
 	return _make_result(damage_messages, current_enemy_hp, current_player_hp)
+
+
+func _player_strike_with_word(
+	ctx: Dictionary,
+	damage_messages: Array[String],
+	start_enemy_hp: int,
+	start_player_hp: int,
+	use_scrabble: bool,
+	freq_scaling: float,
+	letter_bonus_mult: float,
+	player_stats: Dictionary,
+	enemy_stats: Dictionary,
+	rng: RandomNumberGenerator,
+) -> Dictionary:
+	var strike_word: String = str(ctx.get("strike_word", ""))
+	var pl := ctx.get("player_letters", PackedStringArray()) as PackedStringArray
+	var uses_player_letters: bool = bool(ctx.get("uses_player_letters", ctx.get("uses_bonus_letters", true)))
+	var enemy_max_hp: int = maxi(1, int(ctx.get("enemy_max_hp", 1)))
+	var player_max_hp: int = maxi(1, int(ctx.get("player_max_hp", start_player_hp)))
+
+	var current_enemy_hp: int = start_enemy_hp
+	var current_player_hp: int = start_player_hp
+
+	if not uses_player_letters:
+		damage_messages.append(
+			"Oh no — you missed! You didn't use any of your player letters."
+		)
+		return {"enemy_hp": current_enemy_hp, "player_hp": current_player_hp}
+
+	var grp: Dictionary = LetterGroupBonuses.compute_strike_bonuses(
+		strike_word, pl, enemy_max_hp, player_max_hp
+	)
+	var vowel_heal: int = int(grp.get("vowel_heal", 0))
+	if vowel_heal > 0:
+		current_player_hp = mini(player_max_hp, current_player_hp + vowel_heal)
+		var vc: int = int(grp.get("vowel_count", 0))
+		damage_messages.append(
+			"%s: you recovered %d HP (%d vowel%s × 2%% max HP)." % [
+				LetterGroupBonuses.GROUP_THEME_VOWEL,
+				vowel_heal,
+				vc,
+				"s" if vc != 1 else "",
+			]
+		)
+
+	if current_enemy_hp <= 0:
+		damage_messages.append("You dealt: 0 damage.")
+		return {"enemy_hp": current_enemy_hp, "player_hp": current_player_hp}
+
+	var prior_rw: int = int(ctx.get("repeat_word_prior_uses", 0))
+	var flat_add: int = int(grp.get("flat_damage_add", 0))
+	var rare_flat: int = int(grp.get("rare_max_hp_damage", 0))
+	var common_n: int = int(grp.get("common_count", 0))
+	var vr_n: int = int(grp.get("very_rare_count", 0))
+	var rare_n: int = int(grp.get("rare_count", 0))
+
+	if use_scrabble:
+		var sd: Dictionary = _compute_scrabble_damage(strike_word, pl)
+		var scrabble_core: int = int(sd["damage"])
+		var pre_repeat: int = scrabble_core + flat_add + rare_flat
+		var total_player_damage: int = _apply_repeat_word_damage_penalty(
+			pre_repeat, prior_rw, damage_messages
+		)
+		current_enemy_hp = CombatEngine.apply_damage(current_enemy_hp, total_player_damage)
+		_append_scrabble_player_messages(
+			damage_messages,
+			strike_word,
+			pl,
+			sd,
+			scrabble_core,
+			pre_repeat,
+			total_player_damage,
+			flat_add,
+			rare_flat,
+		)
+	else:
+		var player_move := {
+			"base_damage": 5 + int(grp.get("flat_base_damage_bonus", 0)),
+			"scaling": freq_scaling,
+			"coefficient": 1.2 * letter_bonus_mult,
+			"accuracy": 1.0,
+		}
+		var outcome := CombatEngine.compute_attack(player_stats, enemy_stats, player_move, rng)
+		var pre_repeat2: int = int(outcome.damage) + rare_flat
+		var total_dmg: int = _apply_repeat_word_damage_penalty(pre_repeat2, prior_rw, damage_messages)
+		current_enemy_hp = CombatEngine.apply_damage(current_enemy_hp, total_dmg)
+		if common_n > 0 or vr_n > 0:
+			damage_messages.append(
+				"%s / %s: +%d base damage on this strike (%d Knight letters × 2, %d Royalty × 10)."
+				% [
+					LetterGroupBonuses.GROUP_THEME_COMMON,
+					LetterGroupBonuses.GROUP_THEME_VERY_RARE,
+					common_n * 2 + vr_n * 10,
+					common_n,
+					vr_n,
+				]
+			)
+		if rare_n > 0 and rare_flat > 0:
+			damage_messages.append(
+				"%s: +%d damage (%d rare × 5%% enemy max HP)." % [
+					LetterGroupBonuses.GROUP_THEME_RARE,
+					rare_flat,
+					rare_n,
+				]
+			)
+		damage_messages.append(
+			_format_player_strike_damage_line(total_dmg, bool(outcome.get("is_crit", false)))
+		)
+
+	return {"enemy_hp": current_enemy_hp, "player_hp": current_player_hp}
 
 ## After all player strikes for the round, run enemy attacks + status effects.
 func resolve_enemy_and_status(ctx: Dictionary) -> Dictionary:
@@ -359,8 +415,11 @@ func _append_scrabble_player_messages(
 	word: String,
 	player_letters: PackedStringArray,
 	sd: Dictionary,
-	pre_repeat_damage: int,
+	scrabble_core_damage: int,
+	pre_repeat_total: int,
 	final_damage: int = -1,
+	letter_group_flat_add: int = 0,
+	letter_group_rare_damage: int = 0,
 ) -> void:
 	damage_messages.append(_format_scrabble_tile_line(word))
 	var hits: int = int(sd.get("hits", 0))
@@ -379,7 +438,30 @@ func _append_scrabble_player_messages(
 		]
 	damage_messages.append(mult_explain)
 	damage_messages.append(
-		"Damage: round(%d × %s) = %d." % [base, _scrabble_float_str(mult), pre_repeat_damage]
+		"Damage: round(%d × %s) = %d." % [base, _scrabble_float_str(mult), scrabble_core_damage]
 	)
-	var dealt: int = pre_repeat_damage if final_damage < 0 else final_damage
+	if pre_repeat_total > scrabble_core_damage:
+		var delta: int = pre_repeat_total - scrabble_core_damage
+		var explain: String
+		if letter_group_flat_add > 0 and letter_group_rare_damage > 0:
+			explain = "%s / %s +%d, %s +%d" % [
+				LetterGroupBonuses.GROUP_THEME_COMMON,
+				LetterGroupBonuses.GROUP_THEME_VERY_RARE,
+				letter_group_flat_add,
+				LetterGroupBonuses.GROUP_THEME_RARE,
+				letter_group_rare_damage,
+			]
+		elif letter_group_flat_add > 0:
+			explain = "%s / %s +%d" % [
+				LetterGroupBonuses.GROUP_THEME_COMMON,
+				LetterGroupBonuses.GROUP_THEME_VERY_RARE,
+				letter_group_flat_add,
+			]
+		else:
+			explain = "%s +%d (5%% max HP per rare letter)" % [
+				LetterGroupBonuses.GROUP_THEME_RARE,
+				letter_group_rare_damage,
+			]
+		damage_messages.append("Letter groups (%s) → subtotal %d." % [explain, pre_repeat_total])
+	var dealt: int = pre_repeat_total if final_damage < 0 else final_damage
 	damage_messages.append("You dealt %d damage." % dealt)
