@@ -1,6 +1,6 @@
 extends Control
 
-@onready var mode_modal: Control = $ModeModal
+@onready var mode_modal: PanelContainer = $ModeModal
 @onready var continue_button: Button = $VBoxContainer/Continue
 
 func _ready():
