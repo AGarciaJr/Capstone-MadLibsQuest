@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.IO;
 using MadLibsQuest.NLP;
 
 namespace MadLibsQuest;
@@ -31,7 +32,12 @@ public partial class WordNetBridge : Node
 
 		_wordNetService = new WordNetService();
 
-		var absolutePath = ProjectSettings.GlobalizePath(WordNetDictPath);
+		GD.Print($"[WordNetBridge] WordNetDictPath raw = {WordNetDictPath}");
+
+		var exeDir = Path.GetDirectoryName(OS.GetExecutablePath());
+		var absolutePath = Path.Combine(exeDir ?? "", "assets", "wordnet", "dict");
+
+		GD.Print($"[WordNetBridge] WordNetDictPath absolute = {absolutePath}");
 
 		if (_wordNetService.Initialize(absolutePath))
 		{

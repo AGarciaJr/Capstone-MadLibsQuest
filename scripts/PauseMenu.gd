@@ -1,6 +1,6 @@
 extends CanvasLayer
 
-const _BATTLE_INFORMATION := preload("res://Scenes/BattleInformation.tscn")
+const _BATTLE_INFORMATION := preload("res://scenes/BattleInformation.tscn")
 
 var _tips_overlay: Control = null
 

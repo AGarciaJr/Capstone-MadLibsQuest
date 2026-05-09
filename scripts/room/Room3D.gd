@@ -2,17 +2,12 @@ extends Node3D
 
 @onready var camera: Camera3D = $Camera3D
 @onready var hint_label: Label = $CanvasLayer/UIRoot/BottomCenter/HintLabel
-@onready var begin_run_button: Button = (
-	$CanvasLayer/UIRoot/CompletionCenter/CompletionPanel/CompletionVBox/HBoxContainer/BeginRunButton
-)
+
 @onready var fade: ColorRect = $CanvasLayer/UIRoot/Fade
 @onready var crosshair: Control = $CanvasLayer/UIRoot/Crosshair
 @onready var doors_root : Node3D = $DoorsRoot
 @onready var map_overlay: Control = $CanvasLayer/UIRoot/MapOverlay
 @onready var map_view: MapView = $CanvasLayer/UIRoot/MapOverlay/Panel/MapView
-@onready var main_menu_button: Button = (
-	$CanvasLayer/UIRoot/CompletionCenter/CompletionPanel/CompletionVBox/HBoxContainer/MainMenuButton
-)
 
 @onready var room_hp_label: Label = $CanvasLayer/UIRoot/RoomHUD/PlayerHP
 @onready var room_hp_bar: ProgressBar = $CanvasLayer/UIRoot/RoomHUD/PlayerHPBar
@@ -21,7 +16,7 @@ extends Node3D
 @export var door_radius: float = .75
 
 
-const DOOR_SCENE := preload("res://Scenes/Rooms/DoorInteractable.tscn")
+const DOOR_SCENE := preload("res://scenes/Rooms/DoorInteractable.tscn")
 
 var sensitivity := 0.003
 var _hovered_door: DoorInteractable = null
