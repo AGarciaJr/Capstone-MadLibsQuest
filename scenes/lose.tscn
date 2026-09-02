@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://c045ih8p2ymnw"]
+
+[node name="Lose" type="Control" unique_id=1964011546]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="." unique_id=2079507752]
+layout_mode = 0
+offset_left = 465.0
+offset_top = 163.0
+offset_right = 683.0
+offset_bottom = 186.0
+text = "YOU LOSE YOU BIG LOSER!!!!"
+
+[node name="TryAgain" type="Button" parent="." unique_id=1246277261]
+layout_mode = 0
+offset_left = 211.0
+offset_top = 427.0
+offset_right = 464.0
+offset_bottom = 458.0
+text = "Try again (and probs lose again)"
+
+[node name="Quit" type="Button" parent="." unique_id=1627984696]
+layout_mode = 0
+offset_left = 743.0
+offset_top = 426.0
+offset_right = 827.0
+offset_bottom = 457.0
+text = "Rage Quit
+"

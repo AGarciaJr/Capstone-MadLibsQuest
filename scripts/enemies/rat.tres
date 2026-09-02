@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://dhxkah64vwbuv"]
+
+[ext_resource type="Texture2D" uid="uid://bks1mldabeufn" path="res://art/backgrounds/forest.png" id="1_c63wt"]
+[ext_resource type="Script" uid="uid://5rke65cu03oi" path="res://scripts/enemies/enemy_data.gd" id="1_ipvjv"]
+[ext_resource type="Texture2D" uid="uid://dgdm6vfix0e5c" path="res://art/rat.png" id="2_l81s4"]
+
+[resource]
+script = ExtResource("1_ipvjv")
+enemy_name = "Rat"
+health = null
+attack_speed = 5.0
+damage = 5.0
+sprite_scale = Vector2(0.15, 0.15)
+sprite = ExtResource("2_l81s4")
+background = ExtResource("1_c63wt")
+metadata/_custom_type_script = "uid://5rke65cu03oi"

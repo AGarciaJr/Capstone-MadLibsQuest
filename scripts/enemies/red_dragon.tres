@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://bf5h7kexdsmm4"]
+
+[ext_resource type="Script" uid="uid://5rke65cu03oi" path="res://scripts/enemies/enemy_data.gd" id="1_7vdsh"]
+[ext_resource type="Texture2D" uid="uid://bx7rsogfuas6l" path="res://art/backgrounds/final_boss.png" id="1_v5eku"]
+[ext_resource type="Texture2D" uid="uid://bcf2uyfvx7of7" path="res://art/red_dragon.png" id="2_6yukv"]
+
+[resource]
+script = ExtResource("1_7vdsh")
+enemy_name = "Red Dragon"
+max_health = 50.0
+health = 50.0
+attack_speed = 6.0
+damage = 20.0
+resistance = Array[int]([1])
+weakness = Array[int]([2])
+sprite_scale = Vector2(7, 7)
+sprite = ExtResource("2_6yukv")
+background = ExtResource("1_v5eku")
+metadata/_custom_type_script = "uid://5rke65cu03oi"

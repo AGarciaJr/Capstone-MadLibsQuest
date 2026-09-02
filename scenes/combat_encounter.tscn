@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://c5uutubovrag1"]
+
+[ext_resource type="Script" uid="uid://c46yedvk4xqit" path="res://scripts/combat_encounter.gd" id="1_p285p"]
+[ext_resource type="PackedScene" uid="uid://b62pfo1v01lf3" path="res://scenes/enemy.tscn" id="2_p285p"]
+
+[node name="Combat Encounter" type="Control" unique_id=417468212]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_p285p")
+
+[node name="Background" type="Sprite2D" parent="." unique_id=525473313]
+position = Vector2(576, 324)
+
+[node name="Enemy" parent="." unique_id=262792338 instance=ExtResource("2_p285p")]
+position = Vector2(559, 207)
+
+[node name="WordEnter" type="LineEdit" parent="." unique_id=1541925838]
+layout_mode = 0
+offset_left = 475.0
+offset_top = 516.0
+offset_right = 648.0
+offset_bottom = 547.0
+alignment = 1
+
+[node name="InventoryLabel" type="Label" parent="." unique_id=1050357194]
+layout_mode = 0
+offset_left = 389.0
+offset_top = 440.0
+offset_right = 728.0
+offset_bottom = 463.0
+text = "Inventory: "
+horizontal_alignment = 1
+
+[node name="BardLabel" type="Label" parent="." unique_id=1083665604]
+layout_mode = 0
+offset_left = 247.0
+offset_top = 394.0
+offset_right = 867.0
+offset_bottom = 417.0
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="PlayerHealthBar" type="ProgressBar" parent="." unique_id=164523687]
+layout_mode = 0
+offset_left = 471.0
+offset_top = 584.0
+offset_right = 652.0
+offset_bottom = 611.0
+show_percentage = false
+
+[node name="PlayerHealthLabel" type="Label" parent="PlayerHealthBar" unique_id=998086320]
+layout_mode = 0
+offset_left = 65.0
+offset_top = 2.0
+offset_right = 105.0
+offset_bottom = 25.0
