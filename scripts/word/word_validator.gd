@@ -1,40 +1,39 @@
-extends Node
 class_name WordValidator
+extends Node
+## Decides whether typed text is a playable word: real dictionary
+## word, letters only, long enough, and not already played this
+## encounter. Reports a human-readable reason when it is not.
 
-@onready var word_dict: Dictionary = RunState.get_word_dict()
+const MINIMUM_LENGTH: int = 2
 
-func _ready() -> void:
-	# Incoming
-	Signals.text_sent.connect(is_valid_word)
+# Words already accepted this encounter; repeats are rejected to
+# push the player toward linguistic variety.
+var _played_words: Array[String] = []
 
-func is_valid_word(text: String):
-	"""
-	Signals that word is validated with the new word
-	OR
-	Signals that the word is invalid
-	"""
-	if is_in_dict(text) \
-	and matches_part_of_speech(text, WordDictionary.SpeechPart.Verb):
-		var new_word = create_word(text)
-		Signals.emit_word_validated(new_word)
-	else:
-		Signals.emit_text_invalidated(text)
 
-func is_in_dict(text: String) -> bool:
-	return word_dict.has(text.to_lower())
+func start_encounter() -> void:
+	_played_words = []
 
-func matches_part_of_speech(
-	text: String, 
-	part_of_speech: WordDictionary.SpeechPart
-) -> bool:
-	return word_dict.get(text.to_lower()) == part_of_speech
 
-func create_word(text: String) -> Word:
-	var letters := RunState.inventory.consume_letters_for(text)
-	var word := Word.new(text, letters)
-	# Debug
-	#print("Word validated and created")
-	#print(word.text, " damage: ", word.get_final_damage())
-	#print("Element: ", word.dominant_element)
-	#print("Letters: ", word.letters)
-	return word
+## Returns {"valid": bool, "reason": String}.
+func validate(text: String) -> Dictionary:
+	var word: String = text.strip_edges().to_lower()
+	if word.length() < MINIMUM_LENGTH:
+		return _verdict(false, "Too short")
+	for character: String in word:
+		if character < "a" or character > "z":
+			return _verdict(false, "Letters only")
+	if _played_words.has(word):
+		return _verdict(false, "Already played this fight")
+	if not WordNet.word_exists(word):
+		return _verdict(false, "Not in the lexicon")
+	return _verdict(true, "")
+
+
+## Records an accepted word so it cannot be replayed this fight.
+func mark_played(word: String) -> void:
+	_played_words.append(word.strip_edges().to_lower())
+
+
+func _verdict(valid: bool, reason: String) -> Dictionary:
+	return {"valid": valid, "reason": reason}

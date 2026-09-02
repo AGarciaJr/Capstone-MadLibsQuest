@@ -1,0 +1,17 @@
+{
+	"quill_of_fortune": {
+		"name": "Quill of Fortune",
+		"description": "Earn 5 extra gold after every victory.",
+		"price": 40
+	},
+	"tome_of_echoes": {
+		"name": "Tome of Echoes",
+		"description": "Your words resonate: semantic effectiveness rises.",
+		"price": 50
+	},
+	"iron_bookmark": {
+		"name": "Iron Bookmark",
+		"description": "Sturdy binding. +10 maximum health.",
+		"price": 35
+	}
+}

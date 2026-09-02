@@ -1,107 +1,59 @@
-# Mad Libs Quest
+# Lexical Rogue
 
-A whimsical RPG adventure where **words have power**. Help the Bard restore a broken world by filling in the blanks of reality itself through creative Mad Libs storytelling.
+Scrabble meets Balatro: a roguelike deckbuilder where you spell
+words from a deck of letter characters, and damage flows from the
+semantic similarity between your word and the enemy's nature.
+Built with Godot 4.7 (standard build, pure GDScript).
 
-## Features
+Full design document: [docs/GDD.md](docs/GDD.md).
+Code style: [docs/gdscript-style.md](docs/gdscript-style.md).
 
-- **Story-driven Mad Libs gameplay** - Your word choices shape the narrative
-- **NLP-powered validation** - WordNet integration validates parts of speech
-- **Pixel art aesthetic** - Charming top-down exploration
-- **The Bard** - Your mystical guide who weaves your words into tales
+## The loop
+
+Fight → draw a hand of letters → read the enemy's word tags →
+spell a word that resonates against them → the enemy retaliates →
+earn gold → shop and hear the bard retell your journey at the
+tavern → choose the next encounter → reach and defeat the boss.
 
 ## Setup
 
-### Prerequisites
+1. Install [Godot 4.7+](https://godotengine.org/) (standard
+   build; .NET is not needed).
+2. Download the WordNet 3.1 database and place its `dict` folder
+   at `assets/wordnet/dict` — see `assets/wordnet/SETUP.txt`.
+   The database is not committed to the repository.
+3. Open the project in Godot and run.
 
-- [Godot 4.6+](https://godotengine.org/) with .NET support
-- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+The first launch parses WordNet (~1 s) and caches a binary index
+in `user://`; later launches load in well under a second.
 
-### WordNet Database Setup
+## Architecture
 
-The game uses [WordNet](https://wordnet.princeton.edu/) for natural language processing. You need to download the WordNet database files:
+- `scripts/nlp/` — WordNet reader (index/data file parsing,
+  lemmatization), semantic scorer (Wu-Palmer over hypernyms,
+  cross-POS derivation hops, gloss-noun association), storyteller.
+- `scripts/autoloads/` — `WordNet` (the single game-facing NLP
+  interface), `RunState` (run data), `EventBus` (signals).
+- `scripts/word/` — letter stats, deck manager, word validator.
+- `scripts/combat/` — damage calculator, enemy factory, enemy,
+  combat controller (turn state machine).
+- `scripts/tavern/` — economy system, tavern controller.
+- `data/` — enemy and relic definitions (JSON).
+- `tools/` — headless test scenes (see below).
 
-1. **Download WordNet 3.1**:
-   - Go to: https://wordnet.princeton.edu/download/current-version
-   - Download the database files (not the full installer)
-   - Or use direct link: http://wordnetcode.princeton.edu/wn3.1.dict.tar.gz
+## Tests
 
-2. **Extract and place the files**:
-   ```
-   assets/
-   └── wordnet/
-	   └── dict/
-		   ├── data.adj
-		   ├── data.adv
-		   ├── data.noun
-		   ├── data.verb
-		   ├── index.adj
-		   ├── index.adv
-		   ├── index.noun
-		   ├── index.verb
-		   └── (other .exc and auxiliary files)
-   ```
-
-3. **Alternative: macOS Homebrew**:
-   ```bash
-   brew install wordnet
-   # Apple Silicon (M1/M2/M3):
-   cp -r /opt/homebrew/opt/wordnet/dict assets/wordnet/
-   # Intel Mac:
-   cp -r /usr/local/opt/wordnet/dict assets/wordnet/
-   ```
-
-### Building
-
-1. Clone the repository
-2. Open the project in Godot 4.6+
-3. Build the C# solution:
-   ```bash
-   dotnet restore
-   dotnet build
-   ```
-4. Run the game from the Godot editor
-
-## Project Structure
+Headless checks run from the project root:
 
 ```
-├── assets/
-│   ├── wordnet/dict/        # WordNet database (download separately)
-│   └── Pixel Art Top Down/  # Sprite assets
-├── scenes/
-│   ├── intro_scene.gd/tscn  # Opening narrative + first Mad Lib
-│   └── tutorial_area.gd/tscn # First explorable area
-├── scripts/
-│   ├── autoloads/           # Global singletons
-│   ├── entities/
-│   │   ├── player.gd        # Player character
-│   │   └── bard.gd          # The Bard NPC
-│   ├── nlp/
-│   │   ├── WordNetService.cs    # Core WordNet logic
-│   │   └── WordNetBridge.cs     # Godot<->C# bridge
-│   └── GameData.gd          # Persistent game state
-└── project.godot
+godot --headless --path . -s res://tools/wordnet_smoke_test.gd
+godot --headless --path . res://tools/combat_sim_test.tscn
+godot --headless --path . res://tools/tavern_sim_test.tscn
 ```
 
-## How Word Validation Works
+## Debug tools
 
-When you enter a word for a Mad Lib blank:
-
-1. The **Bard** asks for a specific part of speech (noun, verb, adjective, adverb)
-2. **WordNet** checks if your word can be used as that part of speech
-3. If valid: The word is accepted with positive feedback
-4. If invalid: The Bard explains what type of word you actually entered
-
-Example:
-- Prompt: "Enter an adjective"
-- You type: "run"
-- Bard: "Woah there! That's not quite right! 'run' is actually a noun or verb!"
-
-## License
-
-Educational project - [Your License Here]
-
-## Credits
-
-- **WordNet** - Princeton University
-- **Pixel Art Assets** - [Pixel Art Top Down - Basic](link)
-- **Godot Engine** - https://godotengine.org/
+F12 toggles the developer overlay in-game: full damage-math
+breakdown of the last word, a live similarity tester, gold and
+healing cheats, skip-to-tavern, and forcing enemy tags or drawn
+letters.
