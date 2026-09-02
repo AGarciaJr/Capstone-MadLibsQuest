@@ -2,9 +2,6 @@
 .godot/
 /android/
 
-# WordNet database (large, download separately)
-assets/wordnet/dict/
-
 # Local editor state
 .vscode/settings.json
 export_presets.cfg
